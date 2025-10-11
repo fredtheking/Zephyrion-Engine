@@ -13,6 +13,9 @@ FetchContent_Declare(
         GIT_PROGRESS   TRUE
         GIT_SHALLOW    TRUE
 )
+set(SDL_STATIC ON)
+set(SDL_SHARED OFF)
+set(SDL3_BUILD_SHARED_LIBS OFF)
 FetchContent_MakeAvailable(sdl3)
 
 
