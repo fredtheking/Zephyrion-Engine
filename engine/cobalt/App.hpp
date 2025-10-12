@@ -11,6 +11,12 @@ namespace Cobalt {
     void Run();
 
   private:
+    SDL_Window* m_Window;
+    SDL_Renderer* m_Renderer;
+  public:
+    bool m_Running = true;
+
+  private:
     //...
   public:
     SINGLETON_CONSTRUCTOR(App)
