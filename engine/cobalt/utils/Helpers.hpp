@@ -30,4 +30,13 @@ namespace Cobalt::Low::Helpers {
       return gen();
     }
   }
+
+  namespace String {
+    inline std::string ToUpper(std::string msg) {
+      return std::ranges::transform(msg, msg.begin(), toupper).out._Unwrapped();
+    }
+    inline std::string ToUpper(const char* msg) {
+      return ToUpper(std::string(msg));
+    }
+  }
 }

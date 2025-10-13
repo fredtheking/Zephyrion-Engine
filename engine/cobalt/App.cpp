@@ -1,42 +1,29 @@
 #include "App.hpp"
 
+void Cobalt::App::Setup() {
+  ASSERT(
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO),
+    fprintf(stderr, "Failed initialising SDL3: %s", SDL_GetError())
+  )
+
+  p_MainWindow = MAKE_UPTR(Window)(1920, 1080, "Hello, Cobalt!", 0);
+}
+void Cobalt::App::Terminate() {
+  p_MainWindow.reset();
+
+  SDL_Quit();
+}
+
 
 void Cobalt::App::Run() {
-  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-    fprintf(stderr, "Failed initialising SDL3: %s", SDL_GetError());
-    std::abort();
-  }
-
-  m_Window = SDL_CreateWindow("Hello, Cobalt!", 1920, 1080, 0);
-  if (!m_Window) {
-    fprintf(stderr, "Failed creating Window: %s", SDL_GetError());
-    std::abort();
-  }
-
-  m_Renderer = SDL_CreateRenderer(m_Window, nullptr);
-  if (!m_Renderer) {
-    fprintf(stderr, "Failed creating Renderer: %s", SDL_GetError());
-    std::abort();
-  }
-
+  Setup();
 
   while (m_Running) {
     Process();
     Render();
   }
 
-
-  if (m_Renderer) {
-    SDL_DestroyRenderer(m_Renderer);
-    m_Renderer = nullptr;
-  }
-  if (m_Window) {
-    SDL_DestroyWindow(m_Window);
-    m_Window = nullptr;
-  }
-  SDL_Quit();
-
-  printf("All clean!\n");
+  Terminate();
 }
 
 void Cobalt::App::Process() {
@@ -60,7 +47,7 @@ void Cobalt::App::Process() {
   }
 }
 void Cobalt::App::Render() {
-  SDL_SetRenderDrawColor(m_Renderer, 0, 64, 92, 255);
-  SDL_RenderClear(m_Renderer);
-  SDL_RenderPresent(m_Renderer);
+  SDL_SetRenderDrawColor(p_MainWindow->p_Renderer, 0, 64, 92, 255);
+  SDL_RenderClear(p_MainWindow->p_Renderer);
+  SDL_RenderPresent(p_MainWindow->p_Renderer);
 }

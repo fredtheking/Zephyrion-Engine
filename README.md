@@ -1,18 +1,18 @@
-# Quartz Engine
+# Cobalt Engine
 
 > [!WARNING]
 > This thing exists purely so i can mess around with c++.  
-> Not a product, not stable, not useful (probably).
+> Not stable.
 
 ---
 
 ## About
-Quartz Engine is a game engine using Entity-Component-Layer<sub><sub>(scenes)</sub></sub> system.  
+Cobalt Engine is a game engine using Entity-Component-Layer<sub><sub>(scenes)</sub></sub> system.  
 I already made two engines in C# ([Streamline](https://github.com/fredtheking/Streamline-Engine), [Zephyrion](https://github.com/fredtheking/ZephyrionEngine)), and they sucked.  
-So now im trying again, but with C++. Maybe it will suck less?
+So now im trying again, but with C++.
 
-- Rendering with [raylib](https://www.raylib.com/) (cuz opengl/directx is black magic)  
-- Some multithreading (but render + resource loading is still single-threaded, thanks raylib)  
+- Rendering with [SDL3](https://www.libsdl.org/)  
+- Some multithreading (maybe?)  
 - Custom architecture  
 
 ---

@@ -2,8 +2,18 @@
 
 #define REF(TYPE) TYPE&
 #define CREF(TYPE) const REF(TYPE)
-#define VOID_FUNC std::function<void()>
+
+#define UPTR(TYPE) std::unique_ptr<TYPE>
+#define MAKE_UPTR(TYPE) std::make_unique<TYPE>
+#define SPTR(TYPE) std::shared_ptr<TYPE>
+#define MAKE_SPTR(TYPE) std::make_shared<TYPE>
+#define WPTR(TYPE) std::weak_ptr<TYPE>
+
+#define FUNC(RETURN) std::function<RETURN()>
+#define VOID_FUNC FUNC(void)
 #define VOID_FUNC_CONST CREF(VOID_FUNC)
+
+#define ASSERT(SUCCESS, LOG_EVENT) if (!SUCCESS) { LOG_EVENT; std::abort(); }
 
 #define SINGLETON_CONSTRUCTOR(NAME) private:                                  \
                                       NAME() = default;                       \
