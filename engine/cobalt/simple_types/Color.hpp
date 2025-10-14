@@ -1,70 +1,58 @@
 #pragma once
 #include "cobalt/pch.hpp"
+#include "cobalt/utils/Macros.hpp"
 
-namespace Cobalt::ST {
-  class Color {
-  private:
-    //...
-  public:
-    //...
-
-  private:
-    //...
-  public:
-    const unsigned char red;
-    const unsigned char green;
-    const unsigned char blue;
-    const unsigned char alpha;
-
-    const std::string hex;
-    const unsigned int integer;
-
-  private:
-    //...
-  public:
-    Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
-    Color(unsigned int integer);
-    Color(std::string hex);
-    ~Color();
+namespace CE::ST {
+  /**
+   * Struct that holds R, G, B and A values. Each is Uint8 (unsigned int).
+   */
+  struct RGBA {
+    Uint8 red;
+    Uint8 green;
+    Uint8 blue;
+    Uint8 alpha;
   };
 
-  #define DEFINE_COLOR(NAME, R, G, B) static inline Color NAME {R, G, B, 255};
-  #define DEFINE_COLOR_SINGLE(NAME, X) DEFINE_COLOR(NAME, X, X, X)
+  /**
+   * Smart color class. Contains RGBA struct, Uint32 (unsigned int) rgba form and hex string.
+   */
+  class Color {
+  private:
+    void InitRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    void InitInteger();
+    void InitHex();
 
-  DEFINE_COLOR_SINGLE(White, 255)
-  DEFINE_COLOR_SINGLE(DimWhite, 230)
+    void InitElse();
+  public:
+    void Update();
+    void Update(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    void Update(CREF(RGBA) rgba);
+    void Update(Uint32 integer);
+    void Update(CREF(std::string) hex);
 
-  DEFINE_COLOR_SINGLE(BrightLightGray, 217)
-  DEFINE_COLOR_SINGLE(LightGray, 192)
-  DEFINE_COLOR_SINGLE(DimLightGray, 167)
+    static RGBA ToRGBA(Uint32 integer);
+    static RGBA ToRGBA(CREF(std::string) hex);
+    static Uint32 ToInteger(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    static Uint32 ToInteger(CREF(RGBA) rgba);
+    static Uint32 ToInteger(CREF(std::string) hex);
+    static std::string ToHex(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    static std::string ToHex(CREF(RGBA) rgba);
+    static std::string ToHex(Uint32 integer);
 
-  DEFINE_COLOR_SINGLE(BrightGray, 153)
-  DEFINE_COLOR_SINGLE(Gray, 128)
-  DEFINE_COLOR_SINGLE(DimGray, 103)
+  private:
+    //...
+  public:
+    RGBA rgba;
+    std::string hex;
+    Uint32 integer;
 
-  DEFINE_COLOR_SINGLE(BrightDarkGray, 89)
-  DEFINE_COLOR_SINGLE(DarkGray, 64)
-  DEFINE_COLOR_SINGLE(DimDarkGray, 39)
-
-  DEFINE_COLOR_SINGLE(BrightBlack, 25)
-  DEFINE_COLOR_SINGLE(Black, 0)
-
-  DEFINE_COLOR(Red, 255, 0, 0)
-  DEFINE_COLOR(Lime, 0, 255, 0)
-  DEFINE_COLOR(Blue, 0, 0, 255)
-  DEFINE_COLOR(Green, 0, 128, 0)
-  DEFINE_COLOR(Yellow, 255, 255, 0)
-  DEFINE_COLOR(Cyan, 0, 255, 255)
-  DEFINE_COLOR(Magenta, 255, 0, 255)
-  DEFINE_COLOR(Purple, 128, 0, 128)
-
-  #undef DEFINE_COLOR_SINGLE
-  #undef DEFINE_COLOR
-}
-
-namespace std {
-  std::string std::to_string(Color color) {
-    std::stringstream ss;
-    ss << "Color(" << color.ToInt() << ")";
-  }
+  private:
+    //...
+  public:
+    Color();
+    Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    explicit Color(CREF(RGBA) rgba);
+    explicit Color(Uint32 integer);
+    explicit Color(CREF(std::string) hex);
+  };
 }

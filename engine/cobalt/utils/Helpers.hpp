@@ -1,7 +1,7 @@
 #pragma once
 #include "cobalt/pch.hpp"
 
-namespace Cobalt::Low::Helpers {
+namespace CE::Low::Helpers {
   namespace Update {
     inline std::chrono::time_point<std::chrono::steady_clock> last_frame = std::chrono::steady_clock::now();
 

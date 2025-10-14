@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Cobalt::ST {
+namespace CE::ST {
   template <typename T = float>
   class Vector2 {
   private:

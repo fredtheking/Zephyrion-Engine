@@ -1,6 +1,6 @@
 #include "App.hpp"
 
-void Cobalt::App::Setup() {
+void CE::App::Setup() {
   ASSERT(
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO),
     fprintf(stderr, "Failed initialising SDL3: %s", SDL_GetError())
@@ -8,14 +8,14 @@ void Cobalt::App::Setup() {
 
   p_MainWindow = MAKE_UPTR(Window)(1920, 1080, "Hello, Cobalt!", 0);
 }
-void Cobalt::App::Terminate() {
+void CE::App::Terminate() {
   p_MainWindow.reset();
 
   SDL_Quit();
 }
 
 
-void Cobalt::App::Run() {
+void CE::App::Run() {
   Setup();
 
   while (m_Running) {
@@ -26,7 +26,7 @@ void Cobalt::App::Run() {
   Terminate();
 }
 
-void Cobalt::App::Process() {
+void CE::App::Process() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
@@ -46,7 +46,7 @@ void Cobalt::App::Process() {
     }
   }
 }
-void Cobalt::App::Render() {
+void CE::App::Render() {
   SDL_SetRenderDrawColor(p_MainWindow->p_Renderer, 0, 64, 92, 255);
   SDL_RenderClear(p_MainWindow->p_Renderer);
   SDL_RenderPresent(p_MainWindow->p_Renderer);

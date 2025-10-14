@@ -4,14 +4,14 @@
 
 
 template<typename T>
-Cobalt::ST::Vector2<T>::Vector2() {
+CE::ST::Vector2<T>::Vector2() {
   INIT_SINGLE(0)
 }
 template<typename T>
-Cobalt::ST::Vector2<T>::Vector2(T x, T y) {
+CE::ST::Vector2<T>::Vector2(T x, T y) {
   INIT(x, y)
 }
 template<typename T>
-Cobalt::ST::Vector2<T>::Vector2(T xy) {
+CE::ST::Vector2<T>::Vector2(T xy) {
   INIT_SINGLE(xy)
 }

@@ -3,7 +3,7 @@
 #include "Rectangle.hpp"
 #include "cobalt/utils/Macros.hpp"
 
-namespace Cobalt::ST {
+namespace CE::ST {
   template<typename T = float>
   class Bounds {
   private:

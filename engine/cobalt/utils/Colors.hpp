@@ -1,0 +1,50 @@
+#pragma once
+#include "cobalt/simple_types/Color.hpp"
+
+#define DEFINE_COLOR(NAME, R, G, B) inline ST::Color NAME {R, G, B, 255};
+#define DEFINE_COLOR_SINGLE(NAME, X) DEFINE_COLOR(NAME, X, X, X)
+
+namespace CE::Colors {
+  DEFINE_COLOR_SINGLE(White, 255)
+  DEFINE_COLOR_SINGLE(DimWhite, 230)
+
+  DEFINE_COLOR_SINGLE(BrightLightGray, 217)
+  DEFINE_COLOR_SINGLE(LightGray, 192)
+  DEFINE_COLOR_SINGLE(DimLightGray, 167)
+
+  DEFINE_COLOR_SINGLE(BrightGray, 153)
+  DEFINE_COLOR_SINGLE(Gray, 128)
+  DEFINE_COLOR_SINGLE(DimGray, 103)
+
+  DEFINE_COLOR_SINGLE(BrightDarkGray, 89)
+  DEFINE_COLOR_SINGLE(DarkGray, 64)
+  DEFINE_COLOR_SINGLE(DimDarkGray, 39)
+
+  DEFINE_COLOR_SINGLE(BrightBlack, 25)
+  DEFINE_COLOR_SINGLE(Black, 0)
+
+  DEFINE_COLOR_SINGLE(RayWhite, 245)  // a tribute to Ray's lib, raylib!
+
+  DEFINE_COLOR(Red, 255, 0, 0)
+  DEFINE_COLOR(Lime, 0, 255, 0)
+  DEFINE_COLOR(Blue, 0, 0, 255)
+  DEFINE_COLOR(Green, 0, 128, 0)
+  DEFINE_COLOR(Yellow, 255, 255, 0)
+  DEFINE_COLOR(Cyan, 0, 255, 255)
+  DEFINE_COLOR(Magenta, 255, 0, 255)
+  DEFINE_COLOR(Purple, 128, 0, 128)
+  DEFINE_COLOR(Orange, 255, 165, 0)
+  DEFINE_COLOR(Pink, 255, 192, 203)
+  DEFINE_COLOR(Brown, 165, 42, 42)
+  DEFINE_COLOR(Beige, 245, 245, 220)
+  DEFINE_COLOR(Turquoise, 64, 224, 208)
+  DEFINE_COLOR(SkyBlue, 135, 206, 235)
+  DEFINE_COLOR(Navy, 0, 0, 128)
+  DEFINE_COLOR(Olive, 128, 128, 0)
+  DEFINE_COLOR(Teal, 0, 128, 128)
+  DEFINE_COLOR(Silver, 192, 192, 192)
+  DEFINE_COLOR(Gold, 255, 215, 0)
+}
+
+#undef DEFINE_COLOR_SINGLE
+#undef DEFINE_COLOR

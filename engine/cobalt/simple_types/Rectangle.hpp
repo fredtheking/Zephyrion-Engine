@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector2.hpp"
 
-namespace Cobalt::ST {
+namespace CE::ST {
   template <typename T = float>
   class Rectangle {
   private:

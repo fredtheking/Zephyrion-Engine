@@ -3,6 +3,6 @@
 #include "cobalt/core/render_modes/ScreenEdgeClass.hpp"
 #include "cobalt/core/render_modes/StretchClass.hpp"
 
-namespace Cobalt::Unions {
+namespace CE::Unions {
 
 }

@@ -3,7 +3,7 @@
 #include "cobalt/utils/Enums.hpp"
 #include "cobalt/utils/Macros.hpp"
 
-namespace Cobalt {
+namespace CE {
   class Logger {
   private:
     static void RawPrint(CREF(std::string) prefix, CREF(std::string) msg, EConsoleColor fg_color, EConsoleColor bg_color, bool once = false);

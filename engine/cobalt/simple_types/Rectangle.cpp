@@ -4,22 +4,22 @@
 
 
 template<typename T>
-Cobalt::ST::Rectangle<T>::Rectangle() {
+CE::ST::Rectangle<T>::Rectangle() {
   INIT_SINGLE(0)
 }
 template<typename T>
-Cobalt::ST::Rectangle<T>::Rectangle(T x, T y, T width, T height) {
+CE::ST::Rectangle<T>::Rectangle(T x, T y, T width, T height) {
   INIT(x, y, width, height)
 }
 template<typename T>
-Cobalt::ST::Rectangle<T>::Rectangle(Vector2<T> pos, Vector2<T> size) {
+CE::ST::Rectangle<T>::Rectangle(Vector2<T> pos, Vector2<T> size) {
   INIT(pos.x, pos.y, size.x, size.y)
 }
 template<typename T>
-Cobalt::ST::Rectangle<T>::Rectangle(Vector2<T> pos, T width, T height) {
+CE::ST::Rectangle<T>::Rectangle(Vector2<T> pos, T width, T height) {
   INIT(pos.x, pos.y, width, height)
 }
 template<typename T>
-Cobalt::ST::Rectangle<T>::Rectangle(T x, T y, Vector2<T> size) {
+CE::ST::Rectangle<T>::Rectangle(T x, T y, Vector2<T> size) {
   INIT(x, y, size.x, size.y)
 }

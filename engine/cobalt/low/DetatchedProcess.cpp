@@ -1,6 +1,6 @@
 #include "DetachedProcess.hpp"
 
-void Cobalt::Low::DetachedProcess::Start() {
+void CE::Low::DetachedProcess::Start() {
   m_Running = true;
   m_Worker = std::thread([this]{
     while (m_Running)
@@ -8,7 +8,7 @@ void Cobalt::Low::DetachedProcess::Start() {
   });
   m_Worker.detach();
 }
-void Cobalt::Low::DetachedProcess::Stop() {
+void CE::Low::DetachedProcess::Stop() {
   m_Running = false;
 }
 

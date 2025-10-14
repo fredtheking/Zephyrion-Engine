@@ -1,7 +1,7 @@
 #pragma once
 #define ENUM(NAME) enum class NAME
 
-namespace Cobalt::Enums {
+namespace CE::Enums {
   ENUM(WindowPosition) {
     Centered,
     TopLeft,

@@ -3,7 +3,7 @@
 #include "core/Window.hpp"
 #include "utils/Macros.hpp"
 
-namespace Cobalt {
+namespace CE {
   class App final {
   private:
     void Setup();

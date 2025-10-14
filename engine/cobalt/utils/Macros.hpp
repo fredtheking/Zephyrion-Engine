@@ -4,9 +4,9 @@
 #define CREF(TYPE) const REF(TYPE)
 
 #define UPTR(TYPE) std::unique_ptr<TYPE>
-#define MAKE_UPTR(TYPE) std::make_unique<TYPE>
+#define MAKE_UPTR(TYPE, ...) std::make_unique<TYPE>(__VA_ARGS__)
 #define SPTR(TYPE) std::shared_ptr<TYPE>
-#define MAKE_SPTR(TYPE) std::make_shared<TYPE>
+#define MAKE_SPTR(TYPE, ...) std::make_shared<TYPE>(__VA_ARGS__)
 #define WPTR(TYPE) std::weak_ptr<TYPE>
 
 #define FUNC(RETURN) std::function<RETURN()>
@@ -31,7 +31,7 @@
                                    return __VA_ARGS__; \
                                  }
 
-namespace Cobalt::Low {
+namespace CE::Low {
   #define POS_N_NEG_ACTION_BASE(PREFIX_POS, PREFIX_NEG, NAME, TYPE, VAR) void PREFIX_POS##NAME(CREF(TYPE) VAR); \
                                                                          void PREFIX_NEG##NAME(CREF(TYPE) VAR);
 }
@@ -55,5 +55,5 @@ namespace Cobalt::Low {
 #define INFINITE_FLOATING(TYPE) std::numeric_limits<TYPE>::infinity()
 #define NONVALID_FLOAT -INFINITE_FLOATING(float)
 
-#define GET_APP_SINGLETON Cobalt::App::Get()
+#define GET_APP_SINGLETON CE::App::Get()
 #define DEFINE_APP_VARIABLE REF(auto) app = GET_APP_SINGLETON;

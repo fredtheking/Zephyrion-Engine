@@ -2,7 +2,7 @@
 #include "cobalt/pch.hpp"
 #include "cobalt/utils/Macros.hpp"
 
-namespace Cobalt::Low {
+namespace CE::Low {
   class DetachedProcess final {
     private:
     //...
