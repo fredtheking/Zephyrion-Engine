@@ -3,6 +3,8 @@
 #include <SDL3/SDL.h>
 #include <imgui.h>
 
+#include <cpp-terminal/terminal.hpp>
+#include <cpp-terminal/window.hpp>
 #include <iostream>
 #include <uuid.h>
 #include <string>
@@ -17,3 +19,4 @@
 #include <functional>
 #include <thread>
 #include <utility>
+#include "cobalt/utils/Macros.hpp"

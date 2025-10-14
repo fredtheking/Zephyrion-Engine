@@ -42,6 +42,18 @@ target_link_libraries(imgui PUBLIC SDL3::SDL3)
 
 
 FetchContent_Declare(
+        cpp-terminal
+        GIT_REPOSITORY https://github.com/jupyter-xeus/cpp-terminal.git
+        GIT_TAG        5a4c0031155891d15a7cfd74584bfb2785f65478
+        GIT_PROGRESS   TRUE
+        GIT_SHALLOW    TRUE
+        GIT_DEPTH      1
+)
+set(DOXYGEN_GENERATE_LATEX OFF)
+FetchContent_MakeAvailable(cpp-terminal)
+
+
+FetchContent_Declare(
         stduuid
         GIT_REPOSITORY https://github.com/mariusbancila/stduuid.git
         GIT_TAG        v1.2.3
@@ -52,12 +64,28 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(stduuid)
 
 
+FetchContent_Declare(
+        fmt
+        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+        GIT_TAG        12.0.0
+        GIT_PROGRESS   TRUE
+        GIT_SHALLOW    TRUE
+)
+FetchContent_MakeAvailable(fmt)
+
+
 
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cobalt/**)
 add_library(${ENGINE_NAME} STATIC ${ENGINE_SOURCES})
 target_include_directories(${ENGINE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(${ENGINE_NAME} PUBLIC SDL3::SDL3 imgui stduuid)
+target_link_libraries(${ENGINE_NAME} PUBLIC
+        fmt::fmt
+        cpp-terminal
+        SDL3::SDL3
+        imgui
+        stduuid
+)
 add_custom_command(TARGET ${ENGINE_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_SOURCE_DIR}/engine/res"

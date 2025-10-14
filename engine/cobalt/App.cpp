@@ -1,7 +1,7 @@
 #include "App.hpp"
 
 void CE::App::Setup() {
-  ASSERT(
+  CRASH_ASSERT(
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO),
     fprintf(stderr, "Failed initialising SDL3: %s", SDL_GetError())
   )

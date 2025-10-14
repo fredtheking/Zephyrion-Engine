@@ -1,54 +1,57 @@
 #include "Logger.hpp"
-#include <algorithm>
-#include <iostream>
-#include <vector>
-
+#include "cobalt/pch.hpp"
 #include "cobalt/utils/Helpers.hpp"
-#include "cobalt/utils/Macros.hpp"
-#include "engine/managers/TerminalManager.hpp"
+#include <fmt/args.h>
+#include <fmt/color.h>
+
+#include "cpp-terminal/screen.hpp"
+#include "cpp-terminal/window.hpp"
 
 std::vector<std::string> oncers = {};
 
-void Logger::RawPrint(const std::string &prefix, const std::string &msg, EConsoleColor fg_color, EConsoleColor bg_color, bool once) {
-  std::string new_msg = msg;
-
-  if (!std::ranges::contains(oncers, msg)) {
-    std::cout << Low::Helpers::String::ToUpper(msg) << ": " << new_msg << "\n";
-  }
-
-  if (once)
-    oncers.push_back(msg);
+void CE::Logger::RawPrint(const std::string &prefix, CREF(std::string) msg, CREF(ST::Color) fg_color, CREF(ST::Color) bg_color) {
+  fmt::print(
+    fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue)) |
+    fmt::bg(fmt::rgb(0, 0, 0)),
+    "[{}]: {}\n",
+    Low::Helpers::String::ToUpper(prefix), msg
+  );
 }
 
-void Logger::DebugLog(const std::string &msg, const EConsoleColor& fg_color, const bool& once) {
-  RawPrint("debug", msg, fg_color, EConsoleColor::Black, once);
+void CE::Logger::DebugLog(CREF(std::string) msg, CREF(ST::Color) fg_color) {
+  RawPrint("debug", msg, fg_color, Colors::Black);
 }
-void Logger::Information(const std::string &msg, const bool& once) {
-  RawPrint("info", msg, EConsoleColor::White, EConsoleColor::Blank, once);
+void CE::Logger::Information(CREF(std::string) msg) {
+  RawPrint("info", msg, Colors::White, Colors::Blank);
 }
-void Logger::Warning(const std::string &msg, const bool& once) {
-  RawPrint("warn", msg, EConsoleColor::Yellow, EConsoleColor::Blank, once);
+void CE::Logger::Warning(CREF(std::string) msg) {
+  RawPrint("warn", msg, Colors::Yellow, Colors::Blank);
 }
-void Logger::Error(const std::string &msg, const bool& once) {
-  RawPrint("error", msg, EConsoleColor::Red, EConsoleColor::Blank, once);
+void CE::Logger::Error(CREF(std::string) msg) {
+  RawPrint("error", msg, Colors::Red, Colors::Blank);
 }
 // Also crashes the game.
-void Logger::Critical(const std::string &msg, const bool& once) {
-  RawPrint("crit", msg, EConsoleColor::Black, EConsoleColor::Red, once);
+void CE::Logger::Critical(CREF(std::string) msg) {
+  RawPrint("crit", msg, Colors::Black, Colors::Red);
   std::abort();
 }
 
 
-void Logger::Separator(const std::string& msg, const char& sign) {
-  Separator(EConsoleColor::Purple, msg, sign);
+void CE::Logger::Separator(CREF(std::string) msg, const char sign) {
+  Separator(Colors::Purple, msg, sign);
 }
-void Logger::Separator(const EConsoleColor& fg_color, const std::string& msg, const char& sign) {
-  const size_t term_width = TerminalManager::GetWidth();
+void CE::Logger::Separator(CREF(ST::Color) fg_color, CREF(std::string) msg, const char sign) {
+  const size_t term_width = Term::screen_size().columns();
   const std::string space = msg.empty() ? "" : "  ";
   const size_t msg_len = msg.length();
 
   if (msg_len + space.length() * 2 >= term_width) {
-    std::cout << TerminalManager::ToFgColor(fg_color, msg) << "\n";
+    fmt::print(
+      fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue)) |
+      fmt::bg(fmt::rgb(0, 0, 0)),
+      "{}\n",
+      msg
+    );
     return;
   }
 

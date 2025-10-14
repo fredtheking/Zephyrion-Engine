@@ -18,7 +18,7 @@ namespace CE::ST {
    */
   class Color {
   private:
-    void InitRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+    void InitRGBA(UINT8 r, Uint8 g, Uint8 b, Uint8 a);
     void InitInteger();
     void InitHex();
 
@@ -43,8 +43,8 @@ namespace CE::ST {
     //...
   public:
     RGBA rgba;
-    std::string hex;
     Uint32 integer;
+    std::string hex;
 
   private:
     //...

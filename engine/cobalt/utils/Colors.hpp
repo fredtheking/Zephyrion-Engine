@@ -1,10 +1,13 @@
 #pragma once
 #include "cobalt/simple_types/Color.hpp"
 
-#define DEFINE_COLOR(NAME, R, G, B) inline ST::Color NAME {R, G, B, 255};
+#define DEFINE_COLOR_FULL(NAME, R, G, B, A) inline const ST::Color NAME {R, G, B, A};
+#define DEFINE_COLOR(NAME, R, G, B) DEFINE_COLOR_FULL(NAME, R, G, B, 255)
 #define DEFINE_COLOR_SINGLE(NAME, X) DEFINE_COLOR(NAME, X, X, X)
 
 namespace CE::Colors {
+  DEFINE_COLOR_FULL(Blank, 255, 255, 255, 0)
+
   DEFINE_COLOR_SINGLE(White, 255)
   DEFINE_COLOR_SINGLE(DimWhite, 230)
 

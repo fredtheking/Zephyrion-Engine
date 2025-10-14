@@ -3,27 +3,36 @@
 #define REF(TYPE) TYPE&
 #define CREF(TYPE) const REF(TYPE)
 
+#define U(TYPE) unsigned TYPE
+#define UINT32 U(int)
+#define UINT16 U(short)
+#define UINT8 U(char)
+
 #define UPTR(TYPE) std::unique_ptr<TYPE>
-#define MAKE_UPTR(TYPE, ...) std::make_unique<TYPE>(__VA_ARGS__)
+#define MAKE_UPTR(TYPE) std::make_unique<TYPE>
 #define SPTR(TYPE) std::shared_ptr<TYPE>
-#define MAKE_SPTR(TYPE, ...) std::make_shared<TYPE>(__VA_ARGS__)
+#define MAKE_SPTR(TYPE) std::make_shared<TYPE>
 #define WPTR(TYPE) std::weak_ptr<TYPE>
 
 #define FUNC(RETURN) std::function<RETURN()>
 #define VOID_FUNC FUNC(void)
 #define VOID_FUNC_CONST CREF(VOID_FUNC)
 
-#define ASSERT(SUCCESS, LOG_EVENT) if (!SUCCESS) { LOG_EVENT; std::abort(); }
+#define CRASH_ASSERT(SUCCESS, LOG_EVENT) if (!SUCCESS) { LOG_EVENT; std::abort(); }
 
-#define SINGLETON_CONSTRUCTOR(NAME) private:                                  \
-                                      NAME() = default;                       \
+#define SINGLETON_CONSTRUCTOR(NAME) private:                                \
+                                      NAME() = default;                      \
                                     public:                                   \
-                                      NAME(CREF(NAME)) = delete;             \
-                                      REF(NAME) operator=(CREF(NAME)) = delete;  \
-                                      static REF(NAME) Get() {               \
-                                        static NAME singleton;                \
-                                        return singleton;                     \
+                                      NAME(CREF(NAME)) = delete;               \
+                                      REF(NAME) operator=(CREF(NAME)) = delete; \
+                                      static REF(NAME) Get() {                   \
+                                        static NAME singleton;                    \
+                                        return singleton;                          \
                                       }
+#define STATIC_ONLY_CONSTRUCTOR(NAME) public:                                  \
+                                        NAME() = delete;                        \
+                                        NAME(CREF(NAME)) = delete;               \
+                                        REF(NAME) operator=(CREF(NAME)) = delete; \
 
 #define EXTEND_I(NAME) public Interfaces::I##NAME
 #define LOG_AND_RETURN(MSG, ...) { \
