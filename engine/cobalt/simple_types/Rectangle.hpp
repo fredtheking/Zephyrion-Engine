@@ -24,3 +24,6 @@ namespace CE::ST {
     Rectangle(T x, T y, Vector2<T> size);
   };
 }
+
+template class CE::ST::Rectangle<>;
+template class CE::ST::Rectangle<int>;

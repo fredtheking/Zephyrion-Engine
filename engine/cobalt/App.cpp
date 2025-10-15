@@ -2,11 +2,11 @@
 
 #include "core/Logger.hpp"
 
-void CE::App::Setup() {
+void CE::App::Initialise() {
   Logger::Separator(Colors::Yellow, "Hello, world! Setting up engine...");
 
   ASSERT(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), Critical, "Failed initialising SDL3", "Initialised SDL3")
-  p_MainWindow = MAKE_UPTR(Window)(1920, 1080, "Hello, Cobalt!", 0);
+  p_MainWindow = MAKE_UPTR(Window)(p_Config->window);
 
   Logger::Separator(Colors::Lime, "Engine set up. Starting runtime");
 }
@@ -20,9 +20,13 @@ void CE::App::Terminate() {
   Logger::Separator(Colors::Lime, "Goodbye");
 }
 
-
+void CE::App::Setup(CREF(Configs::WindowConfig) window_config) {
+  p_Config = MAKE_UPTR(Configs::AppConfig)(
+    MAKE_SPTR(Configs::WindowConfig)(window_config)
+  );
+}
 void CE::App::Run() {
-  Setup();
+  Initialise();
 
   while (m_Running) {
     Process();

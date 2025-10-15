@@ -19,8 +19,8 @@
 #define VOID_FUNC_CONST CREF(VOID_FUNC)
 
 #define ASSERT(BOOL_FUNC, LOGGER_FUNC, MSG_FAILED, MSG_SUCCESS, ...) if (!BOOL_FUNC) Logger::LOGGER_FUNC(MSG_FAILED); \
-                                                                     else          { Logger::Success(MSG_SUCCESS); __VA_ARGS__ }
-#define ASSERT_SDL(BOOL_FUNC, MSG_FAILED, MSG_SUCCESS) ASSERT(BOOL_FUNC, Critical, MSG_FAILED ": " + std::string(SDL_GetError()), MSG_SUCCESS)
+                                                                     else if (strcmp(MSG_SUCCESS, "") != 0) { __VA_ARGS__; Logger::Success(MSG_SUCCESS); }
+#define ASSERT_SDL(BOOL_FUNC, MSG_FAILED, MSG_SUCCESS, ...) ASSERT(BOOL_FUNC, Critical, MSG_FAILED ": " + std::string(SDL_GetError()), MSG_SUCCESS, __VA_ARGS__)
 
 #define SINGLETON_CONSTRUCTOR(NAME) private:                                \
                                       NAME() = default;                      \
@@ -57,11 +57,12 @@
 #define GETTER(NAME, TYPE) PREFIX_GETTER( , NAME, TYPE)
 #define SETTER(NAME, TYPE, VAR) void Set##NAME(CREF(TYPE) VAR);
 #define GETTER_N_SETTER(NAME, TYPE, VAR) GETTER(NAME, TYPE) SETTER(NAME, TYPE, VAR)
-#define GETTER_N_SETTER_DEFAULT(NAME, TYPE, VAR) TYPE Get##NAME(){return this->VAR;} \
-                                                 void Set##NAME(CREF(TYPE) VAR){this->VAR = VAR;}
+#define GETTER_N_SETTER_DEFAULT(NAME, TYPE, VAR, ...) TYPE Get##NAME() { return this->VAR; } \
+                                                 void Set##NAME(TYPE VAR) { this->VAR = VAR; __VA_ARGS__ }
 
 #define INFINITE_FLOATING(TYPE) std::numeric_limits<TYPE>::infinity()
 #define NONVALID_FLOAT -INFINITE_FLOATING(float)
+#define NONVALID_INT INT_MIN
 
 #define GET_APP_SINGLETON CE::App::Get()
 #define DEFINE_APP_VARIABLE REF(auto) app = GET_APP_SINGLETON;

@@ -21,3 +21,6 @@ namespace CE::ST {
     explicit Vector2(T xy);
   };
 }
+
+template class CE::ST::Vector2<>;
+template class CE::ST::Vector2<int>;

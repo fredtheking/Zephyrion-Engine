@@ -1,5 +1,6 @@
 #pragma once
 #include "cobalt/pch.hpp"
+#include "cobalt/configs/WindowConfig.hpp"
 #include "cobalt/utils/Macros.hpp"
 
 namespace CE {
@@ -10,6 +11,7 @@ namespace CE {
     void UpdateIcon(CREF(std::string) filepath);
 
   private:
+    SPTR(Configs::WindowConfig) p_Config;
     SDL_Window* p_Window;
     SDL_Renderer* p_Renderer;
     SDL_Surface* p_Icon;
@@ -19,7 +21,7 @@ namespace CE {
   private:
     friend class App;
   public:
-    Window(int width, int height, CREF(std::string) title, SDL_WindowFlags flags);
+    explicit Window(CREF(SPTR(Configs::WindowConfig)) window_config);
     ~Window();
   };
 }

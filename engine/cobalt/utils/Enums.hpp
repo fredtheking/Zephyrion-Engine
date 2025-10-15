@@ -5,10 +5,8 @@ namespace CE::Enums {
   ENUM(WindowPosition) {
     Centered,
     TopLeft,
-    TopRight,
-    BottomLeft,
-    BottomRight,
-  };
+    Custom,
+};
 
   ENUM(WindowMode) {
     Windowed,
@@ -28,13 +26,6 @@ namespace CE::Enums {
     WindowSize,
     Custom,
   };
-
-  ENUM(BoundsUpdateChanges) {
-    XYWH,
-    Rectangle,
-    Vectors,
-    Bounds,
-  };
 }
 
-#undef MAKE_INTERFACE
+#undef ENUM

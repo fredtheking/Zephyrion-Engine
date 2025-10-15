@@ -44,3 +44,6 @@ namespace CE::ST {
     explicit Bounds(CREF(Rectangle<T>) rec);
   };
 }
+
+template class CE::ST::Bounds<>;
+template class CE::ST::Bounds<int>;
