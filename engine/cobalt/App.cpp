@@ -1,17 +1,23 @@
 #include "App.hpp"
 
-void CE::App::Setup() {
-  CRASH_ASSERT(
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO),
-    fprintf(stderr, "Failed initialising SDL3: %s", SDL_GetError())
-  )
+#include "core/Logger.hpp"
 
+void CE::App::Setup() {
+  Logger::Separator(Colors::Yellow, "Hello, world! Setting up engine...");
+
+  ASSERT(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), Critical, "Failed initialising SDL3", "Initialised SDL3")
   p_MainWindow = MAKE_UPTR(Window)(1920, 1080, "Hello, Cobalt!", 0);
+
+  Logger::Separator(Colors::Lime, "Engine set up. Starting runtime");
 }
 void CE::App::Terminate() {
+  Logger::Separator(Colors::Red, "Terminating app...");
+
   p_MainWindow.reset();
 
   SDL_Quit();
+
+  Logger::Separator(Colors::Lime, "Goodbye");
 }
 
 
@@ -46,7 +52,7 @@ void CE::App::Process() {
     }
   }
 }
-void CE::App::Render() {
+void CE::App::Render() const {
   SDL_SetRenderDrawColor(p_MainWindow->p_Renderer, 0, 64, 92, 255);
   SDL_RenderClear(p_MainWindow->p_Renderer);
   SDL_RenderPresent(p_MainWindow->p_Renderer);

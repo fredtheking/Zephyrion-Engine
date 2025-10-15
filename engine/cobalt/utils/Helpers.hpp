@@ -1,7 +1,10 @@
 #pragma once
-#include "cobalt/pch.hpp"
+#include <utility>
 
-namespace CE::Low::Helpers {
+#include "cobalt/pch.hpp"
+#include "cobalt/core/Logger.hpp"
+
+namespace CE::Helpers {
   namespace Update {
     inline std::chrono::time_point<std::chrono::steady_clock> last_frame = std::chrono::steady_clock::now();
 
@@ -32,11 +35,46 @@ namespace CE::Low::Helpers {
   }
 
   namespace String {
+    inline std::string ApplyToEachChar(std::string msg, CREF(FUNC(UINT8(UINT8))) func) {
+      std::ranges::transform(msg, msg.begin(),
+        [func](const UINT8 c) { return static_cast<char>(func(c)); });
+      return msg;
+    }
     inline std::string ToUpper(std::string msg) {
-      return std::ranges::transform(msg, msg.begin(), toupper).out._Unwrapped();
+      return ApplyToEachChar(std::move(msg), toupper);
     }
     inline std::string ToUpper(const char* msg) {
       return ToUpper(std::string(msg));
+    }
+    inline std::string ToLower(std::string msg) {
+      return ApplyToEachChar(std::move(msg), tolower);
+    }
+    inline std::string ToLower(const char* msg) {
+      return ToUpper(std::string(msg));
+    }
+  }
+
+  namespace Loaders {
+    inline SDL_Surface* PNGtoSurface(CREF(std::string) filepath) {
+      int width, height;
+      unsigned char* data = stbi_load(filepath.c_str(), &width, &height, nullptr, 4); // force RGBA
+      if (!data) {
+        Logger::Error("Failed to load '" + filepath + "' image as 'R8G8B8A8'");
+        return nullptr;
+      }
+
+      SDL_Surface* surf = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA8888);
+      if (!surf) {
+        stbi_image_free(data);
+        Logger::Error("Failed to create 'SDL_Surface' from path '" + filepath + "'");
+        return nullptr;
+      }
+
+      std::memcpy(surf->pixels, data, static_cast<size_t>(width) * height * 4);
+      stbi_image_free(data);
+      Logger::Success("Loaded 'R8G8B8A8' image - " + filepath);
+
+      return surf;
     }
   }
 }

@@ -7,19 +7,35 @@
 #include "cpp-terminal/screen.hpp"
 #include "cpp-terminal/window.hpp"
 
-std::vector<std::string> oncers = {};
+void CE::Logger::RawPrint(CREF(std::string) prefix, CREF(std::string) msg, CREF(ST::Color) fg_color, CREF(ST::Color) bg_color) {
+  auto style = fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue));
+  if (bg_color != Colors::Blank)
+    style |= fmt::bg(fmt::rgb(bg_color.rgba.red, bg_color.rgba.green, bg_color.rgba.blue));
 
-void CE::Logger::RawPrint(const std::string &prefix, CREF(std::string) msg, CREF(ST::Color) fg_color, CREF(ST::Color) bg_color) {
-  fmt::print(
-    fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue)) |
-    fmt::bg(fmt::rgb(0, 0, 0)),
-    "[{}]: {}\n",
-    Low::Helpers::String::ToUpper(prefix), msg
-  );
+  std::function<void()> format_callback;
+  if (!prefix.empty()) {
+    std::string good_prefix = Helpers::String::ToUpper(prefix);
+    format_callback = [&msg, good_prefix, &style] {
+      fmt::print("{}\r", fmt::styled(
+        fmt::format("[{}]: {}\n", good_prefix, msg),
+        style
+      ));
+    };
+  } else {
+    format_callback = [&msg, &style] {
+      fmt::print("{}\r", fmt::styled(
+        fmt::format("{}\n", msg),
+        style
+      ));
+    };
+  }
+
+  format_callback();
+  std::cout.flush();
 }
 
 void CE::Logger::DebugLog(CREF(std::string) msg, CREF(ST::Color) fg_color) {
-  RawPrint("debug", msg, fg_color, Colors::Black);
+  RawPrint("debug", msg, fg_color, Colors::Blank);
 }
 void CE::Logger::Information(CREF(std::string) msg) {
   RawPrint("info", msg, Colors::White, Colors::Blank);
@@ -27,10 +43,13 @@ void CE::Logger::Information(CREF(std::string) msg) {
 void CE::Logger::Warning(CREF(std::string) msg) {
   RawPrint("warn", msg, Colors::Yellow, Colors::Blank);
 }
+void CE::Logger::Success(CREF(std::string) msg) {
+  RawPrint("success", msg, Colors::Lime, Colors::Blank);
+}
 void CE::Logger::Error(CREF(std::string) msg) {
   RawPrint("error", msg, Colors::Red, Colors::Blank);
 }
-// Also crashes the game.
+// Also crashes the app.
 void CE::Logger::Critical(CREF(std::string) msg) {
   RawPrint("crit", msg, Colors::Black, Colors::Red);
   std::abort();
@@ -47,11 +66,11 @@ void CE::Logger::Separator(CREF(ST::Color) fg_color, CREF(std::string) msg, cons
 
   if (msg_len + space.length() * 2 >= term_width) {
     fmt::print(
-      fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue)) |
-      fmt::bg(fmt::rgb(0, 0, 0)),
+      fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue)),
       "{}\n",
       msg
     );
+    std::cout.flush();
     return;
   }
 
@@ -64,7 +83,12 @@ void CE::Logger::Separator(CREF(ST::Color) fg_color, CREF(std::string) msg, cons
     full_line += sign;
   }
 
-  std::cout << TerminalManager::ToFgColor(fg_color, full_line);
+  fmt::print(
+      fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue)),
+      "{}\n\r",
+      full_line
+    );
+  std::cout.flush();
   #if !defined(_WIN32) && !defined(_WIN64)
   std::cout << "\n";
   #endif

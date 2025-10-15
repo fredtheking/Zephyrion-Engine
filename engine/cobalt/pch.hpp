@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include <imgui.h>
+#include "deps/stb_image.h"
 
 #include <cpp-terminal/terminal.hpp>
 #include <cpp-terminal/window.hpp>

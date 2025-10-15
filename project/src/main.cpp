@@ -2,6 +2,6 @@
 #include "cobalt/utils/Colors.hpp"
 
 int main(){
-  DEFINE_APP_VARIABLE
+  auto& app = CE::App::Get();
   app.Run();
 }

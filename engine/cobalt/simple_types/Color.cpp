@@ -86,3 +86,10 @@ CE::ST::Color::Color(const Uint32 integer) {
 CE::ST::Color::Color(CREF(std::string) hex) {
   Update(hex);
 }
+
+
+bool CE::ST::Color::operator==(const Color &color) const {
+  return rgba == color.rgba &&
+         integer == color.integer &&
+         hex == color.hex;
+}

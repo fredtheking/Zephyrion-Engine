@@ -80,11 +80,11 @@ add_library(${ENGINE_NAME} STATIC ${ENGINE_SOURCES})
 target_include_directories(${ENGINE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(${ENGINE_NAME} PUBLIC
-        fmt::fmt
-        cpp-terminal
         SDL3::SDL3
         imgui
         stduuid
+        fmt::fmt
+        cpp-terminal
 )
 add_custom_command(TARGET ${ENGINE_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory

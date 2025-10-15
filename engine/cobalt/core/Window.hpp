@@ -7,11 +7,12 @@ namespace CE {
   private:
     //...
   public:
-    //...
+    void UpdateIcon(CREF(std::string) filepath);
 
   private:
     SDL_Window* p_Window;
     SDL_Renderer* p_Renderer;
+    SDL_Surface* p_Icon;
   public:
     std::vector<SPTR(Window)> m_WindowChildren;
 

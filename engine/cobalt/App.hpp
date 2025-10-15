@@ -10,7 +10,7 @@ namespace CE {
     void Terminate();
 
     void Process();
-    void Render();
+    void Render() const;
   public:
     void Run();
 

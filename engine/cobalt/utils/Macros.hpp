@@ -14,11 +14,13 @@
 #define MAKE_SPTR(TYPE) std::make_shared<TYPE>
 #define WPTR(TYPE) std::weak_ptr<TYPE>
 
-#define FUNC(RETURN) std::function<RETURN()>
-#define VOID_FUNC FUNC(void)
+#define FUNC(RETURN) std::function<RETURN>
+#define VOID_FUNC FUNC(void())
 #define VOID_FUNC_CONST CREF(VOID_FUNC)
 
-#define CRASH_ASSERT(SUCCESS, LOG_EVENT) if (!SUCCESS) { LOG_EVENT; std::abort(); }
+#define ASSERT(BOOL_FUNC, LOGGER_FUNC, MSG_FAILED, MSG_SUCCESS, ...) if (!BOOL_FUNC) Logger::LOGGER_FUNC(MSG_FAILED); \
+                                                                     else          { Logger::Success(MSG_SUCCESS); __VA_ARGS__ }
+#define ASSERT_SDL(BOOL_FUNC, MSG_FAILED, MSG_SUCCESS) ASSERT(BOOL_FUNC, Critical, MSG_FAILED ": " + std::string(SDL_GetError()), MSG_SUCCESS)
 
 #define SINGLETON_CONSTRUCTOR(NAME) private:                                \
                                       NAME() = default;                      \
@@ -40,11 +42,8 @@
                                    return __VA_ARGS__; \
                                  }
 
-namespace CE::Low {
-  #define POS_N_NEG_ACTION_BASE(PREFIX_POS, PREFIX_NEG, NAME, TYPE, VAR) void PREFIX_POS##NAME(CREF(TYPE) VAR); \
-                                                                         void PREFIX_NEG##NAME(CREF(TYPE) VAR);
-}
-
+#define POS_N_NEG_ACTION_BASE(PREFIX_POS, PREFIX_NEG, NAME, TYPE, VAR) void PREFIX_POS##NAME(CREF(TYPE) VAR); \
+                                                                       void PREFIX_NEG##NAME(CREF(TYPE) VAR);
 #define ADD_N_REMOVE(NAME, TYPE, VAR) POS_N_NEG_ACTION_BASE(Add, Remove, NAME, TYPE, VAR)
 #define REG_N_UNREG(NAME, TYPE, VAR) POS_N_NEG_ACTION_BASE(Register, Unregister, NAME, TYPE, VAR)
 #define LINK_N_DETACH(NAME, TYPE, VAR) POS_N_NEG_ACTION_BASE(Link, Detach, NAME, TYPE, VAR)

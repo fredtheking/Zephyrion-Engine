@@ -11,6 +11,13 @@ namespace CE::ST {
     Uint8 green;
     Uint8 blue;
     Uint8 alpha;
+
+    bool operator==(CREF(RGBA) rgba) const {
+      return red == rgba.red &&
+             green == rgba.green &&
+             blue == rgba.blue &&
+             alpha == rgba.alpha;
+    }
   };
 
   /**
@@ -54,5 +61,7 @@ namespace CE::ST {
     explicit Color(CREF(RGBA) rgba);
     explicit Color(Uint32 integer);
     explicit Color(CREF(std::string) hex);
+
+    bool operator==(const Color & color) const;
   };
 }
