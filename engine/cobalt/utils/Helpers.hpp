@@ -1,8 +1,7 @@
 #pragma once
-#include <utility>
-
 #include "cobalt/pch.hpp"
 #include "cobalt/core/Logger.hpp"
+#include "cobalt/utils/Enums.hpp"
 
 namespace CE::Helpers {
   namespace Update {
@@ -16,7 +15,14 @@ namespace CE::Helpers {
     }
   }
   namespace Render {
+    inline std::chrono::time_point<std::chrono::steady_clock> last_frame = std::chrono::steady_clock::now();
 
+    inline long double GetDeltaTime() {
+      const auto now = std::chrono::steady_clock::now();
+      const double delta = std::chrono::duration<double>(now - last_frame).count();
+      last_frame = now;
+      return delta;
+    }
   }
   namespace Window {
 
@@ -76,5 +82,43 @@ namespace CE::Helpers {
 
       return surf;
     }
+  }
+
+  inline SDL_WindowFlags Translate(Enums::WindowInitFlags window_init_flags) {
+    SDL_WindowFlags flags = {};
+    #define FLAG_ADD(NAME) flags |= static_cast<UINT32>(window_init_flags == Enums::WindowInitFlags::NAME);
+
+    FLAG_ADD(OpenGL)
+    FLAG_ADD(Vulkan)
+    FLAG_ADD(Metal)
+    FLAG_ADD(Transparent)
+    FLAG_ADD(Occluded)
+    FLAG_ADD(External)
+    FLAG_ADD(Modal)
+    FLAG_ADD(Utility)
+    FLAG_ADD(Tooltip)
+    FLAG_ADD(PopupMenu)
+    FLAG_ADD(HighPixelDensity)
+    FLAG_ADD(MouseGrabbed)
+    FLAG_ADD(MouseCapture)
+    FLAG_ADD(MouseRelativeMode)
+    FLAG_ADD(MouseFocus)
+    FLAG_ADD(KeyboardFocused)
+    FLAG_ADD(InputFocus)
+    FLAG_ADD(NotFocusable)
+
+    #undef FLAG_ADD
+    return flags;
+  }
+  inline std::string ToString(Enums::WindowInitFlags window_init_flags) {
+    std::string flags_str;
+    for (auto flag : magic_enum::enum_values<Enums::WindowInitFlags>()) {
+      if ((window_init_flags & flag) == flag) {
+        if (!flags_str.empty())
+          flags_str += " | ";
+        flags_str += std::string(magic_enum::enum_name(flag));
+      }
+    }
+    return flags_str;
   }
 }

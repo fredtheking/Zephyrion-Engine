@@ -4,6 +4,7 @@
 #define CREF(TYPE) const REF(TYPE)
 
 #define U(TYPE) unsigned TYPE
+#define UINT64 U(long long)
 #define UINT32 U(int)
 #define UINT16 U(short)
 #define UINT8 U(char)
@@ -48,7 +49,7 @@
 #define REG_N_UNREG(NAME, TYPE, VAR) POS_N_NEG_ACTION_BASE(Register, Unregister, NAME, TYPE, VAR)
 #define LINK_N_DETACH(NAME, TYPE, VAR) POS_N_NEG_ACTION_BASE(Link, Detach, NAME, TYPE, VAR)
 
-#define PREFIX_GETTER_ARGS(PREFIX, NAME, TYPE, ...) TYPE PREFIX##Get##NAME(__VA_ARGS__);
+#define PREFIX_GETTER_ARGS(PREFIX, NAME, TYPE, ...) TYPE PREFIX##Get##NAME(__VA_ARGS__)
 #define PREFIX_GETTER(PREFIX, NAME, TYPE) PREFIX_GETTER_ARGS(PREFIX, NAME, TYPE)
 #define TRYGETTER(NAME, TYPE) template<typename T> \
                               bool TryGet##NAME(REF(TYPE) out);

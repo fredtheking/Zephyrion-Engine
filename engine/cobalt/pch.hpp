@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include <imgui.h>
+#include <magic_enum_all.hpp>
 #include "deps/stb_image.h"
 
 #include <cpp-terminal/terminal.hpp>
@@ -19,5 +20,7 @@
 #include <any>
 #include <functional>
 #include <thread>
+#include <stdexcept>
+#include <initializer_list>
 #include <utility>
 #include "cobalt/utils/Macros.hpp"

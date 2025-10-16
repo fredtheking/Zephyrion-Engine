@@ -5,6 +5,7 @@ int main(){
   app.Setup(CE::Configs::Builders::WindowConfigBuilder{}
       .Title("Hello!")
       .Position(10, 10)
+      .DynamicFlags(CE::Enums::WindowDynamicFlags::Resizable)
       .Size(1280, 720)
       .Build()
   );

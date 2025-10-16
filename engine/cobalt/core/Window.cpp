@@ -16,9 +16,9 @@ CE::Window::Window(CREF(SPTR(Configs::WindowConfig)) window_config) {
     p_Config->title_str.c_str(),
     p_Config->size_vec2.x,
     p_Config->size_vec2.y,
-    p_Config->flags_enums
+    Helpers::Translate(p_Config->GetInitFlags())
   );
-  ASSERT_SDL(p_Window, "Failed initialising Window", "", p_Config->window = p_Window);
+  ASSERT_SDL(p_Window, "Failed initialising Window", "");
 
   p_Renderer = SDL_CreateRenderer(p_Window, nullptr);
   ASSERT_SDL(p_Renderer, "Failed initialising Renderer for window", "");

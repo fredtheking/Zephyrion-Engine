@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include "cobalt/core/Logger.hpp"
 #include "cobalt/simple_types/Vector2.hpp"
 #include "cobalt/utils/Enums.hpp"
@@ -16,50 +16,22 @@ namespace CE {
     private:
       friend class ::CE::Configs::Builders::WindowConfigBuilder;
       friend class ::CE::Window;
-      SDL_Window* window = nullptr;
 
       std::string title_str = "Hello from Cobalt Engine!";
       ST::Vector2<int> position_vec2 = NONVALID_VEC2;
       Enums::WindowPosition position_mode_enum = Enums::WindowPosition::Centered;
       ST::Vector2<int> size_vec2 = {800, 600};
-      Enums::WindowFlags flags_enums = {};
+      Enums::WindowInitFlags init_flags_enums = Enums::WindowInitFlags::OpenGL;
+      Enums::WindowDynamicFlags dynamic_flags_enums = {};
       float opacity_float = 1;
-
-      void InternalSetWindowPosition() {
-        switch (position_mode_enum) {
-          case Enums::WindowPosition::Centered:
-            SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-            break;
-          case Enums::WindowPosition::TopLeft:
-            SDL_SetWindowPosition(window, 0, 0);
-            break;
-          case Enums::WindowPosition::Custom:
-            SDL_SetWindowPosition(window, position_vec2.x, position_vec2.y);
-            break;
-        }
-      }
-      void InternalSetWindowFlags(CREF(Enums::WindowFlags) flags) {
-        SDL_SetWindowFullscreen(window, flags == Enums::WindowFlags::Fullscreen);
-        SDL_SetWindowOpacity(window, flags == Enums::WindowFlags::Fullscreen);
-      }
     public:
-      GETTER_N_SETTER_DEFAULT(Title, CREF(std::string), title_str,
-        SDL_SetWindowTitle(window, this->title_str.c_str());
-      )
-      GETTER_N_SETTER_DEFAULT(Position, CREF(ST::Vector2<int>), position_vec2,
-        position_mode_enum = Enums::WindowPosition::Custom;
-        InternalSetWindowPosition();
-      )
-      GETTER_N_SETTER_DEFAULT(PositionMode, Enums::WindowPosition, position_mode_enum,
-        position_vec2 = NONVALID_VEC2;
-        InternalSetWindowPosition();
-      )
-      GETTER_N_SETTER_DEFAULT(Size, CREF(ST::Vector2<int>), size_vec2,
-        SDL_SetWindowSize(window, this->size_vec2.x, this->size_vec2.y);
-      )
-      GETTER_N_SETTER_DEFAULT(Flags, Enums::WindowFlags, flags_enums,
-        InternalSetWindowFlags(this->flags_enums);
-      )
+      GETTER(Title, CREF(std::string)){return title_str;}
+      GETTER(Position, CREF(ST::Vector2<int>)){return position_vec2;}
+      GETTER(PositionMode, CREF(Enums::WindowPosition)){return position_mode_enum;}
+      GETTER(Size, CREF(ST::Vector2<int>)){return size_vec2;}
+      GETTER(InitFlags, CREF(Enums::WindowInitFlags)){return init_flags_enums;}
+      GETTER(DynamicFlags, CREF(Enums::WindowDynamicFlags)){return dynamic_flags_enums;}
+      GETTER(Opacity, CREF(float)){return opacity_float;}
     };
 
     namespace Builders {
@@ -110,8 +82,13 @@ namespace CE {
           });
         }
 
-        WindowConfigBuilder& Flags(const Enums::WindowFlags flags) {
-          config.flags_enums = flags;
+        WindowConfigBuilder& InitFlags(const Enums::WindowInitFlags flags) {
+          config.init_flags_enums = flags;
+          return *this;
+        }
+
+        WindowConfigBuilder& DynamicFlags(const Enums::WindowDynamicFlags flags) {
+          config.dynamic_flags_enums = flags;
           return *this;
         }
 

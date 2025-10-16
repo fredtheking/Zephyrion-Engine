@@ -47,7 +47,6 @@ FetchContent_Declare(
         GIT_TAG        5a4c0031155891d15a7cfd74584bfb2785f65478
         GIT_PROGRESS   TRUE
         GIT_SHALLOW    TRUE
-        GIT_DEPTH      1
 )
 set(DOXYGEN_GENERATE_LATEX OFF)
 FetchContent_MakeAvailable(cpp-terminal)
@@ -59,7 +58,6 @@ FetchContent_Declare(
         GIT_TAG        v1.2.3
         GIT_PROGRESS   TRUE
         GIT_SHALLOW    TRUE
-        GIT_DEPTH      1
 )
 FetchContent_MakeAvailable(stduuid)
 
@@ -74,10 +72,24 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(fmt)
 
 
+FetchContent_Declare(
+        magic-enums
+        GIT_REPOSITORY https://github.com/Neargye/magic_enum.git
+        GIT_TAG        v0.9.7
+        GIT_PROGRESS   TRUE
+        GIT_SHALLOW    TRUE
+)
+FetchContent_MakeAvailable(magic-enums)
+set(magic-enums_DIR ${CMAKE_BINARY_DIR}/_deps/magic-enums-src)
+
+
 
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cobalt/**)
 add_library(${ENGINE_NAME} STATIC ${ENGINE_SOURCES})
-target_include_directories(${ENGINE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${ENGINE_NAME} PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${magic-enums_DIR}/include/magic_enum
+)
 
 target_link_libraries(${ENGINE_NAME} PUBLIC
         SDL3::SDL3
