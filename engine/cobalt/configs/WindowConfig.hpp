@@ -18,11 +18,12 @@ namespace CE {
       friend class ::CE::Window;
       SDL_Window* window = nullptr;
 
-      std::string title_str = "Hello, Cobalt Engine!";
+      std::string title_str = "Hello from Cobalt Engine!";
       ST::Vector2<int> position_vec2 = NONVALID_VEC2;
       Enums::WindowPosition position_mode_enum = Enums::WindowPosition::Centered;
       ST::Vector2<int> size_vec2 = {800, 600};
-      SDL_WindowFlags flags_enums = 0;
+      Enums::WindowFlags flags_enums = {};
+      float opacity_float = 1;
 
       void InternalSetWindowPosition() {
         switch (position_mode_enum) {
@@ -37,8 +38,14 @@ namespace CE {
             break;
         }
       }
+      void InternalSetWindowFlags(CREF(Enums::WindowFlags) flags) {
+        SDL_SetWindowFullscreen(window, flags == Enums::WindowFlags::Fullscreen);
+        SDL_SetWindowOpacity(window, flags == Enums::WindowFlags::Fullscreen);
+      }
     public:
-      GETTER_N_SETTER_DEFAULT(Title, CREF(std::string), title_str)
+      GETTER_N_SETTER_DEFAULT(Title, CREF(std::string), title_str,
+        SDL_SetWindowTitle(window, this->title_str.c_str());
+      )
       GETTER_N_SETTER_DEFAULT(Position, CREF(ST::Vector2<int>), position_vec2,
         position_mode_enum = Enums::WindowPosition::Custom;
         InternalSetWindowPosition();
@@ -47,8 +54,12 @@ namespace CE {
         position_vec2 = NONVALID_VEC2;
         InternalSetWindowPosition();
       )
-      GETTER_N_SETTER_DEFAULT(Size, CREF(ST::Vector2<int>), size_vec2)
-      GETTER_N_SETTER_DEFAULT(Flags, SDL_WindowFlags, flags_enums)
+      GETTER_N_SETTER_DEFAULT(Size, CREF(ST::Vector2<int>), size_vec2,
+        SDL_SetWindowSize(window, this->size_vec2.x, this->size_vec2.y);
+      )
+      GETTER_N_SETTER_DEFAULT(Flags, Enums::WindowFlags, flags_enums,
+        InternalSetWindowFlags(this->flags_enums);
+      )
     };
 
     namespace Builders {
@@ -97,6 +108,16 @@ namespace CE {
             static_cast<int>(width),
             static_cast<int>(height)
           });
+        }
+
+        WindowConfigBuilder& Flags(const Enums::WindowFlags flags) {
+          config.flags_enums = flags;
+          return *this;
+        }
+
+        WindowConfigBuilder& Opacity(const float opacity) {
+          config.opacity_float = opacity;
+          return *this;
         }
 
 

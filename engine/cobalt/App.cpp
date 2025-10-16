@@ -3,18 +3,16 @@
 #include "core/Logger.hpp"
 
 void CE::App::Initialise() {
-  Logger::Separator(Colors::Yellow, "Hello, world! Setting up engine...");
+  Logger::Separator(Colors::Lime, "Engine set up. Starting custom registration...");
 
-  ASSERT(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), Critical, "Failed initialising SDL3", "Initialised SDL3")
-  p_MainWindow = MAKE_UPTR(Window)(p_Config->window);
 
-  Logger::Separator(Colors::Lime, "Engine set up. Starting runtime");
+
+  Logger::Separator(Colors::Lime, "Everything set up. Starting runtime process");
 }
 void CE::App::Terminate() {
   Logger::Separator(Colors::Red, "Terminating app...");
 
   p_MainWindow.reset();
-
   SDL_Quit();
 
   Logger::Separator(Colors::Lime, "Goodbye");
@@ -24,6 +22,12 @@ void CE::App::Setup(CREF(Configs::WindowConfig) window_config) {
   p_Config = MAKE_UPTR(Configs::AppConfig)(
     MAKE_SPTR(Configs::WindowConfig)(window_config)
   );
+
+
+  Logger::Separator(Colors::Yellow, "Hello, world! Setting up engine...");
+
+  ASSERT(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), Critical, "Failed initialising SDL3", "Initialised SDL3")
+  p_MainWindow = MAKE_UPTR(Window)(p_Config->window);
 }
 void CE::App::Run() {
   Initialise();
