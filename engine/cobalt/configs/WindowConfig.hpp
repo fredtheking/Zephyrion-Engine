@@ -99,6 +99,11 @@ namespace CE {
 
 
         WindowConfig Build() {
+          if (config.position_vec2 == NONVALID_VEC2 &&
+              config.position_mode_enum == Enums::WindowPosition::Custom)
+            Logger::Critical("Incorrect \"WindowConfig\"! - "
+                             "If you are using \"CE::Enums::WindowPosition\" to define position, it is prohibited to use \"Custom\" option. Instead, use real values.");
+
           return config;
         }
       };

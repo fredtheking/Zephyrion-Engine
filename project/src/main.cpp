@@ -4,11 +4,13 @@ int main(){
   DEFINE_APP_VARIABLE
   app.Setup(CE::Configs::Builders::WindowConfigBuilder{}
       .Title("Hello!")
-      .Position(10, 10)
+      .Position(CE::Enums::WindowPosition::Centered)
       .DynamicFlags(CE::Enums::WindowDynamicFlags::Resizable)
-      .Size(1280, 720)
+      .Size(1920, 1080)
       .Build()
   );
+  // Custom initialisation
+
 
   app.Run();
 }

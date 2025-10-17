@@ -41,7 +41,7 @@ namespace CE::ST {
     Bounds(CREF(Vector2<T>) pos, CREF(Vector2<T>) size);
     Bounds(CREF(Vector2<T>) pos, CREF(T) width, CREF(T) height);
     Bounds(CREF(T) x, CREF(T) y, CREF(Vector2<T>) size);
-    explicit Bounds(CREF(Rectangle<T>) rec);
+    Bounds(CREF(Rectangle<T>) rec);
   };
 }
 

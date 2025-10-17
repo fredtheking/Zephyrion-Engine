@@ -52,7 +52,7 @@ void CE::Logger::Error(CREF(std::string) msg) {
 // Also crashes the app.
 void CE::Logger::Critical(CREF(std::string) msg) {
   RawPrint("crit", msg, Colors::Black, Colors::Red);
-  std::abort();
+  std::exit(-1);
 }
 
 

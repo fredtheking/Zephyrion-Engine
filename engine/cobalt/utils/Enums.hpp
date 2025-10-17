@@ -1,23 +1,26 @@
 #pragma once
 #define ENUM(NAME) enum class NAME
-#define ENUM_FLAG_OPERATORS(NAME) inline NAME operator+(NAME a, NAME b) {       \
-                                    return static_cast<NAME>(                    \
-                                        static_cast<int>(a) | static_cast<int>(b) \
-                                    );                                             \
-                                  }                                                 \
-                                  inline NAME operator+=(NAME a, NAME b) {           \
-                                    return a = a + b;                                 \
-                                  }                                                    \
-                                  inline bool operator&(NAME a, NAME b) {              \
-                                    return static_cast<int>(a) & static_cast<int>(b);    \
-                                  }                                                       \
-                                  inline NAME operator-(NAME a, NAME b) {                  \
-                                    return static_cast<NAME>(                               \
-                                      static_cast<int>(a) & ~static_cast<int>(b)             \
-                                    );                                                        \
-                                  }                                                            \
-                                  inline NAME operator-=(NAME a, NAME b) {                      \
-                                    return a = a - b;                                             \
+#define ENUM_FLAG_OPERATORS(NAME) inline NAME operator+(NAME a, NAME b) {                    \
+                                    return static_cast<NAME>(                                 \
+                                        static_cast<int>(a) | static_cast<int>(b)              \
+                                    );                                                          \
+                                  }                                                              \
+                                  inline NAME operator+=(NAME a, NAME b) {                        \
+                                    return a = a + b;                                              \
+                                  }                                                                 \
+                                  inline bool operator^(NAME a, NAME b) {                            \
+                                    return static_cast<int>(a) & static_cast<int>(b);                 \
+                                  }                                                                    \
+                                  inline NAME operator&(NAME a, NAME b) {                               \
+                                    return static_cast<NAME>(static_cast<int>(a) & static_cast<int>(b)); \
+                                  }                                                                       \
+                                  inline NAME operator-(NAME a, NAME b) {                                  \
+                                    return static_cast<NAME>(                                               \
+                                      static_cast<int>(a) & ~static_cast<int>(b)                             \
+                                    );                                                                        \
+                                  }                                                                            \
+                                  inline NAME operator-=(NAME a, NAME b) {                                      \
+                                    return a = a - b;                                                            \
                                   }
 
 namespace CE::Enums {
@@ -27,18 +30,20 @@ namespace CE::Enums {
     Custom,
   };
 
-  ENUM(WindowDynamicFlags) : UINT8 {
-    Fullscreen  = 1 << 0,
-    Hidden      = 1 << 1,
-    Borderless  = 1 << 2,
-    Resizable   = 1 << 3,
-    Minimized   = 1 << 4,
-    Maximized   = 1 << 5,
-    AlwaysOnTop = 1 << 6,
+  ENUM(WindowDynamicFlags) : UINT32 {
+    None        = 0,
+    Fullscreen  = SDL_WINDOW_FULLSCREEN,
+    Hidden      = SDL_WINDOW_HIDDEN,
+    Borderless  = SDL_WINDOW_BORDERLESS,
+    Resizable   = SDL_WINDOW_RESIZABLE,
+    Minimized   = SDL_WINDOW_MINIMIZED,
+    Maximized   = SDL_WINDOW_MAXIMIZED,
+    AlwaysOnTop = SDL_WINDOW_ALWAYS_ON_TOP,
   };
   ENUM_FLAG_OPERATORS(WindowDynamicFlags)
 
-  ENUM(WindowInitFlags)  : UINT32 {
+  ENUM(WindowInitFlags) : UINT32 {
+    None              = 0,
     OpenGL            = SDL_WINDOW_OPENGL,
     Vulkan            = SDL_WINDOW_VULKAN,
     Metal             = SDL_WINDOW_METAL,

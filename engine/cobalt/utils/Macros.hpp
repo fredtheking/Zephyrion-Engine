@@ -20,7 +20,7 @@
 #define VOID_FUNC_CONST CREF(VOID_FUNC)
 
 #define ASSERT(BOOL_FUNC, LOGGER_FUNC, MSG_FAILED, MSG_SUCCESS, ...) if (!BOOL_FUNC) Logger::LOGGER_FUNC(MSG_FAILED); \
-                                                                     else if (strcmp(MSG_SUCCESS, "") != 0) { __VA_ARGS__; Logger::Success(MSG_SUCCESS); }
+                                                                     else { __VA_ARGS__; if (strcmp(MSG_SUCCESS, "") != 0) Logger::Success(MSG_SUCCESS); }
 #define ASSERT_SDL(BOOL_FUNC, MSG_FAILED, MSG_SUCCESS, ...) ASSERT(BOOL_FUNC, Critical, MSG_FAILED ": " + std::string(SDL_GetError()), MSG_SUCCESS, __VA_ARGS__)
 
 #define SINGLETON_CONSTRUCTOR(NAME) private:                                \

@@ -58,9 +58,9 @@ namespace CE::ST {
   public:
     Color();
     Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-    explicit Color(CREF(RGBA) rgba);
-    explicit Color(Uint32 integer);
-    explicit Color(CREF(std::string) hex);
+    Color(CREF(RGBA) rgba);
+    Color(Uint32 integer);
+    Color(CREF(std::string) hex);
 
     bool operator==(const Color & color) const;
   };

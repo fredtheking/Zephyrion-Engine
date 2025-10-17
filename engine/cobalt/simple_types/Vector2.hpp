@@ -18,7 +18,9 @@ namespace CE::ST {
   public:
     Vector2();
     Vector2(T x, T y);
-    explicit Vector2(T xy);
+    Vector2(T xy);
+
+    bool operator==(const Vector2 & vector2) const;
   };
 }
 

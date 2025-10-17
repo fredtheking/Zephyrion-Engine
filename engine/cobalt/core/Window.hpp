@@ -6,7 +6,7 @@
 namespace CE {
   class Window {
   private:
-    //...
+    void InternalSetWindowPosition() const;
   public:
     void UpdateIcon(CREF(std::string) filepath);
 

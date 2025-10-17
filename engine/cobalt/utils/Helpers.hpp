@@ -84,9 +84,12 @@ namespace CE::Helpers {
     }
   }
 
-  inline SDL_WindowFlags Translate(Enums::WindowInitFlags window_init_flags) {
+
+  inline SDL_WindowFlags Translate(const Enums::WindowInitFlags window_init_flags) {
     SDL_WindowFlags flags = {};
-    #define FLAG_ADD(NAME) flags |= static_cast<UINT32>(window_init_flags == Enums::WindowInitFlags::NAME);
+    #define FLAG_ADD(NAME) \
+      if ((window_init_flags & Enums::WindowInitFlags::NAME) == Enums::WindowInitFlags::NAME) \
+        flags |= static_cast<SDL_WindowFlags>(Enums::WindowInitFlags::NAME);
 
     FLAG_ADD(OpenGL)
     FLAG_ADD(Vulkan)
@@ -110,15 +113,41 @@ namespace CE::Helpers {
     #undef FLAG_ADD
     return flags;
   }
-  inline std::string ToString(Enums::WindowInitFlags window_init_flags) {
-    std::string flags_str;
-    for (auto flag : magic_enum::enum_values<Enums::WindowInitFlags>()) {
-      if ((window_init_flags & flag) == flag) {
-        if (!flags_str.empty())
-          flags_str += " | ";
-        flags_str += std::string(magic_enum::enum_name(flag));
+
+
+  template <typename T>
+  requires std::is_scoped_enum_v<T>
+  std::string ToString(T bitmask_enum) {
+    std::string result;
+
+    for (auto value : magic_enum::enum_values<T>())
+      if ((bitmask_enum ^ value) && (value != T::None)) {
+        if (!result.empty()) result += " | ";
+        result += std::string(magic_enum::enum_name(value));
+      }
+
+    if (result.empty())
+      result = "None";
+
+    return result;
+  }
+
+  template <typename T>
+  requires (!std::is_scoped_enum_v<T> && std::is_enum_v<T>)
+  std::string ToString(T bitmask_enum) {
+    using U = std::underlying_type_t<T>;
+    std::string result;
+
+    for (auto value : magic_enum::enum_values<T>()) {
+      if ((static_cast<U>(bitmask_enum) & static_cast<U>(value)) && static_cast<U>(value) != 0) {
+        if (!result.empty()) result += " | ";
+        result += std::string(magic_enum::enum_name(value));
       }
     }
-    return flags_str;
+
+    if (result.empty())
+      result = "None";
+
+    return result;
   }
 }
