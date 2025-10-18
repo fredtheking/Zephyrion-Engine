@@ -99,6 +99,13 @@ namespace CE {
 
 
         WindowConfig Build() {
+          if (!(  config.init_flags_enums ^ Enums::WindowInitFlags::OpenGL  && !(config.init_flags_enums ^ Enums::WindowInitFlags::Vulkan) && !(config.init_flags_enums ^ Enums::WindowInitFlags::Metal)) &&
+              !(!(config.init_flags_enums ^ Enums::WindowInitFlags::OpenGL) &&   config.init_flags_enums ^ Enums::WindowInitFlags::Vulkan  && !(config.init_flags_enums ^ Enums::WindowInitFlags::Metal)) &&
+              !(!(config.init_flags_enums ^ Enums::WindowInitFlags::OpenGL) && !(config.init_flags_enums ^ Enums::WindowInitFlags::Vulkan) &&   config.init_flags_enums ^ Enums::WindowInitFlags::Metal))
+            Logger::Critical("Incorrect \"WindowConfig\"! - "
+                             "You cannot specify more than one renderer backend in init flags.");
+
+
           if (config.position_vec2 == NONVALID_VEC2 &&
               config.position_mode_enum == Enums::WindowPosition::Custom)
             Logger::Critical("Incorrect \"WindowConfig\"! - "

@@ -1,26 +1,26 @@
 #pragma once
 #define ENUM(NAME) enum class NAME
-#define ENUM_FLAG_OPERATORS(NAME) inline NAME operator+(NAME a, NAME b) {                    \
-                                    return static_cast<NAME>(                                 \
-                                        static_cast<int>(a) | static_cast<int>(b)              \
-                                    );                                                          \
-                                  }                                                              \
-                                  inline NAME operator+=(NAME a, NAME b) {                        \
-                                    return a = a + b;                                              \
+#define BITMASK_FLAG_OPERATORS(NAME) inline NAME operator|(NAME a, NAME b) {                    \
+                                    return static_cast<NAME>(                                    \
+                                        static_cast<int>(a) | static_cast<int>(b)                 \
+                                    );                                                             \
                                   }                                                                 \
-                                  inline bool operator^(NAME a, NAME b) {                            \
-                                    return static_cast<int>(a) & static_cast<int>(b);                 \
+                                  inline NAME operator|=(NAME a, NAME b) {                           \
+                                    return a = a | b;                                                 \
                                   }                                                                    \
-                                  inline NAME operator&(NAME a, NAME b) {                               \
-                                    return static_cast<NAME>(static_cast<int>(a) & static_cast<int>(b)); \
+                                  inline bool operator^(NAME a, NAME b) {                               \
+                                    return static_cast<int>(a) & static_cast<int>(b);                    \
                                   }                                                                       \
-                                  inline NAME operator-(NAME a, NAME b) {                                  \
-                                    return static_cast<NAME>(                                               \
-                                      static_cast<int>(a) & ~static_cast<int>(b)                             \
-                                    );                                                                        \
-                                  }                                                                            \
-                                  inline NAME operator-=(NAME a, NAME b) {                                      \
-                                    return a = a - b;                                                            \
+                                  inline NAME operator&(NAME a, NAME b) {                                  \
+                                    return static_cast<NAME>(static_cast<int>(a) & static_cast<int>(b));    \
+                                  }                                                                          \
+                                  inline NAME operator-(NAME a, NAME b) {                                     \
+                                    return static_cast<NAME>(                                                  \
+                                      static_cast<int>(a) & ~static_cast<int>(b)                                \
+                                    );                                                                           \
+                                  }                                                                               \
+                                  inline NAME operator-=(NAME a, NAME b) {                                         \
+                                    return a = a - b;                                                               \
                                   }
 
 namespace CE::Enums {
@@ -40,7 +40,7 @@ namespace CE::Enums {
     Maximized   = SDL_WINDOW_MAXIMIZED,
     AlwaysOnTop = SDL_WINDOW_ALWAYS_ON_TOP,
   };
-  ENUM_FLAG_OPERATORS(WindowDynamicFlags)
+  BITMASK_FLAG_OPERATORS(WindowDynamicFlags)
 
   ENUM(WindowInitFlags) : UINT32 {
     None              = 0,
@@ -63,7 +63,7 @@ namespace CE::Enums {
     InputFocus        = SDL_WINDOW_INPUT_FOCUS,
     NotFocusable      = SDL_WINDOW_NOT_FOCUSABLE,
   };
-  ENUM_FLAG_OPERATORS(WindowInitFlags)
+  BITMASK_FLAG_OPERATORS(WindowInitFlags)
 
   ENUM(WindowMode) {
     Windowed,
@@ -85,5 +85,5 @@ namespace CE::Enums {
   };
 }
 
-#undef ENUM_FLAG_OPERATORS
+#undef BITMASK_FLAG_OPERATORS
 #undef ENUM
