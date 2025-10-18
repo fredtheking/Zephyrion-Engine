@@ -6,7 +6,8 @@
 namespace CE {
   class Window {
   private:
-    void InternalSetWindowPosition() const;
+    void Internal_SetWindowPosition() const;
+    [[nodiscard]] SDL_WindowFlags Internal_InitialiseFlags() const;
   public:
     void UpdateIcon(CREF(std::string) filepath);
 

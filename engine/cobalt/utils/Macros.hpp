@@ -67,3 +67,4 @@
 
 #define GET_APP_SINGLETON CE::App::Get()
 #define DEFINE_APP_VARIABLE REF(auto) app = GET_APP_SINGLETON;
+#define ENGINE_ASSETS "assets/engine/"

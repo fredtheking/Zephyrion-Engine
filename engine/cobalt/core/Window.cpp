@@ -3,7 +3,7 @@
 #include "cobalt/pch.hpp"
 #include "cobalt/utils/Helpers.hpp"
 
-void CE::Window::InternalSetWindowPosition() const {
+void CE::Window::Internal_SetWindowPosition() const {
   ST::Vector2<int> pos;
   switch (p_Config->GetPositionMode()) {
     case Enums::WindowPosition::Centered:
@@ -18,6 +18,29 @@ void CE::Window::InternalSetWindowPosition() const {
   }
   SDL_SetWindowPosition(p_Window, pos.x, pos.y);
 }
+SDL_WindowFlags CE::Window::Internal_InitialiseFlags() const {
+  SDL_WindowFlags flags = SDL_WINDOW_OPENGL;
+
+  if (p_Config->GetOpacity() < 1.0f)
+    flags |= SDL_WINDOW_TRANSPARENT;
+  if (p_Config->resizable_bool)
+    flags |= SDL_WINDOW_RESIZABLE;
+  if (p_Config->fullscreen_bool)
+    flags |= SDL_WINDOW_FULLSCREEN;
+  if (p_Config->borderless_bool)
+    flags |= SDL_WINDOW_BORDERLESS;
+
+  switch (p_Config->renderer_enum) {
+    case Enums::BackendRenderer::OpenGL:
+      flags |= SDL_WINDOW_OPENGL; break;
+    case Enums::BackendRenderer::Vulkan:
+      flags |= SDL_WINDOW_VULKAN; break;
+    case Enums::BackendRenderer::Metal:
+      flags |= SDL_WINDOW_METAL; break;
+  }
+
+  return flags;
+}
 
 
 void CE::Window::UpdateIcon(CREF(std::string) filepath) {
@@ -30,21 +53,20 @@ CE::Window::Window(CREF(SPTR(Configs::WindowConfig)) window_config) {
   Logger::Information("Creating window...");
 
   p_Window = SDL_CreateWindow(
-    p_Config->title_str.c_str(),
-    p_Config->size_vec2.x,
-    p_Config->size_vec2.y,
-    Helpers::Translate(p_Config->GetInitFlags())
+    p_Config->GetTitle().c_str(),
+    p_Config->GetSize().x,
+    p_Config->GetSize().y,
+    Internal_InitialiseFlags()
   );
   ASSERT_SDL(p_Window, "Failed initialising Window", "",
-    InternalSetWindowPosition();
+    Internal_SetWindowPosition();
   );
 
   p_Renderer = SDL_CreateRenderer(p_Window, nullptr);
   ASSERT_SDL(p_Renderer, "Failed initialising Renderer for window", "");
 
   UpdateIcon("assets/engine/icon.png");
-  Logger::DebugLog("Init Flags: " + Helpers::ToString(p_Config->GetInitFlags()));
-  Logger::DebugLog("Dynamic Flags: " + Helpers::ToString(p_Config->GetDynamicFlags()));
+  Logger::DebugLog("Current Flags: " + Helpers::Enums::ToString(SDL_GetWindowFlags(p_Window)));
 
   Logger::Information("Finished creating window");
 }

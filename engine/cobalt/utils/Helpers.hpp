@@ -2,6 +2,7 @@
 #include "cobalt/pch.hpp"
 #include "cobalt/core/Logger.hpp"
 #include "cobalt/utils/Enums.hpp"
+#include "translations/EnumTranslations.hpp"
 
 namespace CE::Helpers {
   namespace Update {
@@ -39,7 +40,6 @@ namespace CE::Helpers {
       return gen();
     }
   }
-
   namespace String {
     inline std::string ApplyToEachChar(std::string msg, CREF(FUNC(UINT8(UINT8))) func) {
       std::ranges::transform(msg, msg.begin(),
@@ -59,7 +59,6 @@ namespace CE::Helpers {
       return ToUpper(std::string(msg));
     }
   }
-
   namespace Loaders {
     inline SDL_Surface* PNGtoSurface(CREF(std::string) filepath) {
       int width, height;
@@ -83,71 +82,16 @@ namespace CE::Helpers {
       return surf;
     }
   }
-
-
-  inline SDL_WindowFlags Translate(const Enums::WindowInitFlags window_init_flags) {
-    SDL_WindowFlags flags = {};
-    #define FLAG_ADD(NAME) \
-      if ((window_init_flags & Enums::WindowInitFlags::NAME) == Enums::WindowInitFlags::NAME) \
-        flags |= static_cast<SDL_WindowFlags>(Enums::WindowInitFlags::NAME);
-
-    FLAG_ADD(OpenGL)
-    FLAG_ADD(Vulkan)
-    FLAG_ADD(Metal)
-    FLAG_ADD(Transparent)
-    FLAG_ADD(Occluded)
-    FLAG_ADD(External)
-    FLAG_ADD(Modal)
-    FLAG_ADD(Utility)
-    FLAG_ADD(Tooltip)
-    FLAG_ADD(PopupMenu)
-    FLAG_ADD(HighPixelDensity)
-    FLAG_ADD(MouseGrabbed)
-    FLAG_ADD(MouseCapture)
-    FLAG_ADD(MouseRelativeMode)
-    FLAG_ADD(MouseFocus)
-    FLAG_ADD(KeyboardFocused)
-    FLAG_ADD(InputFocus)
-    FLAG_ADD(NotFocusable)
-
-    #undef FLAG_ADD
-    return flags;
-  }
-
-
-  template <typename T>
-  requires std::is_scoped_enum_v<T>
-  std::string ToString(T bitmask_enum) {
-    std::string result;
-
-    for (auto value : magic_enum::enum_values<T>())
-      if ((bitmask_enum ^ value) && (value != T::None)) {
-        if (!result.empty()) result += " | ";
-        result += std::string(magic_enum::enum_name(value));
+  namespace Enums {
+    inline std::string ToString(const SDL_WindowFlags flags) {
+      std::string out;
+      for (auto& [val, name] : Translations::Enums::Translation__SDL_WindowFlags.forward) {
+        if (flags & val) {
+          if (!out.empty()) out += " | ";
+          out += name;
+        }
       }
-
-    if (result.empty())
-      result = "None";
-
-    return result;
-  }
-
-  template <typename T>
-  requires (!std::is_scoped_enum_v<T> && std::is_enum_v<T>)
-  std::string ToString(T bitmask_enum) {
-    using U = std::underlying_type_t<T>;
-    std::string result;
-
-    for (auto value : magic_enum::enum_values<T>()) {
-      if ((static_cast<U>(bitmask_enum) & static_cast<U>(value)) && static_cast<U>(value) != 0) {
-        if (!result.empty()) result += " | ";
-        result += std::string(magic_enum::enum_name(value));
-      }
+      return out.empty() ? "SDL_WINDOW_NONE" : out;
     }
-
-    if (result.empty())
-      result = "None";
-
-    return result;
   }
 }

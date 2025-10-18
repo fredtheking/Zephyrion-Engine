@@ -35,7 +35,7 @@ namespace CE::ST {
   public:
     Bimap(std::initializer_list<std::pair<T1, T2>> list) {
       for (auto& p : list) {
-        insert(p.first, p.second);
+        Insert(p.first, p.second);
       }
     }
   };
