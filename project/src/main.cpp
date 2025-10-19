@@ -5,7 +5,8 @@ int main(){
   app.Setup(CE::Configs::Builders::WindowConfigBuilder{}
       .Title("Hello!")
       .Position(CE::Enums::WindowPosition::Centered)
-      .Size(1920, 1080)
+      .Size(540, 1080)
+      .BackendRenderer(CE::Enums::BackendRenderer::OpenGL)
       .Build()
   );
 

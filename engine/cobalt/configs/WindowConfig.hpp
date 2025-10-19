@@ -3,7 +3,6 @@
 #include "cobalt/low/BuilderBase.hpp"
 #include "cobalt/simple_types/Vector2.hpp"
 #include "cobalt/utils/Enums.hpp"
-#define NONVALID_VEC2 ST::Vector2{NONVALID_INT}
 
 namespace CE {
   class Window;
@@ -22,11 +21,15 @@ namespace CE {
       ST::Vector2<int> position_vec2           = NONVALID_VEC2;
       Enums::WindowPosition position_mode_enum = Enums::WindowPosition::Centered;
       ST::Vector2<int> size_vec2               = {800, 600};
+      ST::Vector2<int> max_size_vec2           = NONVALID_VEC2;
+      ST::Vector2<int> min_size_vec2           = NONVALID_VEC2;
       float opacity_float                      = 1;
 
       bool resizable_bool                      = false;
       bool borderless_bool                     = false;
       bool fullscreen_bool                     = false;
+      bool always_on_top_bool                  = false;
+      bool unfocused_bool                      = false;
     public:
       GETTER(BackendRendererName, std::string_view){return magic_enum::enum_name(renderer_enum);}
       GETTER(Title, CREF(std::string)){return title_str;}
@@ -38,9 +41,40 @@ namespace CE {
 
     namespace Builders {
       class WindowConfigBuilder final : public Low::BuilderBase<WindowConfig> {
+        void ValidityCheck() override {
+          if (build_object.renderer_enum != Enums::BackendRenderer::OpenGL)
+            Logger::Critical("Incorrect \"WindowConfig\"! - "
+              "Currently, only \"OpenGL\" backend renderer is supported.");
+
+          if (build_object.position_vec2 == NONVALID_VEC2 &&
+              build_object.position_mode_enum == Enums::WindowPosition::Custom)
+            Logger::Critical("Incorrect \"WindowConfig\"! - "
+              "If you are using \"CE::Enums::WindowPosition\" to define position, it is prohibited to use \"Custom\" option. Instead, use real values.");
+        }
       public:
         WindowConfigBuilder& BackendRenderer(const Enums::BackendRenderer renderer) {
           build_object.renderer_enum = renderer;
+          return *this;
+        }
+
+        WindowConfigBuilder& Resizable() {
+          build_object.resizable_bool = true;
+          return *this;
+        }
+        WindowConfigBuilder& Borderless() {
+          build_object.borderless_bool = true;
+          return *this;
+        }
+        WindowConfigBuilder& Fullscreen() {
+          build_object.fullscreen_bool = true;
+          return *this;
+        }
+        WindowConfigBuilder& AlwaysOnTop() {
+          build_object.always_on_top_bool = true;
+          return *this;
+        }
+        WindowConfigBuilder& Unfocused() {
+          build_object.unfocused_bool = true;
           return *this;
         }
 
@@ -88,21 +122,39 @@ namespace CE {
           });
         }
 
+        WindowConfigBuilder& MinimalSize(CREF(ST::Vector2<int>) size) {
+          build_object.min_size_vec2 = size;
+          return *this;
+        }
+        WindowConfigBuilder& MinimalSize(const int width, const int height) {
+          return Size(ST::Vector2{width, height});
+        }
+        WindowConfigBuilder& MinimalSize(const float width, const float height) {
+          Logger::Warning("Clipping floats to ints. Be careful!");
+          return Size(ST::Vector2{
+            static_cast<int>(width),
+            static_cast<int>(height)
+          });
+        }
+
+        WindowConfigBuilder& MaximumSize(CREF(ST::Vector2<int>) size) {
+          build_object.max_size_vec2 = size;
+          return *this;
+        }
+        WindowConfigBuilder& MaximumSize(const int width, const int height) {
+          return Size(ST::Vector2{width, height});
+        }
+        WindowConfigBuilder& MaximumSize(const float width, const float height) {
+          Logger::Warning("Clipping floats to ints. Be careful!");
+          return Size(ST::Vector2{
+            static_cast<int>(width),
+            static_cast<int>(height)
+          });
+        }
+
         WindowConfigBuilder& Opacity(const float opacity) {
           build_object.opacity_float = opacity;
           return *this;
-        }
-
-
-        void ValidityCheck() override {
-          if (build_object.renderer_enum != Enums::BackendRenderer::OpenGL)
-            Logger::Critical("Incorrect \"WindowConfig\"! - "
-              "Currently, only \"OpenGL\" backend renderer is supported.");
-
-          if (build_object.position_vec2 == NONVALID_VEC2 &&
-              build_object.position_mode_enum == Enums::WindowPosition::Custom)
-            Logger::Critical("Incorrect \"WindowConfig\"! - "
-              "If you are using \"CE::Enums::WindowPosition\" to define position, it is prohibited to use \"Custom\" option. Instead, use real values.");
         }
       };
     }

@@ -42,17 +42,6 @@ target_link_libraries(imgui PUBLIC SDL3::SDL3)
 
 
 FetchContent_Declare(
-        cpp-terminal
-        GIT_REPOSITORY https://github.com/jupyter-xeus/cpp-terminal.git
-        GIT_TAG        5a4c0031155891d15a7cfd74584bfb2785f65478
-        GIT_PROGRESS   TRUE
-        GIT_SHALLOW    TRUE
-)
-set(DOXYGEN_GENERATE_LATEX OFF)
-FetchContent_MakeAvailable(cpp-terminal)
-
-
-FetchContent_Declare(
         stduuid
         GIT_REPOSITORY https://github.com/mariusbancila/stduuid.git
         GIT_TAG        v1.2.3
@@ -96,7 +85,6 @@ target_link_libraries(${ENGINE_NAME} PUBLIC
         imgui
         stduuid
         fmt::fmt
-        cpp-terminal
 )
 add_custom_command(TARGET ${ENGINE_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory

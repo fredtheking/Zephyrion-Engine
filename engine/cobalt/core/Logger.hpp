@@ -6,7 +6,8 @@
 namespace CE {
   class Logger {
   private:
-    //...
+    static int GetConsoleWidth();
+    static void PrintTimestamp(CREF(std::string) timestamp);
   public:
     static std::string GetTimestamp();
     static void RawPrint(CREF(std::string) prefix, CREF(std::string) msg, CREF(ST::Color) fg_color, CREF(ST::Color) bg_color);

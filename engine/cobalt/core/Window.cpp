@@ -1,7 +1,7 @@
 #include "Window.hpp"
 #include "Logger.hpp"
 #include "cobalt/pch.hpp"
-#include "cobalt/utils/Helpers.hpp"
+#include "cobalt/utils/Util.hpp"
 
 void CE::Window::Internal_SetWindowPosition() const {
   ST::Vector2<int> pos;
@@ -44,8 +44,8 @@ SDL_WindowFlags CE::Window::Internal_InitialiseFlags() const {
 
 
 void CE::Window::UpdateIcon(CREF(std::string) filepath) {
-  p_Icon = Helpers::Loaders::PNGtoSurface(filepath);
-  ASSERT(p_Icon, Error, "Failed loading icon", "Loaded icon", SDL_SetWindowIcon(p_Window, p_Icon);)
+  p_Icon = Util::Loaders::PNGtoSurface(filepath);
+  Util::AssertSDL(p_Icon, "Failed to set window icon based on error log above", "Loaded window icon", false, [this]{SDL_SetWindowIcon(p_Window, p_Icon);});
 }
 
 CE::Window::Window(CREF(SPTR(Configs::WindowConfig)) window_config) {
@@ -58,15 +58,13 @@ CE::Window::Window(CREF(SPTR(Configs::WindowConfig)) window_config) {
     p_Config->GetSize().y,
     Internal_InitialiseFlags()
   );
-  ASSERT_SDL(p_Window, "Failed initialising Window", "",
-    Internal_SetWindowPosition();
-  );
+  Util::AssertSDL(p_Window, "Failed initialising Window", "", true, [this] {Internal_SetWindowPosition();});
 
   p_Renderer = SDL_CreateRenderer(p_Window, nullptr);
-  ASSERT_SDL(p_Renderer, "Failed initialising Renderer for window", "");
+  Util::AssertSDL(p_Renderer, "Failed initialising Renderer for window", "", true);
 
   UpdateIcon("assets/engine/icon.png");
-  Logger::DebugLog("Current Flags: " + Helpers::Enums::ToString(SDL_GetWindowFlags(p_Window)));
+  Logger::DebugLog("Current Flags: " + Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
 
   Logger::Information("Finished creating window");
 }
@@ -74,8 +72,8 @@ CE::Window::Window(CREF(SPTR(Configs::WindowConfig)) window_config) {
 CE::Window::~Window() {
   Logger::Information("Destroying window...");
 
-  ASSERT(p_Renderer, Error, "Failed destroying Renderer", "Destroyed Renderer", SDL_DestroyRenderer(p_Renderer))
-  ASSERT(p_Window, Error, "Failed destroying Window", "Destroyed Window", SDL_DestroyWindow(p_Window))
+  Util::AssertSDL(p_Renderer, "Failed destroying Renderer", "Destroyed Renderer", false, [this]{SDL_DestroyRenderer(p_Renderer);});
+  Util::AssertSDL(p_Window, "Failed destroying Window", "Destroyed Window", false, [this]{SDL_DestroyWindow(p_Window);});
 
   Logger::Information("Finished destroying window");
 }

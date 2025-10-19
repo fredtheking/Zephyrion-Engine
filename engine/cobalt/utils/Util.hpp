@@ -1,10 +1,42 @@
 #pragma once
 #include "cobalt/pch.hpp"
 #include "cobalt/core/Logger.hpp"
-#include "cobalt/utils/Enums.hpp"
 #include "translations/EnumTranslations.hpp"
 
-namespace CE::Helpers {
+namespace CE::Util {
+  inline bool Assert(
+    const bool condition,
+    CREF(std::string) fail_msg,
+    CREF(std::string) success_msg = "",
+    const bool crash = false,
+    CREF(std::function<void()>) on_success = nullptr,
+    CREF(std::function<void()>) on_fail = nullptr)
+  {
+    if (!condition) {
+      if (!fail_msg.empty()) {
+        if (crash) Logger::Critical(fail_msg);
+        else       Logger::Error(fail_msg);
+      }
+      if (on_fail) on_fail();
+      return false;
+    }
+
+    if (on_success) on_success();
+    if (!success_msg.empty()) Logger::Success(success_msg);
+    return true;
+  }
+
+  inline bool AssertSDL(
+    const bool condition,
+    CREF(std::string) fail_msg,
+    CREF(std::string) success_msg = "",
+    const bool crash = false,
+    CREF(std::function<void()>) on_success = nullptr,
+    CREF(std::function<void()>) on_fail = nullptr)
+  {
+    return Assert(condition, fail_msg + ": " + SDL_GetError(), success_msg, crash, on_success, on_fail);
+  }
+
   namespace Update {
     inline std::chrono::time_point<std::chrono::steady_clock> last_frame = std::chrono::steady_clock::now();
 
@@ -61,24 +93,26 @@ namespace CE::Helpers {
   }
   namespace Loaders {
     inline SDL_Surface* PNGtoSurface(CREF(std::string) filepath) {
+      if (!Assert(std::filesystem::exists(filepath), "Failed to load: File not found at \"" + filepath + "\"."))
+        return nullptr;
+
       int width, height;
       unsigned char* data = stbi_load(filepath.c_str(), &width, &height, nullptr, 4); // force RGBA
-      if (!data) {
-        Logger::Error("Failed to load '" + filepath + "' image as 'R8G8B8A8'");
+
+      if (!Assert(data, "Failed to load image: Unknown issue."))
         return nullptr;
-      }
 
       SDL_Surface* surf = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA8888);
-      if (!surf) {
+
+      if (!Assert(surf, "Failed to load image: Unable to create \"SDL_Surface\".", "", false,
+        [&surf, &data, &width, &height, &filepath] {
+        std::memcpy(surf->pixels, data, static_cast<size_t>(width) * height * 4);
         stbi_image_free(data);
-        Logger::Error("Failed to create 'SDL_Surface' from path '" + filepath + "'");
+        Logger::Success("Loaded image successfully: at path \"" + filepath + "\" as R8G8B8A8");
+      }, [&data] {
+        stbi_image_free(data);
+      }))
         return nullptr;
-      }
-
-      std::memcpy(surf->pixels, data, static_cast<size_t>(width) * height * 4);
-      stbi_image_free(data);
-      Logger::Success("Loaded 'R8G8B8A8' image - " + filepath);
-
       return surf;
     }
   }

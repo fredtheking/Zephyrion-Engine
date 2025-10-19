@@ -1,9 +1,10 @@
 #include "App.hpp"
 
 #include "core/Logger.hpp"
+#include "utils/Util.hpp"
 
 void CE::App::Initialise() {
-  Logger::Separator(Colors::Yellow, "Registration ended. Initialising custom stuff...");
+  Logger::Separator(Colors::Yellow, "Registration ended. Doing final touches...");
 
   //TODO: come up with smth here
 
@@ -24,9 +25,9 @@ void CE::App::Setup(CREF(Configs::WindowConfig) window_config) {
   );
 
 
-  Logger::Separator(Colors::SkyBlue, "Hello, world! Setting up engine...");
+  Logger::Separator(Colors::SkyBlue, "Hello world! Setting up engine...");
 
-  ASSERT(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), Critical, "Failed initialising SDL3", "Initialised SDL3")
+  Util::AssertSDL(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "Failed initialising SDL3", "Initialised SDL3", true);
   p_MainWindow = MAKE_UPTR(Window)(p_Config->window);
 
   Logger::Separator(Colors::Orange, "Engine set up. Starting custom registration...");

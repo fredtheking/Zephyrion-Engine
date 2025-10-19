@@ -4,10 +4,11 @@
 #define CREF(TYPE) const REF(TYPE)
 
 #define U(TYPE) unsigned TYPE
-#define UINT64 U(long long)
-#define UINT32 U(int)
-#define UINT16 U(short)
 #define UINT8 U(char)
+#define UINT16 U(short)
+#define UINT32 U(int)
+#define UINT64 U(long)
+#define UINT128 U(long long)
 
 #define UPTR(TYPE) std::unique_ptr<TYPE>
 #define MAKE_UPTR(TYPE) std::make_unique<TYPE>
@@ -19,9 +20,6 @@
 #define VOID_FUNC FUNC(void())
 #define VOID_FUNC_CONST CREF(VOID_FUNC)
 
-#define ASSERT(BOOL_FUNC, LOGGER_FUNC, MSG_FAILED, MSG_SUCCESS, ...) if (!BOOL_FUNC) Logger::LOGGER_FUNC(MSG_FAILED); \
-                                                                     else { __VA_ARGS__; if (strcmp(MSG_SUCCESS, "") != 0) Logger::Success(MSG_SUCCESS); }
-#define ASSERT_SDL(BOOL_FUNC, MSG_FAILED, MSG_SUCCESS, ...) ASSERT(BOOL_FUNC, Critical, MSG_FAILED ": " + std::string(SDL_GetError()), MSG_SUCCESS, __VA_ARGS__)
 
 #define SINGLETON_CONSTRUCTOR(NAME) private:                                \
                                       NAME() = default;                      \
@@ -64,6 +62,7 @@
 #define INFINITE_FLOATING(TYPE) std::numeric_limits<TYPE>::infinity()
 #define NONVALID_FLOAT -INFINITE_FLOATING(float)
 #define NONVALID_INT INT_MIN
+#define NONVALID_VEC2 ST::Vector2{NONVALID_INT}
 
 #define GET_APP_SINGLETON CE::App::Get()
 #define DEFINE_APP_VARIABLE REF(auto) app = GET_APP_SINGLETON;

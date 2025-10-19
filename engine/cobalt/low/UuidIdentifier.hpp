@@ -1,10 +1,10 @@
 #pragma once
 #include "cobalt/pch.hpp"
-#include "cobalt/utils/Helpers.hpp"
+#include "cobalt/utils/Util.hpp"
 
 namespace CE::Low {
   class UuidIdentifier {
   public:
-    const uuids::uuid UUID = Helpers::UUIDs::Create();
+    const uuids::uuid UUID = Util::UUIDs::Create();
   };
 }

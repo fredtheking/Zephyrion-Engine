@@ -1,14 +1,45 @@
 #include "Logger.hpp"
 #include "cobalt/pch.hpp"
-#include "cobalt/utils/Helpers.hpp"
+#include "cobalt/utils/Util.hpp"
 
 constexpr int MSG_START_POINT = 12;
 
+#ifdef _WIN32
+#undef UINT8
+#undef UINT16
+#undef UINT32
+#undef UINT64
+#include <Windows.h>
+int CE::Logger::GetConsoleWidth() {
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+  return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+}
+#else
+#include <sys/ioctl.h>
+#include <unistd.h>
+int CE::Logger::GetConsoleWidth() {
+  struct winsize w;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+  return w.ws_col;
+}
+#endif
+
+
+void CE::Logger::PrintTimestamp(CREF(std::string) timestamp) {
+  const ST::RGBA rgba = Colors::Silver.rgba;
+  fmt::print(
+    fmt::fg(fmt::rgb(rgba.red, rgba.green, rgba.blue)),
+    "{}",
+    ('[' + timestamp + "]")
+  );
+}
 std::string CE::Logger::GetTimestamp() {
   const auto now = std::chrono::system_clock::now();
 
   std::time_t t = std::chrono::system_clock::to_time_t(now);
   std::tm local{};
+
 #ifdef _WIN32
   localtime_s(&local, &t);
 #else
@@ -16,10 +47,10 @@ std::string CE::Logger::GetTimestamp() {
 #endif
 
   const auto ms = duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-
   std::ostringstream oss;
-  oss << std::put_time(&local, "%Y-%m-%d %H:%M:%S")
-      << '.' << std::setw(3) << std::setfill('0') << ms.count();
+
+  oss << std::put_time(&local, "%d-%m-%y %H:%M:%S.")
+      << std::setw(3) << std::setfill('0') << ms.count();
 
   return oss.str();
 }
@@ -31,23 +62,26 @@ void CE::Logger::RawPrint(CREF(std::string) prefix, CREF(std::string) msg, CREF(
 
   std::function<void()> format_callback;
   if (!prefix.empty()) {
-    std::string good_prefix = Helpers::String::ToUpper(prefix);
+    std::string good_prefix = Util::String::ToUpper(prefix);
     const int msg_startspace_len = MSG_START_POINT-(good_prefix.size()+3);
     format_callback = [&msg, good_prefix, msg_startspace_len, &style] {
       fmt::print("{}\r", fmt::styled(
-        fmt::format("[{}] [{}]:{}{}\n", GetTimestamp(), good_prefix, std::string(msg_startspace_len, ' '), msg),
+        fmt::format("[{}]:{}{}\n",
+          good_prefix, std::string(msg_startspace_len, ' '), msg),
         style
       ));
     };
   } else {
     format_callback = [&msg, &style] {
       fmt::print("{}\r", fmt::styled(
-        fmt::format("[{}]: {}{}\n", GetTimestamp(), std::string(MSG_START_POINT, ' '), msg),
+        fmt::format("{}{}\n",
+          std::string(MSG_START_POINT, ' '), msg),
         style
       ));
     };
   }
 
+  PrintTimestamp(GetTimestamp());
   format_callback();
   std::cout.flush();
 }
@@ -78,21 +112,13 @@ void CE::Logger::Separator(CREF(std::string) msg, const char sign) {
   Separator(Colors::Purple, msg, sign);
 }
 void CE::Logger::Separator(CREF(ST::Color) fg_color, CREF(std::string) msg, const char sign) {
-  const size_t term_width = Term::screen_size().columns();
+  const size_t term_width = GetConsoleWidth();
   const std::string space = msg.empty() ? "" : "  ";
   const size_t msg_len = msg.length();
 
-  if (msg_len + space.length() * 2 >= term_width) {
-    fmt::print(
-      fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue)),
-      "{}\n",
-      msg
-    );
-    std::cout.flush();
-    return;
-  }
+  const std::string timestamp = GetTimestamp();
 
-  const int filler_len_raw = static_cast<int>(term_width) - static_cast<int>(msg_len) - static_cast<int>(space.length() * 2);
+  const int filler_len_raw = static_cast<int>(term_width) - (timestamp.size()+3) - static_cast<int>(msg_len) - static_cast<int>(space.length() * 2);
   const size_t filler_len = filler_len_raw > 0 ? filler_len_raw / 2 : 0;
   const std::string filler(filler_len, sign);
 
@@ -101,13 +127,11 @@ void CE::Logger::Separator(CREF(ST::Color) fg_color, CREF(std::string) msg, cons
     full_line += sign;
   }
 
+  PrintTimestamp(timestamp);
   fmt::print(
       fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue)),
       "{}\n\r",
       full_line
     );
   std::cout.flush();
-  #if !defined(_WIN32) && !defined(_WIN64)
-  std::cout << "\n";
-  #endif
 }

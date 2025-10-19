@@ -4,10 +4,6 @@
 #include <imgui.h>
 #include <magic_enum_all.hpp>
 #include "deps/stb_image.h"
-
-#include <cpp-terminal/terminal.hpp>
-#include <cpp-terminal/window.hpp>
-#include "cpp-terminal/screen.hpp"
 #include <fmt/args.h>
 #include <fmt/color.h>
 
@@ -26,7 +22,9 @@
 #include <thread>
 #include <stdexcept>
 #include <initializer_list>
+#include <filesystem>
 #include <utility>
+#include <algorithm>
 #include <ctime>
 #include <iomanip>
 #include <sstream>
