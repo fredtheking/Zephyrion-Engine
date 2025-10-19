@@ -7,6 +7,10 @@
 
 #include <cpp-terminal/terminal.hpp>
 #include <cpp-terminal/window.hpp>
+#include "cpp-terminal/screen.hpp"
+#include <fmt/args.h>
+#include <fmt/color.h>
+
 #include <iostream>
 #include <uuid.h>
 #include <string>
@@ -23,4 +27,8 @@
 #include <stdexcept>
 #include <initializer_list>
 #include <utility>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+
 #include "cobalt/utils/Macros.hpp"

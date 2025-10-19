@@ -7,7 +7,8 @@ namespace CE::Low {
   protected:
     T build_object{};
   public:
-    virtual T Build() = 0;
+    virtual void ValidityCheck() = 0;
+    virtual T Build() { ValidityCheck(); return std::move(build_object); }
 
     BuilderBase() = default;
     virtual ~BuilderBase() = default;

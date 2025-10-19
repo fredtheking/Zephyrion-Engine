@@ -17,16 +17,16 @@ namespace CE {
       friend class ::CE::Configs::Builders::WindowConfigBuilder;
       friend class ::CE::Window;
 
-      Enums::BackendRenderer renderer_enum = Enums::BackendRenderer::OpenGL;
-      std::string title_str = "Hello from Cobalt Engine!";
-      ST::Vector2<int> position_vec2 = NONVALID_VEC2;
+      Enums::BackendRenderer renderer_enum     = Enums::BackendRenderer::OpenGL;
+      std::string title_str                    = "Hello from Cobalt Engine!";
+      ST::Vector2<int> position_vec2           = NONVALID_VEC2;
       Enums::WindowPosition position_mode_enum = Enums::WindowPosition::Centered;
-      ST::Vector2<int> size_vec2 = {800, 600};
-      float opacity_float = 1;
+      ST::Vector2<int> size_vec2               = {800, 600};
+      float opacity_float                      = 1;
 
-      bool resizable_bool = false;
-      bool borderless_bool = false;
-      bool fullscreen_bool = false;
+      bool resizable_bool                      = false;
+      bool borderless_bool                     = false;
+      bool fullscreen_bool                     = false;
     public:
       GETTER(BackendRendererName, std::string_view){return magic_enum::enum_name(renderer_enum);}
       GETTER(Title, CREF(std::string)){return title_str;}
@@ -94,7 +94,7 @@ namespace CE {
         }
 
 
-        WindowConfig Build() override {
+        void ValidityCheck() override {
           if (build_object.renderer_enum != Enums::BackendRenderer::OpenGL)
             Logger::Critical("Incorrect \"WindowConfig\"! - "
               "Currently, only \"OpenGL\" backend renderer is supported.");
@@ -103,8 +103,6 @@ namespace CE {
               build_object.position_mode_enum == Enums::WindowPosition::Custom)
             Logger::Critical("Incorrect \"WindowConfig\"! - "
               "If you are using \"CE::Enums::WindowPosition\" to define position, it is prohibited to use \"Custom\" option. Instead, use real values.");
-
-          return std::move(build_object);
         }
       };
     }

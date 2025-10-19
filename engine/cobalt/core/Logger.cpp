@@ -1,11 +1,28 @@
 #include "Logger.hpp"
 #include "cobalt/pch.hpp"
 #include "cobalt/utils/Helpers.hpp"
-#include <fmt/args.h>
-#include <fmt/color.h>
 
-#include "cpp-terminal/screen.hpp"
-#include "cpp-terminal/window.hpp"
+constexpr int MSG_START_POINT = 12;
+
+std::string CE::Logger::GetTimestamp() {
+  const auto now = std::chrono::system_clock::now();
+
+  std::time_t t = std::chrono::system_clock::to_time_t(now);
+  std::tm local{};
+#ifdef _WIN32
+  localtime_s(&local, &t);
+#else
+  localtime_r(&t, &local);
+#endif
+
+  const auto ms = duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
+  std::ostringstream oss;
+  oss << std::put_time(&local, "%Y-%m-%d %H:%M:%S")
+      << '.' << std::setw(3) << std::setfill('0') << ms.count();
+
+  return oss.str();
+}
 
 void CE::Logger::RawPrint(CREF(std::string) prefix, CREF(std::string) msg, CREF(ST::Color) fg_color, CREF(ST::Color) bg_color) {
   auto style = fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue));
@@ -15,16 +32,17 @@ void CE::Logger::RawPrint(CREF(std::string) prefix, CREF(std::string) msg, CREF(
   std::function<void()> format_callback;
   if (!prefix.empty()) {
     std::string good_prefix = Helpers::String::ToUpper(prefix);
-    format_callback = [&msg, good_prefix, &style] {
+    const int msg_startspace_len = MSG_START_POINT-(good_prefix.size()+3);
+    format_callback = [&msg, good_prefix, msg_startspace_len, &style] {
       fmt::print("{}\r", fmt::styled(
-        fmt::format("[{}]: {}\n", good_prefix, msg),
+        fmt::format("[{}] [{}]:{}{}\n", GetTimestamp(), good_prefix, std::string(msg_startspace_len, ' '), msg),
         style
       ));
     };
   } else {
     format_callback = [&msg, &style] {
       fmt::print("{}\r", fmt::styled(
-        fmt::format("{}\n", msg),
+        fmt::format("[{}]: {}{}\n", GetTimestamp(), std::string(MSG_START_POINT, ' '), msg),
         style
       ));
     };
