@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-set(SOLUTION_NAME CobaltProject)
+set(SOLUTION_NAME ZephyrionProject)
 project(${SOLUTION_NAME} LANGUAGES CXX)
 set(CLEAN_BIN_DIR ${CMAKE_SOURCE_DIR}/build)
 set(CMAKE_CXX_STANDARD 23)

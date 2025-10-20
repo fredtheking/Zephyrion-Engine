@@ -1,14 +1,14 @@
-# Cobalt Engine
+# Zephyrion Engine
 
 > [!WARNING]
-> This thing exists purely so i can mess around with c++.  
+> This thing exists purely so I can mess around with C++23.  
 > Not stable.
 
 ---
 
 ## About
-Cobalt Engine is a game engine using Entity-Component-Layer<sub><sub>(scenes)</sub></sub> system.  
-I already made two engines in C# ([Streamline](https://github.com/fredtheking/Streamline-Engine), [Zephyrion](https://github.com/fredtheking/ZephyrionEngine)), and they sucked.  
+Zephyrion Engine is a game engine using Entity-Component-Layer<sub><sub>(scenes)</sub></sub> system.  
+I already made two engines in C# ([Streamline](https://github.com/fredtheking/Streamline-Engine), [Zephyrion (old C# version)](https://github.com/fredtheking/ZephyrionEngine)), and they sucked.  
 So now im trying again, but with C++.
 
 - Rendering with [SDL3](https://www.libsdl.org/)  
@@ -25,4 +25,4 @@ So now im trying again, but with C++.
 ---
 
 ## License
-The Unlicense. Do whatever you want with it.
+No licence yet!

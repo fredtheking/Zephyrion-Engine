@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
-set(ENGINE_NAME cobalt-engine)
-project(${ENGINE_NAME} LANGUAGES CXX)
+set(ENGINE_NAME zephyrion-engine)
+project(${ENGINE_NAME} LANGUAGES C CXX)
 
 include(FetchContent)
 
@@ -73,7 +73,7 @@ set(magic-enums_DIR ${CMAKE_BINARY_DIR}/_deps/magic-enums-src)
 
 
 
-file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cobalt/**)
+file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/zephyrion/**)
 add_library(${ENGINE_NAME} STATIC ${ENGINE_SOURCES})
 target_include_directories(${ENGINE_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
