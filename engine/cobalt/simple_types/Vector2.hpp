@@ -1,4 +1,5 @@
 #pragma once
+#include "cobalt/utils/Macros.hpp"
 
 namespace CE::ST {
   template <typename T = float>
@@ -20,7 +21,9 @@ namespace CE::ST {
     Vector2(T x, T y);
     Vector2(T xy);
 
-    bool operator==(const Vector2 & vector2) const;
+    bool operator==(CREF(Vector2) vector2) const;
+    bool operator<(CREF(Vector2) vector2) const;
+    bool operator>(CREF(Vector2) vector2) const;
   };
 }
 

@@ -23,3 +23,13 @@ bool CE::ST::Vector2<T>::operator==(CREF(Vector2) vector2) const {
   return x == vector2.x &&
          y == vector2.y;
 }
+template<typename T>
+bool CE::ST::Vector2<T>::operator<(CREF(Vector2) vector2) const {
+  return x < vector2.x ||
+         y < vector2.y;
+}
+template<typename T>
+bool CE::ST::Vector2<T>::operator>(CREF(Vector2) vector2) const {
+  return x > vector2.x ||
+         y > vector2.y;
+}

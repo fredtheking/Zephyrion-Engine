@@ -92,7 +92,7 @@ namespace CE::Util {
     }
   }
   namespace Loaders {
-    inline SDL_Surface* PNGtoSurface(CREF(std::string) filepath) {
+    inline SDL_Surface* PNGtoSurface(CREF(std::string) filepath, const SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888) {
       if (!Assert(std::filesystem::exists(filepath), "Failed to load: File not found at \"" + filepath + "\"."))
         return nullptr;
 
@@ -102,7 +102,7 @@ namespace CE::Util {
       if (!Assert(data, "Failed to load image: Unknown issue."))
         return nullptr;
 
-      SDL_Surface* surf = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA8888);
+      SDL_Surface* surf = SDL_CreateSurface(width, height, format);
 
       if (!Assert(surf, "Failed to load image: Unable to create \"SDL_Surface\".", "", false,
         [&surf, &data, &width, &height, &filepath] {

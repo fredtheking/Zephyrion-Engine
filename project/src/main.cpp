@@ -3,14 +3,15 @@
 int main(){
   DEFINE_APP_VARIABLE
   app.Setup(CE::Configs::Builders::WindowConfigBuilder{}
-      .Title("Hello!")
+      .Title("[Cobalt Engine] example - Basic Window")
       .Position(CE::Enums::WindowPosition::Centered)
-      .Size(540, 1080)
-      .BackendRenderer(CE::Enums::BackendRenderer::OpenGL)
+      .Resizable()
+      .Icon("assets/icon.png")
       .Build()
   );
 
   // Custom initialisation
 
   app.Run();
+  app.Shutdown();
 }

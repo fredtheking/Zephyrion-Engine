@@ -18,6 +18,7 @@ namespace CE {
 
       Enums::BackendRenderer renderer_enum     = Enums::BackendRenderer::OpenGL;
       std::string title_str                    = "Hello from Cobalt Engine!";
+      std::string icon_filepath_str            = "";
       ST::Vector2<int> position_vec2           = NONVALID_VEC2;
       Enums::WindowPosition position_mode_enum = Enums::WindowPosition::Centered;
       ST::Vector2<int> size_vec2               = {800, 600};
@@ -29,7 +30,10 @@ namespace CE {
       bool borderless_bool                     = false;
       bool fullscreen_bool                     = false;
       bool always_on_top_bool                  = false;
-      bool unfocused_bool                      = false;
+      bool input_blocked_bool                  = false;
+
+      SDL_Window* modal_parent_pointer         = nullptr;
+      bool external_bool                       = false;
     public:
       GETTER(BackendRendererName, std::string_view){return magic_enum::enum_name(renderer_enum);}
       GETTER(Title, CREF(std::string)){return title_str;}
@@ -73,8 +77,16 @@ namespace CE {
           build_object.always_on_top_bool = true;
           return *this;
         }
-        WindowConfigBuilder& Unfocused() {
-          build_object.unfocused_bool = true;
+        WindowConfigBuilder& InputBlocked() {
+          build_object.input_blocked_bool = true;
+          return *this;
+        }
+        WindowConfigBuilder& Modal(SDL_Window* parent) {
+          build_object.modal_parent_pointer = parent;
+          return *this;
+        }
+        WindowConfigBuilder& External() {
+          build_object.external_bool = true;
           return *this;
         }
 
@@ -84,6 +96,11 @@ namespace CE {
         }
         WindowConfigBuilder& Title(const char* title) {
           return Title(std::string{title});
+        }
+
+        WindowConfigBuilder& Icon(CREF(std::string) filepath) {
+          build_object.icon_filepath_str = filepath;
+          return *this;
         }
 
         WindowConfigBuilder& Position(const Enums::WindowPosition position_mode) {
@@ -96,60 +113,72 @@ namespace CE {
           build_object.position_vec2 = position;
           return *this;
         }
+        WindowConfigBuilder& Position(CREF(ST::Vector2<>) size) {
+          Logger::Warning("Clipping floats to ints. Be careful!");
+          return Position(ST::Vector2{
+            static_cast<int>(size.x),
+            static_cast<int>(size.y)
+          });
+        }
         WindowConfigBuilder& Position(const int x, const int y) {
           return Position(ST::Vector2{x, y});
         }
         WindowConfigBuilder& Position(const float x, const float y) {
-          Logger::Warning("Clipping floats to ints. Be careful!");
-          return Position(ST::Vector2{
-            static_cast<int>(x),
-            static_cast<int>(y)
-          });
+          return Position(ST::Vector2{x, y});
         }
 
         WindowConfigBuilder& Size(CREF(ST::Vector2<int>) size) {
           build_object.size_vec2 = size;
           return *this;
         }
+        WindowConfigBuilder& Size(CREF(ST::Vector2<>) size) {
+          Logger::Warning("Clipping floats to ints. Be careful!");
+          return Size(ST::Vector2{
+            static_cast<int>(size.x),
+            static_cast<int>(size.y)
+          });
+        }
         WindowConfigBuilder& Size(const int width, const int height) {
           return Size(ST::Vector2{width, height});
         }
         WindowConfigBuilder& Size(const float width, const float height) {
-          Logger::Warning("Clipping floats to ints. Be careful!");
-          return Size(ST::Vector2{
-            static_cast<int>(width),
-            static_cast<int>(height)
-          });
+          return Size(ST::Vector2{width, height});
         }
 
         WindowConfigBuilder& MinimalSize(CREF(ST::Vector2<int>) size) {
           build_object.min_size_vec2 = size;
           return *this;
         }
+        WindowConfigBuilder& MinimalSize(CREF(ST::Vector2<>) size) {
+          Logger::Warning("Clipping floats to ints. Be careful!");
+          return MinimalSize(ST::Vector2{
+            static_cast<int>(size.x),
+            static_cast<int>(size.y)
+          });
+        }
         WindowConfigBuilder& MinimalSize(const int width, const int height) {
-          return Size(ST::Vector2{width, height});
+          return MinimalSize(ST::Vector2{width, height});
         }
         WindowConfigBuilder& MinimalSize(const float width, const float height) {
-          Logger::Warning("Clipping floats to ints. Be careful!");
-          return Size(ST::Vector2{
-            static_cast<int>(width),
-            static_cast<int>(height)
-          });
+          return MinimalSize(ST::Vector2{width, height});
         }
 
         WindowConfigBuilder& MaximumSize(CREF(ST::Vector2<int>) size) {
           build_object.max_size_vec2 = size;
           return *this;
         }
+        WindowConfigBuilder& MaximumSize(CREF(ST::Vector2<>) size) {
+          Logger::Warning("Clipping floats to ints. Be careful!");
+          return MaximumSize(ST::Vector2{
+            static_cast<int>(size.x),
+            static_cast<int>(size.y)
+          });
+        }
         WindowConfigBuilder& MaximumSize(const int width, const int height) {
-          return Size(ST::Vector2{width, height});
+          return MaximumSize(ST::Vector2{width, height});
         }
         WindowConfigBuilder& MaximumSize(const float width, const float height) {
-          Logger::Warning("Clipping floats to ints. Be careful!");
-          return Size(ST::Vector2{
-            static_cast<int>(width),
-            static_cast<int>(height)
-          });
+          return MaximumSize(ST::Vector2{width, height});
         }
 
         WindowConfigBuilder& Opacity(const float opacity) {
@@ -160,5 +189,3 @@ namespace CE {
     }
   }
 }
-
-#undef NONVALID_VEC2

@@ -15,6 +15,7 @@ namespace CE {
   public:
     void Setup(CREF(Configs::WindowConfig) window_config);
     void Run();
+    void Shutdown();
 
   private:
     //...

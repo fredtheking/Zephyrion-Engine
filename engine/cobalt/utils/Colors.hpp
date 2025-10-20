@@ -47,6 +47,7 @@ namespace CE::Colors {
   DEFINE_COLOR(Teal, 0, 128, 128)
   DEFINE_COLOR(Silver, 192, 192, 192)
   DEFINE_COLOR(Gold, 255, 215, 0)
+  DEFINE_COLOR(DarkCyan, 0, 64, 92)
 }
 
 #undef DEFINE_COLOR_SINGLE

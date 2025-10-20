@@ -47,7 +47,7 @@
 #define REG_N_UNREG(NAME, TYPE, VAR) POS_N_NEG_ACTION_BASE(Register, Unregister, NAME, TYPE, VAR)
 #define LINK_N_DETACH(NAME, TYPE, VAR) POS_N_NEG_ACTION_BASE(Link, Detach, NAME, TYPE, VAR)
 
-#define PREFIX_GETTER_ARGS(PREFIX, NAME, TYPE, ...) TYPE PREFIX##Get##NAME(__VA_ARGS__)
+#define PREFIX_GETTER_ARGS(PREFIX, NAME, TYPE, ...) TYPE PREFIX##Get##NAME(__VA_ARGS__) const
 #define PREFIX_GETTER(PREFIX, NAME, TYPE) PREFIX_GETTER_ARGS(PREFIX, NAME, TYPE)
 #define TRYGETTER(NAME, TYPE) template<typename T> \
                               bool TryGet##NAME(REF(TYPE) out);
@@ -62,7 +62,7 @@
 #define INFINITE_FLOATING(TYPE) std::numeric_limits<TYPE>::infinity()
 #define NONVALID_FLOAT -INFINITE_FLOATING(float)
 #define NONVALID_INT INT_MIN
-#define NONVALID_VEC2 ST::Vector2{NONVALID_INT}
+#define NONVALID_VEC2 CE::ST::Vector2{NONVALID_INT}
 
 #define GET_APP_SINGLETON CE::App::Get()
 #define DEFINE_APP_VARIABLE REF(auto) app = GET_APP_SINGLETON;

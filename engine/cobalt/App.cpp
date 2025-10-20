@@ -28,7 +28,7 @@ void CE::App::Setup(CREF(Configs::WindowConfig) window_config) {
   Logger::Separator(Colors::SkyBlue, "Hello world! Setting up engine...");
 
   Util::AssertSDL(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "Failed initialising SDL3", "Initialised SDL3", true);
-  p_MainWindow = MAKE_UPTR(Window)(p_Config->window);
+  p_MainWindow = MAKE_UPTR(Window)(*p_Config->window);
 
   Logger::Separator(Colors::Orange, "Engine set up. Starting custom registration...");
 }
@@ -39,7 +39,8 @@ void CE::App::Run() {
     Process();
     Render();
   }
-
+}
+void CE::App::Shutdown() {
   Terminate();
 }
 
@@ -64,7 +65,7 @@ void CE::App::Process() {
   }
 }
 void CE::App::Render() const {
-  SDL_SetRenderDrawColor(p_MainWindow->p_Renderer, 0, 64, 92, 255);
+  SDL_SetRenderDrawColor(p_MainWindow->p_Renderer, Colors::DarkCyan.rgba.red, Colors::DarkCyan.rgba.green, Colors::DarkCyan.rgba.blue, 0);
   SDL_RenderClear(p_MainWindow->p_Renderer);
   SDL_RenderPresent(p_MainWindow->p_Renderer);
 }
