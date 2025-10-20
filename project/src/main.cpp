@@ -13,5 +13,8 @@ int main(){
   // Custom initialisation
 
   app.Run();
-  app.Shutdown();
+
+  // Custom termination
+
+  app.Terminate();
 }

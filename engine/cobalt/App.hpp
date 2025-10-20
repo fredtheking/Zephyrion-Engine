@@ -8,14 +8,13 @@ namespace CE {
   class App final {
   private:
     void Initialise();
-    void Terminate();
 
     void Process();
     void Render() const;
   public:
     void Setup(CREF(Configs::WindowConfig) window_config);
     void Run();
-    void Shutdown();
+    void Terminate();
 
   private:
     //...

@@ -11,8 +11,6 @@ void CE::App::Initialise() {
   Logger::Separator(Colors::Lime, "Everything set up. Starting runtime process");
 }
 void CE::App::Terminate() {
-  Logger::Separator(Colors::Orange, "Terminating app...");
-
   p_MainWindow.reset();
   SDL_Quit();
 
@@ -39,9 +37,8 @@ void CE::App::Run() {
     Process();
     Render();
   }
-}
-void CE::App::Shutdown() {
-  Terminate();
+
+  Logger::Separator(Colors::Orange, "Terminating app...");
 }
 
 void CE::App::Process() {
