@@ -21,6 +21,12 @@ void CE::Window::Internal_UpdateWindowPosition() const {
 
   SDL_SetWindowPosition(p_Window, pos.x, pos.y);
 }
+void CE::Window::Internal_UpdateWindowSizeConfigs() const {
+  if (p_Config.min_size_vec2 != NONVALID_VEC2 && p_Config.size_vec2 < p_Config.min_size_vec2)
+    p_Config.size_vec2 = p_Config.min_size_vec2;
+  if (p_Config.max_size_vec2 != NONVALID_VEC2 && p_Config.size_vec2 > p_Config.max_size_vec2)
+    p_Config.size_vec2 = p_Config.max_size_vec2;
+}
 void CE::Window::Internal_UpdateWindowSize() const {
   SDL_SetWindowSize(p_Window, p_Config.size_vec2.x, p_Config.size_vec2.y);
 }
@@ -112,6 +118,7 @@ void CE::Window::UpdatePosition(const float x, const float y) const {
 
 void CE::Window::UpdateSize(const ST::Vector2<int> &size) const {
   p_Config.size_vec2 = size;
+  Internal_UpdateWindowSizeConfigs();
   Internal_UpdateWindowSize();
 }
 void CE::Window::UpdateSize(const ST::Vector2<> &size) const {

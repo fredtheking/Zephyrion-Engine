@@ -1,17 +1,26 @@
 #pragma once
 #include "cobalt/pch.hpp"
 #include "cobalt/configs/WindowConfig.hpp"
+#include "cobalt/simple_types/Bounds.hpp"
 #include "cobalt/utils/Macros.hpp"
 
 namespace CE {
   class Window {
   private:
     void Internal_UpdateWindowPosition() const;
+    void Internal_UpdateWindowSizeConfigs() const;
     void Internal_UpdateWindowSize() const;
     void Internal_SetWindowMinimaxSize() const;
     [[nodiscard]] SDL_WindowFlags Internal_InitialiseFlags() const;
     void Internal_AfterWindowInit();
   public:
+    GETTER(Position, ST::Vector2<int>){return p_Config.position_vec2;}
+    GETTER(PositionX, int){return p_Config.position_vec2.x;}
+    GETTER(PositionY, int) {return p_Config.position_vec2.y;}
+    GETTER(Size, ST::Vector2<int>) {return p_Config.size_vec2;}
+    GETTER(SizeX, int) {return p_Config.size_vec2.x;}
+    GETTER(SizeY, int) {return p_Config.size_vec2.y;}
+
     void UpdateIcon(CREF(std::string) filepath);
 
     void UpdatePosition(Enums::WindowPosition position_mode) const;
