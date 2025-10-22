@@ -1,6 +1,5 @@
 #include "Window.hpp"
 #include "Logger.hpp"
-#include "zephyrion/utils/Macros.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/utils/Util.hpp"
 

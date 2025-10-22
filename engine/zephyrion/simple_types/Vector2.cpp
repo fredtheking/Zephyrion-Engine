@@ -1,6 +1,6 @@
 #include "Vector2.hpp"
 
-#include "zephyrion/utils/Macros.hpp"
+#include "zephyrion/pch.hpp"
 #define INIT(X, Y) this->x = X; this->y = Y;
 #define INIT_SINGLE(X) INIT(X, X);
 

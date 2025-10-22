@@ -1,10 +1,10 @@
- #pragma once
+#pragma once
 #include "zephyrion/core/Logger.hpp"
 #include "zephyrion/low/BuilderBase.hpp"
 #include "zephyrion/simple_types/Vector2.hpp"
 #include "zephyrion/utils/Enums.hpp"
 
- namespace ZE {
+namespace ZE {
   class Window;
   namespace Configs {
     namespace Builders {

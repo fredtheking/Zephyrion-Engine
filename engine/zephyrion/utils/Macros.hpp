@@ -16,6 +16,9 @@
 #define MAKE_SPTR(TYPE) std::make_shared<TYPE>
 #define WPTR(TYPE) std::weak_ptr<TYPE>
 
+#define OPT(TYPE) std::optional<TYPE>
+#define MAKE_OPT(TYPE) std::make_optional<TYPE>
+
 #define FUNC(RETURN) std::function<RETURN>
 #define VOID_FUNC FUNC(void())
 #define VOID_FUNC_CONST CREF(VOID_FUNC)

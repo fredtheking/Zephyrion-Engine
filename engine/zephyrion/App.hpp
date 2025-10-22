@@ -2,26 +2,31 @@
 #include "zephyrion/pch.hpp"
 #include "configs/AppConfig.hpp"
 #include "core/Window.hpp"
-#include "utils/Macros.hpp"
+#include "core/ImguiHandler.hpp"
 
 namespace ZE {
   class App final {
   private:
     void Initialise();
 
+    void PollInput();
     void Process();
-    void Render() const;
+    void Render();
   public:
-    void Setup(CREF(Configs::WindowConfig) window_config);
+    void Setup(CREF(Configs::WindowConfig) window_config = {}, CREF(Configs::ImguiConfig) imgui_config = {});
     void Run();
     void Terminate();
 
   private:
-    //...
+    Low::DetachedProcess e_ProcessLoop{[this]{Process();}};
   public:
     bool m_Running = true;
-    UPTR(Window) p_MainWindow;
-    UPTR(Configs::AppConfig) p_Config;
+    UPTR(Window) p_MainWindow = nullptr;
+    UPTR(ImguiHandler) p_MainImguiHandler = nullptr;
+    UPTR(Configs::AppConfig) p_Config = nullptr;
+
+    double m_ProcessDeltatime;
+    double m_RenderDeltatime;
 
 
   private:

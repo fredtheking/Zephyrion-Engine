@@ -1,6 +1,5 @@
 #pragma once
 #include "zephyrion/pch.hpp"
-#include "zephyrion/utils/Macros.hpp"
 
 namespace ZE::Low {
   class DetachedProcess final {
@@ -19,6 +18,7 @@ namespace ZE::Low {
     private:
     //...
     public:
-    explicit DetachedProcess(VOID_FUNC_CONST action): e_Process(action){}
+    DetachedProcess(VOID_FUNC_CONST event);
+    DetachedProcess(CREF(DetachedProcess)) = default;
   };
 }

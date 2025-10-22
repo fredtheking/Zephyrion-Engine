@@ -1,7 +1,6 @@
 #pragma once
 #include "Vector2.hpp"
 #include "Rectangle.hpp"
-#include "zephyrion/utils/Macros.hpp"
 
 namespace ZE::ST {
   template<typename T = float>

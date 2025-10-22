@@ -1,6 +1,5 @@
 #pragma once
 #include "zephyrion/pch.hpp"
-#include "zephyrion/utils/Macros.hpp"
 
 namespace ZE::ST {
   /**

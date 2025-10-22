@@ -37,10 +37,10 @@ namespace ZE::Util {
     return Assert(condition, fail_msg + ": " + SDL_GetError(), success_msg, crash, on_success, on_fail);
   }
 
-  namespace Update {
+  namespace Process {
     inline std::chrono::time_point<std::chrono::steady_clock> last_frame = std::chrono::steady_clock::now();
 
-    inline long double GetDeltaTime() {
+    inline double GetDeltaTime() {
       const auto now = std::chrono::steady_clock::now();
       const double delta = std::chrono::duration<double>(now - last_frame).count();
       last_frame = now;
@@ -48,13 +48,13 @@ namespace ZE::Util {
     }
   }
   namespace Render {
-    inline std::chrono::time_point<std::chrono::steady_clock> last_frame = std::chrono::steady_clock::now();
+    inline Uint64 last_frame = SDL_GetPerformanceCounter();
 
-    inline long double GetDeltaTime() {
-      const auto now = std::chrono::steady_clock::now();
-      const double delta = std::chrono::duration<double>(now - last_frame).count();
+    inline double GetDeltaTime() {
+      const Uint64 now = SDL_GetPerformanceCounter();
+      const double deltaTime = static_cast<double>(now - last_frame) / SDL_GetPerformanceFrequency();
       last_frame = now;
-      return delta;
+      return deltaTime;
     }
   }
   namespace Window {

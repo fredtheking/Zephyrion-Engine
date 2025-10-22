@@ -12,4 +12,8 @@ void ZE::Low::DetachedProcess::Stop() {
   m_Running = false;
 }
 
+ZE::Low::DetachedProcess::DetachedProcess(VOID_FUNC_CONST event) {
+  e_Process = event;
+}
+
 

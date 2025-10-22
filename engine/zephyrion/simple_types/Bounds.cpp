@@ -1,5 +1,4 @@
 #include "Bounds.hpp"
-#include "zephyrion/utils/Macros.hpp"
 #define INIT(X, Y, W, H) InitXYWH(X, Y, W, H); InitElse();
 #define INIT_SINGLE(X) INIT(X, X, X, X)
 

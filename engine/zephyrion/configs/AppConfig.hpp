@@ -1,8 +1,11 @@
 #pragma once
 #include "WindowConfig.hpp"
+#include "ImguiConfig.hpp"
+
 
 namespace ZE::Configs {
   struct AppConfig {
-    SPTR(WindowConfig) window;
+    UPTR(WindowConfig) window;
+    UPTR(ImguiConfig) imgui;
   };
 }

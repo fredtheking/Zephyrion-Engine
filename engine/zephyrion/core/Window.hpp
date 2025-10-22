@@ -2,7 +2,6 @@
 #include "zephyrion/pch.hpp"
 #include "zephyrion/configs/WindowConfig.hpp"
 #include "zephyrion/simple_types/Bounds.hpp"
-#include "zephyrion/utils/Macros.hpp"
 
 namespace ZE {
   class Window {

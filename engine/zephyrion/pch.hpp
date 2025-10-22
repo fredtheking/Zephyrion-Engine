@@ -19,6 +19,9 @@
 #include <chrono>
 #include <any>
 #include <functional>
+#include <queue>
+#include <mutex>
+#include <atomic>
 #include <thread>
 #include <stdexcept>
 #include <initializer_list>
@@ -28,5 +31,6 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <optional>
 
 #include "zephyrion/utils/Macros.hpp"
