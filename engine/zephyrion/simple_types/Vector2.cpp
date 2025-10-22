@@ -1,5 +1,4 @@
 #include "Vector2.hpp"
-
 #include "zephyrion/pch.hpp"
 #define INIT(X, Y) this->x = X; this->y = Y;
 #define INIT_SINGLE(X) INIT(X, X);
@@ -33,3 +32,6 @@ bool ZE::ST::Vector2<T>::operator>(CREF(Vector2) vector2) const {
   return x > vector2.x ||
          y > vector2.y;
 }
+
+template class ZE::ST::Vector2<>;
+template class ZE::ST::Vector2<int>;

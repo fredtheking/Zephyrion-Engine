@@ -102,3 +102,6 @@ template<typename T>
 void ZE::ST::Bounds<T>::Update(CREF(Rectangle<T>) rec) {
   INIT(rec.x, rec.y, rec.width, rec.height)
 }
+
+template class ZE::ST::Bounds<>;
+template class ZE::ST::Bounds<int>;

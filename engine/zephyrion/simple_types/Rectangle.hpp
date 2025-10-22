@@ -24,6 +24,3 @@ namespace ZE::ST {
     Rectangle(T x, T y, Vector2<T> size);
   };
 }
-
-template class ZE::ST::Rectangle<>;
-template class ZE::ST::Rectangle<int>;

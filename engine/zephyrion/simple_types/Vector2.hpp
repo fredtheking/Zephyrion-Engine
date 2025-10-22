@@ -26,6 +26,3 @@ namespace ZE::ST {
     bool operator>(CREF(Vector2) vector2) const;
   };
 }
-
-template class ZE::ST::Vector2<>;
-template class ZE::ST::Vector2<int>;

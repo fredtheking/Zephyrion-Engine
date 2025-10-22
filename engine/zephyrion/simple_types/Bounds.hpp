@@ -43,6 +43,3 @@ namespace ZE::ST {
     Bounds(CREF(Rectangle<T>) rec);
   };
 }
-
-template class ZE::ST::Bounds<>;
-template class ZE::ST::Bounds<int>;

@@ -23,3 +23,6 @@ template<typename T>
 ZE::ST::Rectangle<T>::Rectangle(T x, T y, Vector2<T> size) {
   INIT(x, y, size.x, size.y)
 }
+
+template class ZE::ST::Rectangle<>;
+template class ZE::ST::Rectangle<int>;
