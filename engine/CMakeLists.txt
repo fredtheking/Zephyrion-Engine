@@ -22,7 +22,7 @@ FetchContent_MakeAvailable(sdl3)
 FetchContent_Declare(
         imgui
         GIT_REPOSITORY https://github.com/ocornut/imgui.git
-        GIT_TAG        v1.92.1
+        GIT_TAG        v1.92.4-docking
         GIT_PROGRESS   TRUE
         GIT_SHALLOW    TRUE
 )
@@ -31,7 +31,7 @@ set(IMGUI_DIR ${CMAKE_BINARY_DIR}/_deps/imgui-src)
 file(GLOB IMGUI_SOURCES
         ${IMGUI_DIR}/*.cpp
         ${IMGUI_DIR}/backends/imgui_impl_sdl3.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_sdlrenderer3.cpp
 )
 add_library(imgui STATIC ${IMGUI_SOURCES})
 target_include_directories(imgui PUBLIC

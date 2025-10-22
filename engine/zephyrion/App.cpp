@@ -27,19 +27,20 @@ void ZE::App::Setup(CREF(Configs::WindowConfig) window_config, CREF(Configs::Img
   Util::AssertSDL(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "Failed initialising SDL3", "Initialised SDL3", true);
   p_MainWindow = MAKE_UPTR(Window)(*p_Config->window);
 
-  p_MainImguiHandler = MAKE_UPTR(ImguiHandler)(*p_Config->imgui);
+  p_MainImguiHandler = MAKE_UPTR(ImguiHandler)(*p_Config->imgui, *p_MainWindow);
 
   Logger::Separator(Colors::Orange, "Engine set up. Starting custom registration...");
 }
 void ZE::App::Run() {
   Initialise();
 
-  e_ProcessLoop.Start();
+  // e_ProcessLoop.Start();
   while (m_Running) {
     PollInput();
+    Process();
     Render();
   }
-  e_ProcessLoop.Stop();
+  // e_ProcessLoop.Stop();
 
   Logger::Separator(Colors::Orange, "Terminating app...");
 }
@@ -47,6 +48,7 @@ void ZE::App::Run() {
 void ZE::App::PollInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
+    ImGui_ImplSDL3_ProcessEvent(&event);
     switch (event.type) {
       case SDL_EVENT_QUIT:
         m_Running = false;
@@ -67,5 +69,6 @@ void ZE::App::Render() {
 
   SDL_SetRenderDrawColor(p_MainWindow->p_Renderer, Colors::DarkCyan.rgba.red, Colors::DarkCyan.rgba.green, Colors::DarkCyan.rgba.blue, 0);
   SDL_RenderClear(p_MainWindow->p_Renderer);
+  p_MainImguiHandler->Render();
   SDL_RenderPresent(p_MainWindow->p_Renderer);
 }

@@ -11,7 +11,7 @@ int main(){
       .Icon(ENGINE_ASSETS "icon.png")
       .Build(),
   ZE::Configs::Builders::ImguiConfigBuilder{}
-      .Event([]{})
+      .Event([]{ImGui::ShowDemoWindow();})
       .Build()
   );
 

@@ -6,6 +6,8 @@
 #include "deps/stb_image.h"
 #include <fmt/args.h>
 #include <fmt/color.h>
+#include <backends/imgui_impl_sdl3.h>
+#include <backends/imgui_impl_sdlrenderer3.h>
 
 #include <iostream>
 #include <uuid.h>

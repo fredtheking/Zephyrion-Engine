@@ -6,7 +6,7 @@ namespace ZE::Low {
     private:
     //...
     public:
-    void Start();
+    void Start(VOID_FUNC_CONST before_loop = nullptr, VOID_FUNC_CONST at_loop_begin = nullptr, VOID_FUNC_CONST at_loop_end = nullptr, VOID_FUNC_CONST after_loop = nullptr);
     void Stop();
 
     private:

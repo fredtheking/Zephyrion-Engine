@@ -18,7 +18,7 @@ namespace ZE {
     void Terminate();
 
   private:
-    Low::DetachedProcess e_ProcessLoop{[this]{Process();}};
+    // Low::DetachedProcess e_ProcessLoop{[this]{Process();}};
   public:
     bool m_Running = true;
     UPTR(Window) p_MainWindow = nullptr;

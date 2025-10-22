@@ -1,4 +1,5 @@
 #pragma once
+#include "Window.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/configs/ImguiConfig.hpp"
 #include "zephyrion/low/DetachedProcess.hpp"
@@ -8,18 +9,18 @@ namespace ZE {
   private:
     //...
   public:
-    //...
+    void Render() const;
 
   private:
     REF(Configs::ImguiConfig) p_Config;
-    Low::DetachedProcess e_ImguiProcess;
+    CREF(Window) p_MainWindow;
   public:
     //...
 
   private:
     //...
   public:
-    explicit ImguiHandler(REF(Configs::ImguiConfig) imgui_config);
+    explicit ImguiHandler(REF(Configs::ImguiConfig) imgui_config, CREF(Window) window);
     ~ImguiHandler();
   };
 }

@@ -14,9 +14,10 @@ namespace ZE {
       friend class ::ZE::Configs::Builders::ImguiConfigBuilder;
       friend class ::ZE::ImguiHandler;
 
-      VOID_FUNC process_event = []{};
+      VOID_FUNC process_event = nullptr;
+      bool dark_theme         = true;
     public:
-      //...
+      GETTER(DarkTheme, bool){return dark_theme;}
     };
 
     namespace Builders {
@@ -27,6 +28,10 @@ namespace ZE {
       public:
         ImguiConfigBuilder& Event(VOID_FUNC_CONST event) {
           build_object.process_event = event;
+          return *this;
+        }
+        ImguiConfigBuilder& LightTheme() {
+          build_object.dark_theme = false;
           return *this;
         }
       };
