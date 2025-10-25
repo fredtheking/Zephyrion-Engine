@@ -194,3 +194,4 @@ ZE::Window::~Window() {
   Logger::Information("Finished destroying window");
 }
 
+//TODO: Move rendering part to window so that each window does its own thing
