@@ -1,4 +1,4 @@
 #include "pch.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "deps/stb_image.h"
+#include "vendor/stb_image.h"

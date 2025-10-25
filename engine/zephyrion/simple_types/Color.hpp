@@ -3,13 +3,14 @@
 
 namespace ZE::ST {
   /**
-   * Struct that holds R, G, B and A values. Each is Uint8 (unsigned int).
+   * Struct that holds R, G, B and A values. Each is UINT8 (unsigned char).
    */
+  template<typename COLOR_TYPE = UINT8>
   struct RGBA {
-    Uint8 red;
-    Uint8 green;
-    Uint8 blue;
-    Uint8 alpha;
+    COLOR_TYPE red;
+    COLOR_TYPE green;
+    COLOR_TYPE blue;
+    COLOR_TYPE alpha;
 
     bool operator==(CREF(RGBA) rgba) const {
       return red == rgba.red &&
@@ -24,43 +25,59 @@ namespace ZE::ST {
    */
   class Color {
   private:
-    void InitRGBA(UINT8 r, Uint8 g, Uint8 b, Uint8 a);
+    void InitRGBA(UINT8 r, UINT8 g, UINT8 b, UINT8 a);
+    void InitRGBAfloat();
     void InitInteger();
     void InitHex();
 
     void InitElse();
   public:
     void Update();
-    void Update(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-    void Update(CREF(RGBA) rgba);
-    void Update(Uint32 integer);
-    void Update(CREF(std::string) hex);
+    void Update(UINT8 r, UINT8 g, UINT8 b, UINT8 a);
+    void Update(float r, float g, float b, float a);
+    void Update(CREF(RGBA<>) rgba);
+    void Update(CREF(RGBA<float>) rgba_float);
+    void Update(UINT32 integer);
+    void Update(CREF(STR) hex);
 
-    static RGBA ToRGBA(Uint32 integer);
-    static RGBA ToRGBA(CREF(std::string) hex);
-    static Uint32 ToInteger(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-    static Uint32 ToInteger(CREF(RGBA) rgba);
-    static Uint32 ToInteger(CREF(std::string) hex);
-    static std::string ToHex(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-    static std::string ToHex(CREF(RGBA) rgba);
-    static std::string ToHex(Uint32 integer);
+    static RGBA<> ToRGBA(float r, float g, float b, float a);
+    static RGBA<> ToRGBA(UINT32 integer);
+    static RGBA<> ToRGBA(CREF(STR) hex);
+    static RGBA<> ToRGBA(CREF(RGBA<float>) rgba_float);
+    static RGBA<float> ToRGBAfloat(UINT8 r, UINT8 g, UINT8 b, UINT8 a);
+    static RGBA<float> ToRGBAfloat(CREF(RGBA<>) rgba);
+    static RGBA<float> ToRGBAfloat(UINT32 integer);
+    static RGBA<float> ToRGBAfloat(CREF(STR) hex);
+    static UINT32 ToInteger(UINT8 r, UINT8 g, UINT8 b, UINT8 a);
+    static UINT32 ToInteger(float r, float g, float b, float a);
+    static UINT32 ToInteger(CREF(RGBA<>) rgba);
+    static UINT32 ToInteger(CREF(RGBA<float>) rgba_float);
+    static UINT32 ToInteger(CREF(STR) hex);
+    static STR ToHex(UINT8 r, UINT8 g, UINT8 b, UINT8 a);
+    static STR ToHex(float r, float g, float b, float a);
+    static STR ToHex(CREF(RGBA<>) rgba);
+    static STR ToHex(CREF(RGBA<float>) rgba_float);
+    static STR ToHex(UINT32 integer);
 
   private:
     //...
   public:
-    RGBA rgba;
-    Uint32 integer;
-    std::string hex;
+    RGBA<> rgba = {};
+    RGBA<float> rgba_float = {};
+    UINT32 integer = 0;
+    STR hex = "000000";
 
   private:
     //...
   public:
     Color();
-    Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-    Color(CREF(RGBA) rgba);
-    Color(Uint32 integer);
-    Color(CREF(std::string) hex);
+    Color(UINT8 r, UINT8 g, UINT8 b, UINT8 a);
+    Color(float r, float g, float b, float a);
+    explicit Color(CREF(RGBA<>) rgba);
+    explicit Color(CREF(RGBA<float>) rgba_float);
+    explicit Color(UINT32 integer);
+    explicit Color(CREF(STR) hex);
 
-    bool operator==(const Color & color) const;
+    bool operator==(CREF(Color) color) const;
   };
 }

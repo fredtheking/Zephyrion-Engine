@@ -31,7 +31,7 @@ set(IMGUI_DIR ${CMAKE_BINARY_DIR}/_deps/imgui-src)
 file(GLOB IMGUI_SOURCES
         ${IMGUI_DIR}/*.cpp
         ${IMGUI_DIR}/backends/imgui_impl_sdl3.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_sdlrenderer3.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 )
 add_library(imgui STATIC ${IMGUI_SOURCES})
 target_include_directories(imgui PUBLIC
@@ -74,9 +74,13 @@ set(magic-enums_DIR ${CMAKE_BINARY_DIR}/_deps/magic-enums-src)
 
 
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/zephyrion/**)
-add_library(${ENGINE_NAME} STATIC ${ENGINE_SOURCES})
+add_library(${ENGINE_NAME} STATIC
+        ${ENGINE_SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad.c
+)
 target_include_directories(${ENGINE_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/include
         ${magic-enums_DIR}/include/magic_enum
 )
 

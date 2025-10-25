@@ -10,6 +10,9 @@
 #define UINT64 U(long)
 #define UINT128 U(long long)
 
+#define C_STR const char*
+#define STR std::string
+
 #define UPTR(TYPE) std::unique_ptr<TYPE>
 #define MAKE_UPTR(TYPE) std::make_unique<TYPE>
 #define SPTR(TYPE) std::shared_ptr<TYPE>
@@ -69,4 +72,6 @@
 
 #define GET_APP_SINGLETON ZE::App::Get()
 #define DEFINE_APP_VARIABLE REF(auto) app = GET_APP_SINGLETON;
+#define GET_IO_SINGLETON ImGui::GetIO()
+#define DEFINE_IO_VARIABLE REF(ImGuiIO) io = GET_IO_SINGLETON;
 #define ENGINE_ASSETS "assets/engine/"

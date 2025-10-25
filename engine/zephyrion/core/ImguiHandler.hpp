@@ -2,7 +2,6 @@
 #include "Window.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/configs/ImguiConfig.hpp"
-#include "zephyrion/low/DetachedProcess.hpp"
 
 namespace ZE {
   class ImguiHandler {
@@ -10,6 +9,7 @@ namespace ZE {
     //...
   public:
     void Render() const;
+    void Draw() const;
 
   private:
     REF(Configs::ImguiConfig) p_Config;

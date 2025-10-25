@@ -1,13 +1,15 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include "vendor/include/glad/glad.h"
+#include <SDL3/SDL_opengl.h>
 #include <imgui.h>
 #include <magic_enum_all.hpp>
-#include "deps/stb_image.h"
+#include "vendor/stb_image.h"
 #include <fmt/args.h>
 #include <fmt/color.h>
 #include <backends/imgui_impl_sdl3.h>
-#include <backends/imgui_impl_sdlrenderer3.h>
+#include <backends/imgui_impl_opengl3.h>
 
 #include <iostream>
 #include <uuid.h>

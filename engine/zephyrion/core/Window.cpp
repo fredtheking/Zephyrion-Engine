@@ -171,8 +171,10 @@ ZE::Window::Window(REF(Configs::WindowConfig) window_config)
   );
   Util::AssertSDL(p_Window, "Failed initialising Window", "", true, [this] {Internal_AfterWindowInit();});
 
-  p_Renderer = SDL_CreateRenderer(p_Window, nullptr);
-  Util::AssertSDL(p_Renderer, "Failed initialising Renderer for window", "", true);
+  m_GLContext = SDL_GL_CreateContext(p_Window);
+  Util::AssertSDL(m_GLContext, "Failed initialising GL context for window", "", true);
+  Util::AssertSDL(SDL_GL_MakeCurrent(p_Window, m_GLContext), "Failed initialising GL context for window", "", true);
+  Util::AssertSDL(SDL_GL_SetSwapInterval(p_Config.vsync_bool), "Failed setting VSync", "");
 
   Logger::DebugLog("Current Flags: " + Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
 
@@ -182,7 +184,8 @@ ZE::Window::Window(REF(Configs::WindowConfig) window_config)
 ZE::Window::~Window() {
   Logger::Information("Destroying window...");
 
-  Util::AssertSDL(p_Renderer, "Failed destroying Renderer", "Destroyed Renderer", false, [this]{SDL_DestroyRenderer(p_Renderer);});
+  Util::AssertSDL(p_Icon, "Failed destroying window icon", "", false, [this]{SDL_DestroySurface(p_Icon);});
+  Util::AssertSDL(m_GLContext, "Failed destroying GL context", "Destroyed GL context", false, [this]{SDL_GL_DestroyContext(m_GLContext);});
   Util::AssertSDL(p_Window, "Failed destroying Window", "Destroyed Window", false, [this]{SDL_DestroyWindow(p_Window);});
 
   Logger::Information("Finished destroying window");

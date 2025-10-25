@@ -41,11 +41,11 @@ namespace ZE {
     //...
   public:
     REF(Configs::WindowConfig) p_Config;
-    SDL_Window* p_Window;
-    SDL_Renderer* p_Renderer;
-    SDL_Surface* p_Icon;
+    SDL_GLContext m_GLContext = nullptr;
+    SDL_Window* p_Window = nullptr;
+    SDL_Surface* p_Icon = nullptr;
 
-    std::vector<SPTR(Window)> m_WindowChildren;
+    std::vector<SPTR(Window)> m_WindowChildren = {};
 
   private:
     friend class App;

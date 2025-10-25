@@ -16,25 +16,26 @@ namespace ZE {
       friend class ::ZE::Configs::Builders::WindowConfigBuilder;
       friend class ::ZE::Window;
 
-      Enums::BackendRenderer renderer_enum     = Enums::BackendRenderer::OpenGL;
-      std::string title_str                    = "Hello from Zephyrion Engine!";
-      std::string icon_filepath_str            = "";
-      ST::Vector2<int> position_vec2           = NONVALID_VEC2;
-      Enums::WindowPosition position_mode_enum = Enums::WindowPosition::Centered;
-      ST::Vector2<int> size_vec2               = {800, 600};
-      ST::Vector2<int> max_size_vec2           = NONVALID_VEC2;
-      ST::Vector2<int> min_size_vec2           = NONVALID_VEC2;
-      float opacity_float                      = 1;
+      Enums::BackendRenderer renderer_enum      = Enums::BackendRenderer::OpenGL;
+      std::string title_str                     = "Hello from Zephyrion Engine!";
+      std::string icon_filepath_str             = "";
+      ST::Vector2<int> position_vec2            = NONVALID_VEC2;
+      Enums::WindowPosition position_mode_enum  = Enums::WindowPosition::Centered;
+      ST::Vector2<int> size_vec2                = {800, 600};
+      ST::Vector2<int> max_size_vec2            = NONVALID_VEC2;
+      ST::Vector2<int> min_size_vec2            = NONVALID_VEC2;
+      float opacity_float                       = 1;
+      bool vsync_bool                           = false;
 
-      bool resizable_bool                      = false;
-      bool borderless_bool                     = false;
-      bool fullscreen_bool                     = false;
-      bool always_on_top_bool                  = false;
-      bool hidden_bool                         = false;
-      bool input_blocked_bool                  = false;
+      bool resizable_bool                       = false;
+      bool borderless_bool                      = false;
+      bool fullscreen_bool                      = false;
+      bool always_on_top_bool                   = false;
+      bool hidden_bool                          = false;
+      bool input_blocked_bool                   = false;
 
-      SDL_Window* modal_parent_pointer         = nullptr;
-      bool external_bool                       = false;
+      SDL_Window* modal_parent_pointer          = nullptr;
+      bool external_bool                        = false;
     public:
       GETTER(BackendRendererName, std::string_view){return magic_enum::enum_name(renderer_enum);}
       GETTER(Title, CREF(std::string)){return title_str;}
@@ -42,6 +43,7 @@ namespace ZE {
       GETTER(PositionMode, CREF(Enums::WindowPosition)){return position_mode_enum;}
       GETTER(Size, CREF(ST::Vector2<int>)){return size_vec2;}
       GETTER(Opacity, CREF(float)){return opacity_float;}
+      GETTER(VSync, CREF(bool)){return vsync_bool;}
     };
 
     namespace Builders {
@@ -188,6 +190,11 @@ namespace ZE {
 
         WindowConfigBuilder& Opacity(const float opacity) {
           build_object.opacity_float = opacity;
+          return *this;
+        }
+
+        WindowConfigBuilder& VSync() {
+          build_object.vsync_bool = true;
           return *this;
         }
       };

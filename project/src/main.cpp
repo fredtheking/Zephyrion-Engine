@@ -8,10 +8,12 @@ int main(){
       .Title("[Zephyrion Engine] example - Sandbox")
       .Position(ZE::Enums::WindowPosition::Centered)
       .Resizable()
+      .Size(1220, 720)
+      .VSync()
       .Icon(ENGINE_ASSETS "icon.png")
       .Build(),
   ZE::Configs::Builders::ImguiConfigBuilder{}
-      .Event([]{ImGui::ShowDemoWindow();})
+      .Event([] {ImGui::ShowDemoWindow();})
       .Build()
   );
 
