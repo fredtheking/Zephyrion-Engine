@@ -14,26 +14,26 @@ void ZE::Window::Internal_UpdateWindowPosition() const {
       pos = {};
       break;
     case Enums::WindowPosition::Custom:
-      pos = p_Config.position_vec2;
+      pos = p_Config.position_vec2.value();
       break;
   }
 
   SDL_SetWindowPosition(p_Window, pos.x, pos.y);
 }
 void ZE::Window::Internal_UpdateWindowSizeConfigs() const {
-  if (p_Config.min_size_vec2 != NONVALID_VEC2 && p_Config.size_vec2 < p_Config.min_size_vec2)
-    p_Config.size_vec2 = p_Config.min_size_vec2;
-  if (p_Config.max_size_vec2 != NONVALID_VEC2 && p_Config.size_vec2 > p_Config.max_size_vec2)
-    p_Config.size_vec2 = p_Config.max_size_vec2;
+  if (p_Config.min_size_vec2 && p_Config.size_vec2 < p_Config.min_size_vec2)
+    p_Config.size_vec2 = p_Config.min_size_vec2.value();
+  if (p_Config.max_size_vec2 && p_Config.size_vec2 > p_Config.max_size_vec2)
+    p_Config.size_vec2 = p_Config.max_size_vec2.value();
 }
 void ZE::Window::Internal_UpdateWindowSize() const {
   SDL_SetWindowSize(p_Window, p_Config.size_vec2.x, p_Config.size_vec2.y);
 }
 void ZE::Window::Internal_SetWindowMinimaxSize() const {
-  if (p_Config.min_size_vec2 != NONVALID_VEC2)
-    SDL_SetWindowMinimumSize(p_Window, p_Config.min_size_vec2.x, p_Config.min_size_vec2.y);
-  if (p_Config.max_size_vec2 != NONVALID_VEC2)
-    SDL_SetWindowMaximumSize(p_Window, p_Config.max_size_vec2.x, p_Config.max_size_vec2.y);
+  if (p_Config.min_size_vec2)
+    SDL_SetWindowMinimumSize(p_Window, p_Config.min_size_vec2->x, p_Config.min_size_vec2->y);
+  if (p_Config.max_size_vec2)
+    SDL_SetWindowMaximumSize(p_Window, p_Config.max_size_vec2->x, p_Config.max_size_vec2->y);
 
   Internal_UpdateWindowSize();
 }
@@ -94,7 +94,7 @@ void ZE::Window::UpdateIcon(CREF(std::string) filepath) {
 
 void ZE::Window::UpdatePosition(const Enums::WindowPosition position_mode) const {
   p_Config.position_mode_enum = position_mode;
-  p_Config.position_vec2 = NONVALID_VEC2;
+  p_Config.position_vec2 = NONVALID_ST_VEC2;
   Internal_UpdateWindowPosition();
 }
 void ZE::Window::UpdatePosition(CREF(ST::Vector2<int>) position) const {
@@ -177,6 +177,8 @@ ZE::Window::Window(REF(Configs::WindowConfig) window_config)
   Util::AssertSDL(SDL_GL_SetSwapInterval(p_Config.vsync_bool), "Failed setting VSync", "");
 
   Logger::DebugLog("Current Flags: " + Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
+
+  m_Imgui = MAKE_UPTR(ImguiHandler)(this);
 
   Logger::Information("Finished creating window");
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "ImguiHandler.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/configs/WindowConfig.hpp"
 #include "zephyrion/simple_types/Bounds.hpp"
@@ -13,13 +14,6 @@ namespace ZE {
     [[nodiscard]] SDL_WindowFlags Internal_InitialiseFlags() const;
     void Internal_AfterWindowInit();
   public:
-    GETTER(Position, ST::Vector2<int>){return p_Config.position_vec2;}
-    GETTER(PositionX, int){return p_Config.position_vec2.x;}
-    GETTER(PositionY, int) {return p_Config.position_vec2.y;}
-    GETTER(Size, ST::Vector2<int>) {return p_Config.size_vec2;}
-    GETTER(SizeX, int) {return p_Config.size_vec2.x;}
-    GETTER(SizeY, int) {return p_Config.size_vec2.y;}
-
     void UpdateIcon(CREF(std::string) filepath);
 
     void UpdatePosition(Enums::WindowPosition position_mode) const;
@@ -41,6 +35,7 @@ namespace ZE {
     //...
   public:
     REF(Configs::WindowConfig) p_Config;
+    UPTR(ImguiHandler) m_Imgui;
     SDL_GLContext m_GLContext = nullptr;
     SDL_Window* p_Window = nullptr;
     SDL_Surface* p_Icon = nullptr;

@@ -18,8 +18,7 @@ void ZE::App::Terminate() {
 
 void ZE::App::Setup(CREF(Configs::WindowConfig) window_config, CREF(Configs::ImguiConfig) imgui_config) {
   p_Config = MAKE_UPTR(Configs::AppConfig)(
-    MAKE_UPTR(Configs::WindowConfig)(window_config),
-    MAKE_UPTR(Configs::ImguiConfig)(imgui_config)
+    MAKE_UPTR(Configs::WindowConfig)(window_config)
   );
 
   Logger::Separator(Colors::SkyBlue, "Hello world! Setting up engine...");
@@ -27,7 +26,6 @@ void ZE::App::Setup(CREF(Configs::WindowConfig) window_config, CREF(Configs::Img
   Util::AssertSDL(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "Failed initialising SDL3", "Initialised SDL3", true);
 
   p_MainWindow = MAKE_UPTR(Window)(*p_Config->window);
-  p_MainImguiHandler = MAKE_UPTR(ImguiHandler)(*p_Config->imgui, *p_MainWindow);
 
   Util::AssertSDL(gladLoadGLLoader(reinterpret_cast<GLADloadproc>(SDL_GL_GetProcAddress)), "Failed initialising GLAD", "", true);
   CREF(ST::Color) bg_color = Colors::BrightBlack;
@@ -72,9 +70,9 @@ void ZE::App::Render() {
   m_RenderDeltatime = Util::Render::GetDeltaTime();
   DEFINE_IO_VARIABLE
 
-  p_MainImguiHandler->Render();
+  p_MainWindow->m_Imgui->Render();
   glViewport(0, 0, p_Config->window->GetSize().x, p_Config->window->GetSize().y);
   glClear(GL_COLOR_BUFFER_BIT);
-  p_MainImguiHandler->Draw();
+  p_MainWindow->m_Imgui->Draw();
   SDL_GL_SwapWindow(p_MainWindow->p_Window);
 }

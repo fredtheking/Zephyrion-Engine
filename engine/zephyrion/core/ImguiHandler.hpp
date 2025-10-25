@@ -2,6 +2,7 @@
 #include "Window.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/configs/ImguiConfig.hpp"
+#include "zephyrion/simple_types/QueueApplier.hpp"
 
 namespace ZE {
   class ImguiHandler {
@@ -18,9 +19,9 @@ namespace ZE {
     //...
 
   private:
-    //...
+    friend class App;
   public:
-    explicit ImguiHandler(REF(Configs::ImguiConfig) imgui_config, CREF(Window) window);
+    explicit ImguiHandler(CREF(Window) window);
     ~ImguiHandler();
   };
 }

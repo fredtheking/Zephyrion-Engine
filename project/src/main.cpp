@@ -9,11 +9,17 @@ int main(){
       .Position(ZE::Enums::WindowPosition::Centered)
       .Resizable()
       .Size(1220, 720)
-      .VSync()
+      //.VSync()
+      .AlwaysOnTop()
       .Icon(ENGINE_ASSETS "icon.png")
       .Build(),
   ZE::Configs::Builders::ImguiConfigBuilder{}
-      .Event([] {ImGui::ShowDemoWindow();})
+      .Event([&app] {
+        ImGui::Begin("Hello, world!");
+        ImGui::Text("Hello, world!");
+        ImGui::Text("%f", GET_IO_SINGLETON.Framerate);
+        ImGui::End();
+      })
       .Build()
   );
 

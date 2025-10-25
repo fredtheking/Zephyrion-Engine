@@ -6,6 +6,5 @@
 namespace ZE::Configs {
   struct AppConfig {
     UPTR(WindowConfig) window;
-    UPTR(ImguiConfig) imgui;
   };
 }

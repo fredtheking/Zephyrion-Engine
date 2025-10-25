@@ -80,7 +80,6 @@ add_library(${ENGINE_NAME} STATIC
 )
 target_include_directories(${ENGINE_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/include
         ${magic-enums_DIR}/include/magic_enum
 )
 

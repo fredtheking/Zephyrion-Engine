@@ -157,3 +157,6 @@ bool ZE::ST::Color::operator==(CREF(Color) color) const {
          integer == color.integer &&
          hex == color.hex;
 }
+
+template class ZE::ST::RGBA<>;
+template class ZE::ST::RGBA<float>;

@@ -6,10 +6,16 @@ void ZE::ImguiHandler::Render() const {
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
+    ImGui::DockSpaceOverViewport();
     p_Config.process_event();
 
-    ImGui::EndFrame();
     ImGui::Render();
+    if (GET_IO_SINGLETON.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+      ImGui::UpdatePlatformWindows();
+      ImGui::RenderPlatformWindowsDefault();
+      SDL_GL_MakeCurrent(p_MainWindow.p_Window, p_MainWindow.m_GLContext);
+    }
   }
 }
 
@@ -18,9 +24,9 @@ void ZE::ImguiHandler::Draw() const {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-ZE::ImguiHandler::ImguiHandler(REF(Configs::ImguiConfig) imgui_config, CREF(Window) window)
-: p_Config(imgui_config)
-, p_MainWindow(window) {
+ZE::ImguiHandler::ImguiHandler(CREF(Window) window)
+: p_Config(window.p_Config.imgui_config.value())
+, p_MainWindow(window){
   Logger::Information("Creating imgui handler...");
 
   const float main_scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
@@ -30,6 +36,8 @@ ZE::ImguiHandler::ImguiHandler(REF(Configs::ImguiConfig) imgui_config, CREF(Wind
   DEFINE_IO_VARIABLE
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   io.IniFilename = nullptr;
 
   if (p_Config.dark_theme) ImGui::StyleColorsDark();

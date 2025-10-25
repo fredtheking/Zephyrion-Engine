@@ -22,7 +22,6 @@ namespace ZE {
   public:
     bool m_Running = true;
     UPTR(Window) p_MainWindow = nullptr;
-    UPTR(ImguiHandler) p_MainImguiHandler = nullptr;
     UPTR(Configs::AppConfig) p_Config = nullptr;
 
     double m_ProcessDeltatime;

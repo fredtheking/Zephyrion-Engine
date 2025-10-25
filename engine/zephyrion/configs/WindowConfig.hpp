@@ -1,4 +1,5 @@
 #pragma once
+#include "ImguiConfig.hpp"
 #include "zephyrion/core/Logger.hpp"
 #include "zephyrion/low/BuilderBase.hpp"
 #include "zephyrion/simple_types/Vector2.hpp"
@@ -15,35 +16,40 @@ namespace ZE {
     private:
       friend class ::ZE::Configs::Builders::WindowConfigBuilder;
       friend class ::ZE::Window;
+      friend class ::ZE::ImguiHandler;
 
-      Enums::BackendRenderer renderer_enum      = Enums::BackendRenderer::OpenGL;
-      std::string title_str                     = "Hello from Zephyrion Engine!";
-      std::string icon_filepath_str             = "";
-      ST::Vector2<int> position_vec2            = NONVALID_VEC2;
-      Enums::WindowPosition position_mode_enum  = Enums::WindowPosition::Centered;
-      ST::Vector2<int> size_vec2                = {800, 600};
-      ST::Vector2<int> max_size_vec2            = NONVALID_VEC2;
-      ST::Vector2<int> min_size_vec2            = NONVALID_VEC2;
-      float opacity_float                       = 1;
-      bool vsync_bool                           = false;
+      Enums::BackendRenderer renderer_enum          = Enums::BackendRenderer::OpenGL;
+      STR title_str                                 = "Hello from Zephyrion Engine!";
+      STR icon_filepath_str                         = "";
+      OPT(ST::Vector2<int>) position_vec2           = NULLOPT;
+      Enums::WindowPosition position_mode_enum      = Enums::WindowPosition::Centered;
+      ST::Vector2<int> size_vec2                    = {800, 600};
+      OPT(ST::Vector2<int>) max_size_vec2           = NULLOPT;
+      OPT(ST::Vector2<int>) min_size_vec2           = NULLOPT;
+      float opacity_float                           = 1;
+      bool vsync_bool                               = false;
+      std::optional<ImguiConfig> imgui_config       = NULLOPT;
 
-      bool resizable_bool                       = false;
-      bool borderless_bool                      = false;
-      bool fullscreen_bool                      = false;
-      bool always_on_top_bool                   = false;
-      bool hidden_bool                          = false;
-      bool input_blocked_bool                   = false;
+      bool resizable_bool                           = false;
+      bool borderless_bool                          = false;
+      bool fullscreen_bool                          = false;
+      bool always_on_top_bool                       = false;
+      bool hidden_bool                              = false;
+      bool input_blocked_bool                       = false;
 
-      SDL_Window* modal_parent_pointer          = nullptr;
-      bool external_bool                        = false;
+      SDL_Window* modal_parent_pointer              = nullptr;
+      bool external_bool                            = false;
     public:
-      GETTER(BackendRendererName, std::string_view){return magic_enum::enum_name(renderer_enum);}
-      GETTER(Title, CREF(std::string)){return title_str;}
-      GETTER(Position, CREF(ST::Vector2<int>)){return position_vec2;}
+      GETTER(BackendRendererName, CREF(STR)){return STR{magic_enum::enum_name(renderer_enum)};}
+      GETTER(Title, CREF(STR)){return title_str;}
+      GETTER(Position, CREF(OPT(ST::Vector2<int>))){return position_vec2;}
       GETTER(PositionMode, CREF(Enums::WindowPosition)){return position_mode_enum;}
       GETTER(Size, CREF(ST::Vector2<int>)){return size_vec2;}
+      GETTER(MaximumSize, CREF(OPT(ST::Vector2<int>))){return max_size_vec2;}
+      GETTER(MinimalSize, CREF(OPT(ST::Vector2<int>))){return min_size_vec2;}
       GETTER(Opacity, CREF(float)){return opacity_float;}
       GETTER(VSync, CREF(bool)){return vsync_bool;}
+      GETTER(ImGuiConfig, CREF(OPT(ImguiConfig))){return imgui_config;}
     };
 
     namespace Builders {
@@ -53,7 +59,7 @@ namespace ZE {
             Logger::Critical("Incorrect \"WindowConfig\"! - "
               "Currently, only \"OpenGL\" backend renderer is supported.");
 
-          if (build_object.position_vec2 == NONVALID_VEC2 &&
+          if (build_object.position_vec2 == NONVALID_ST_VEC2 &&
               build_object.position_mode_enum == Enums::WindowPosition::Custom)
             Logger::Critical("Incorrect \"WindowConfig\"! - "
               "If you are using \"ZE::Enums::WindowPosition\" to define position, it is prohibited to use \"Custom\" option. Instead, use real values.");
@@ -111,7 +117,7 @@ namespace ZE {
         }
 
         WindowConfigBuilder& Position(const Enums::WindowPosition position_mode) {
-          build_object.position_vec2 = NONVALID_VEC2;
+          build_object.position_vec2 = NULLOPT;
           build_object.position_mode_enum = position_mode;
           return *this;
         }
