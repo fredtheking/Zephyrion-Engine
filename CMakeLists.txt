@@ -5,4 +5,4 @@ set(CLEAN_BIN_DIR ${CMAKE_SOURCE_DIR}/build)
 set(CMAKE_CXX_STANDARD 23)
 
 add_subdirectory(engine)
-add_subdirectory(project)
+add_subdirectory(sandbox)

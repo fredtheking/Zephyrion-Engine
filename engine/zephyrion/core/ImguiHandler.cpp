@@ -1,4 +1,6 @@
 #include "ImguiHandler.hpp"
+#include "Window.hpp"
+#include "Logger.hpp"
 
 void ZE::ImguiHandler::Render() const {
   if (p_Config.process_event) {

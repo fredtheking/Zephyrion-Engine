@@ -6,20 +6,15 @@ int main(){
   DEFINE_APP_VARIABLE
   app.Setup(ZE::Configs::Builders::WindowConfigBuilder{}
       .Title("[Zephyrion Engine] example - Sandbox")
-      .Position(ZE::Enums::WindowPosition::Centered)
+      .Position(ZE::Enums::ZE_WindowPosition::Centered)
       .Resizable()
       .Size(1220, 720)
       //.VSync()
-      .AlwaysOnTop()
+      .ImGui(ZE::Configs::Builders::ImguiConfigBuilder{}
+        .Process([]{})
+        .Build()
+      )
       .Icon(ENGINE_ASSETS "icon.png")
-      .Build(),
-  ZE::Configs::Builders::ImguiConfigBuilder{}
-      .Event([&app] {
-        ImGui::Begin("Hello, world!");
-        ImGui::Text("Hello, world!");
-        ImGui::Text("%f", GET_IO_SINGLETON.Framerate);
-        ImGui::End();
-      })
       .Build()
   );
 

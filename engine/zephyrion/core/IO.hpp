@@ -1,6 +1,7 @@
 #pragma once
 #include "zephyrion/pch.hpp"
 #include "zephyrion/simple_types/Vector2.hpp"
+#include "zephyrion/utils/Enums.hpp"
 
 namespace ZE {
   namespace Low {
@@ -12,57 +13,57 @@ namespace ZE {
 
   class IO {
   private:
-    //...
+    static void ProcessEvent(REF(SDL_Event) e);
   public:
-    void OpenGamepad(SDL_JoystickID id);
-    void CloseGamepad(SDL_JoystickID id);
-    [[nodiscard]] const Low::GamepadState* GetGamepad(SDL_JoystickID id) const;
+    static void OpenGamepad(SDL_JoystickID id);
+    static void CloseGamepad(SDL_JoystickID id);
+    [[nodiscard]] static const Low::GamepadState* GetGamepad(SDL_JoystickID id);
 
-    [[nodiscard]] bool QuitRequested() const;
+    [[nodiscard]] static bool QuitRequested();
 
-    [[nodiscard]] bool IsKeyDown(SDL_Scancode key) const;
-    [[nodiscard]] bool IsKeyPressed(SDL_Scancode key) const;
-    [[nodiscard]] bool IsKeyReleased(SDL_Scancode key) const;
+    [[nodiscard]] static bool IsKeyDown(Enums::ZE_Keys key);
+    [[nodiscard]] static bool IsKeyPressed(Enums::ZE_Keys key);
+    [[nodiscard]] static bool IsKeyReleased(Enums::ZE_Keys key);
 
-    [[nodiscard]] bool IsMouseDown(UINT8 button) const;
-    [[nodiscard]] bool IsMousePressed(UINT8 button) const;
-    [[nodiscard]] bool IsMouseReleased(UINT8 button) const;
+    [[nodiscard]] static bool IsMouseDown(Enums::ZE_Mouse button);
+    [[nodiscard]] static bool IsMousePressed(Enums::ZE_Mouse button);
+    [[nodiscard]] static bool IsMouseReleased(Enums::ZE_Mouse button);
 
-    [[nodiscard]] ST::Vector2<int> MousePosition() const;
-    [[nodiscard]] int MousePositionX() const;
-    [[nodiscard]] int MousePositionY() const;
-    [[nodiscard]] ST::Vector2<> MouseWheel() const;
-    [[nodiscard]] float MouseWheelX() const;
-    [[nodiscard]] float MouseWheelY() const;
+    [[nodiscard]] static ST::Vector2<> MousePosition();
+    [[nodiscard]] static float MousePositionX();
+    [[nodiscard]] static float MousePositionY();
+    [[nodiscard]] static ST::Vector2<> MouseWheel();
+    [[nodiscard]] static float MouseWheelX();
+    [[nodiscard]] static float MouseWheelY();
 
-    [[nodiscard]] const REF(STR) GetTextInput() const;
-    [[nodiscard]] const REF(VEC(STR)) GetDroppedFiles() const;
-    [[nodiscard]] const REF(VEC(SDL_Event)) GetWindowEvents() const;
+    [[nodiscard]] static const REF(STR) GetTextInput();
+    [[nodiscard]] static const REF(VEC(STR)) GetDroppedFiles();
+    [[nodiscard]] static const REF(VEC(SDL_Event)) GetWindowEvents();
 
   private:
     static constexpr int MAX_KEYS = SDL_SCANCODE_COUNT;
-    static constexpr int MAX_BUTTONS = 8;
+    static constexpr int MAX_BUTTONS = 5;
 
-    std::array<bool, MAX_KEYS> m_CurrentKeys{};
-    std::array<bool, MAX_KEYS> m_PreviousKeys{};
-    std::array<bool, MAX_BUTTONS> m_CurrentMouse{};
-    std::array<bool, MAX_BUTTONS> m_PreviousMouse{};
+    static std::array<bool, MAX_KEYS> s_CurrentKeys;
+    static std::array<bool, MAX_KEYS> s_PreviousKeys;
+    static std::array<bool, MAX_BUTTONS> s_CurrentMouse;
+    static std::array<bool, MAX_BUTTONS> s_PreviousMouse;
 
-    ST::Vector2<int> m_MousePos;
-    ST::Vector2<> m_MouseWheel;
-    bool m_Quit = false;
+    static ST::Vector2<> s_MousePos;
+    static ST::Vector2<> s_MouseWheel;
+    static bool s_Quit;
 
-    STR m_TextInput;
-    VEC(STR) m_DropFiles;
-    VEC(SDL_Event) m_WindowEvents;
+    static STR s_TextInput;
+    static VEC(STR) s_DropFiles;
+    static VEC(SDL_Event) s_WindowEvents;
 
-    std::unordered_map<SDL_JoystickID, Low::GamepadState> m_Gamepads;
+    static std::unordered_map<SDL_JoystickID, Low::GamepadState> s_Gamepads;
   public:
     //...
 
   private:
-    //...
+    friend class App;
   public:
-    //...
+    STATIC_ONLY_CONSTRUCTOR(IO)
   };
 }

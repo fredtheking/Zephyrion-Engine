@@ -13,12 +13,12 @@ namespace ZE {
     void Process();
     void Render();
   public:
-    void Setup(CREF(Configs::WindowConfig) window_config = {}, CREF(Configs::ImguiConfig) imgui_config = {});
+    void Setup(CREF(Configs::WindowConfig) window_config = {});
     void Run();
     void Terminate();
 
   private:
-    // Low::DetachedProcess e_ProcessLoop{[this]{Process();}};
+    SDL_Event m_Event;
   public:
     bool m_Running = true;
     UPTR(Window) p_MainWindow = nullptr;

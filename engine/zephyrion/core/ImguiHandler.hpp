@@ -1,10 +1,10 @@
 #pragma once
-#include "Window.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/configs/ImguiConfig.hpp"
-#include "zephyrion/simple_types/QueueApplier.hpp"
 
 namespace ZE {
+  class Window;
+
   class ImguiHandler {
   private:
     //...

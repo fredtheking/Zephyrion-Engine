@@ -1,4 +1,6 @@
 #include "App.hpp"
+
+#include "core/IO.hpp"
 #include "core/Logger.hpp"
 #include "utils/Util.hpp"
 
@@ -16,7 +18,7 @@ void ZE::App::Terminate() {
   Logger::Separator(Colors::Lime, "Goodbye world");
 }
 
-void ZE::App::Setup(CREF(Configs::WindowConfig) window_config, CREF(Configs::ImguiConfig) imgui_config) {
+void ZE::App::Setup(CREF(Configs::WindowConfig) window_config) {
   p_Config = MAKE_UPTR(Configs::AppConfig)(
     MAKE_UPTR(Configs::WindowConfig)(window_config)
   );
@@ -36,43 +38,32 @@ void ZE::App::Setup(CREF(Configs::WindowConfig) window_config, CREF(Configs::Img
 void ZE::App::Run() {
   Initialise();
 
-  // e_ProcessLoop.Start();
   while (m_Running) {
     PollInput();
     Process();
     Render();
   }
-  // e_ProcessLoop.Stop();
 
   Logger::Separator(Colors::Orange, "Terminating app...");
 }
 
 void ZE::App::PollInput() {
-  SDL_Event event;
-  while (SDL_PollEvent(&event)) {
-    ImGui_ImplSDL3_ProcessEvent(&event);
-    switch (event.type) {
-      case SDL_EVENT_QUIT:
-        m_Running = false;
-        break;
-      case SDL_EVENT_KEY_DOWN:
-        if (event.key.key == SDLK_ESCAPE)
-          m_Running = false;
-      default:
-        break;
-    }
-  }
+  IO::ProcessEvent(m_Event);
+  m_Running = !IO::QuitRequested();
 }
 void ZE::App::Process() {
   m_ProcessDeltatime = Util::Process::GetDeltaTime();
+
+  if (IO::IsKeyPressed(Enums::ZE_Keys::Escape))
+    m_Running = false;
 }
 void ZE::App::Render() {
   m_RenderDeltatime = Util::Render::GetDeltaTime();
-  DEFINE_IO_VARIABLE
+  if (p_MainWindow->m_Imgui) DEFINE_IO_VARIABLE
 
-  p_MainWindow->m_Imgui->Render();
+  if (p_MainWindow->m_Imgui) p_MainWindow->m_Imgui.value()->Render();
   glViewport(0, 0, p_Config->window->GetSize().x, p_Config->window->GetSize().y);
   glClear(GL_COLOR_BUFFER_BIT);
-  p_MainWindow->m_Imgui->Draw();
+  if (p_MainWindow->m_Imgui) p_MainWindow->m_Imgui.value()->Draw();
   SDL_GL_SwapWindow(p_MainWindow->p_Window);
 }

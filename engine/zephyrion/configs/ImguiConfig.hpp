@@ -26,11 +26,11 @@ namespace ZE {
 
         }
       public:
-        ImguiConfigBuilder& Event(VOID_FUNC_CONST event) {
+        REF(ImguiConfigBuilder) Process(VOID_FUNC_CONST event) {
           build_object.process_event = event;
           return *this;
         }
-        ImguiConfigBuilder& LightTheme() {
+        REF(ImguiConfigBuilder) LightTheme() {
           build_object.dark_theme = false;
           return *this;
         }

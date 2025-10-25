@@ -7,13 +7,13 @@ void ZE::Window::Internal_UpdateWindowPosition() const {
   ST::Vector2<int> pos;
 
   switch (p_Config.position_mode_enum) {
-    case Enums::WindowPosition::Centered:
+    case Enums::ZE_WindowPosition::Centered:
       pos = {SDL_WINDOWPOS_CENTERED};
       break;
-    case Enums::WindowPosition::TopLeft:
+    case Enums::ZE_WindowPosition::TopLeft:
       pos = {};
       break;
-    case Enums::WindowPosition::Custom:
+    case Enums::ZE_WindowPosition::Custom:
       pos = p_Config.position_vec2.value();
       break;
   }
@@ -58,11 +58,11 @@ SDL_WindowFlags ZE::Window::Internal_InitialiseFlags() const {
     flags |= SDL_WINDOW_EXTERNAL;
 
   switch (p_Config.renderer_enum) {
-    case Enums::BackendRenderer::OpenGL:
+    case Enums::ZE_BackendRenderer::OpenGL:
       flags |= SDL_WINDOW_OPENGL; break;
-    case Enums::BackendRenderer::Vulkan:
+    case Enums::ZE_BackendRenderer::Vulkan:
       flags |= SDL_WINDOW_VULKAN; break;
-    case Enums::BackendRenderer::Metal:
+    case Enums::ZE_BackendRenderer::Metal:
       flags |= SDL_WINDOW_METAL; break;
   }
 
@@ -92,13 +92,13 @@ void ZE::Window::UpdateIcon(CREF(std::string) filepath) {
   Util::AssertSDL(p_Icon, "Failed to set window icon based on error log above", "Loaded window icon", false, [this]{SDL_SetWindowIcon(p_Window, p_Icon);});
 }
 
-void ZE::Window::UpdatePosition(const Enums::WindowPosition position_mode) const {
+void ZE::Window::UpdatePosition(const Enums::ZE_WindowPosition position_mode) const {
   p_Config.position_mode_enum = position_mode;
   p_Config.position_vec2 = NONVALID_ST_VEC2;
   Internal_UpdateWindowPosition();
 }
 void ZE::Window::UpdatePosition(CREF(ST::Vector2<int>) position) const {
-  p_Config.position_mode_enum = Enums::WindowPosition::Custom;
+  p_Config.position_mode_enum = Enums::ZE_WindowPosition::Custom;
   p_Config.position_vec2 = position;
   Internal_UpdateWindowPosition();
 }
@@ -178,7 +178,8 @@ ZE::Window::Window(REF(Configs::WindowConfig) window_config)
 
   Logger::DebugLog("Current Flags: " + Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
 
-  m_Imgui = MAKE_UPTR(ImguiHandler)(this);
+  if (p_Config.imgui_config)
+    m_Imgui = MAKE_UPTR(ImguiHandler)(*this);
 
   Logger::Information("Finished creating window");
 }

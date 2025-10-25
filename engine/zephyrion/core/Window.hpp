@@ -16,7 +16,7 @@ namespace ZE {
   public:
     void UpdateIcon(CREF(std::string) filepath);
 
-    void UpdatePosition(Enums::WindowPosition position_mode) const;
+    void UpdatePosition(Enums::ZE_WindowPosition position_mode) const;
     void UpdatePosition(CREF(ST::Vector2<int>) position) const;
     void UpdatePosition(CREF(ST::Vector2<>) position) const;
     void UpdatePosition(int x, int y) const;
@@ -35,7 +35,7 @@ namespace ZE {
     //...
   public:
     REF(Configs::WindowConfig) p_Config;
-    UPTR(ImguiHandler) m_Imgui;
+    OPT(UPTR(ImguiHandler)) m_Imgui = NULLOPT;
     SDL_GLContext m_GLContext = nullptr;
     SDL_Window* p_Window = nullptr;
     SDL_Surface* p_Icon = nullptr;
