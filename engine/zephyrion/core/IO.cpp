@@ -26,6 +26,7 @@ void ZE::IO::ProcessEvent(REF(SDL_Event) e) {
   s_WindowEvents.clear();
 
   while (SDL_PollEvent(&e)) {
+    if (ImGui::GetCurrentContext()) ImGui_ImplSDL3_ProcessEvent(&e);
     switch (e.type) {
       // ===================== SYSTEM =====================
       case SDL_EVENT_QUIT:

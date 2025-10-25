@@ -9,9 +9,15 @@ int main(){
       .Position(ZE::Enums::ZE_WindowPosition::Centered)
       .Resizable()
       .Size(1220, 720)
-      //.VSync()
-      .ImGui(ZE::Configs::Builders::ImguiConfigBuilder{}
-        .Process([]{})
+      .NoVsync()
+      .EnableImGui(ZE::Configs::Builders::ImguiConfigBuilder{}
+        .Process([] {
+          ImGui::ShowDemoWindow();
+
+          ImGui::Begin("Testo");
+          ImGui::Text("FPS: %f", GET_IO_SINGLETON.Framerate);
+          ImGui::End();
+        })
         .Build()
       )
       .Icon(ENGINE_ASSETS "icon.png")

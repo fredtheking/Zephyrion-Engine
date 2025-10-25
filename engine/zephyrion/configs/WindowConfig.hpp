@@ -18,16 +18,16 @@ namespace ZE {
       friend class ::ZE::Window;
       friend class ::ZE::ImguiHandler;
 
-      Enums::ZE_BackendRenderer renderer_enum          = Enums::ZE_BackendRenderer::OpenGL;
+      Enums::ZE_BackendRenderer renderer_enum       = Enums::ZE_BackendRenderer::OpenGL;
       STR title_str                                 = "Hello from Zephyrion Engine!";
       STR icon_filepath_str                         = "";
       OPT(ST::Vector2<int>) position_vec2           = NULLOPT;
-      Enums::ZE_WindowPosition position_mode_enum      = Enums::ZE_WindowPosition::Centered;
+      Enums::ZE_WindowPosition position_mode_enum   = Enums::ZE_WindowPosition::Centered;
       ST::Vector2<int> size_vec2                    = {800, 600};
       OPT(ST::Vector2<int>) max_size_vec2           = NULLOPT;
       OPT(ST::Vector2<int>) min_size_vec2           = NULLOPT;
-      float opacity_float                           = 1;
-      bool vsync_bool                               = false;
+      OPT(float) opacity_float                      = NULLOPT;
+      bool vsync_bool                               = true;
       std::optional<ImguiConfig> imgui_config       = NULLOPT;
 
       bool resizable_bool                           = false;
@@ -40,15 +40,15 @@ namespace ZE {
       SDL_Window* modal_parent_pointer              = nullptr;
       bool external_bool                            = false;
     public:
-      GETTER(BackendRendererName, CREF(STR)){return STR{magic_enum::enum_name(renderer_enum)};}
+      GETTER(BackendRendererName, STR){return STR{magic_enum::enum_name(renderer_enum)};}
       GETTER(Title, CREF(STR)){return title_str;}
-      GETTER(Position, CREF(OPT(ST::Vector2<int>))){return position_vec2;}
+      GETTER(Position, ST::Vector2<int>){return position_vec2.has_value() ? position_vec2.value() : NONVALID_ST_VEC2;}
       GETTER(PositionMode, CREF(Enums::ZE_WindowPosition)){return position_mode_enum;}
       GETTER(Size, CREF(ST::Vector2<int>)){return size_vec2;}
-      GETTER(MaximumSize, CREF(OPT(ST::Vector2<int>))){return max_size_vec2;}
-      GETTER(MinimalSize, CREF(OPT(ST::Vector2<int>))){return min_size_vec2;}
-      GETTER(Opacity, CREF(float)){return opacity_float;}
-      GETTER(VSync, CREF(bool)){return vsync_bool;}
+      GETTER(MaximumSize, ST::Vector2<int>){return max_size_vec2.has_value() ? max_size_vec2.value() : NONVALID_ST_VEC2;}
+      GETTER(MinimalSize, ST::Vector2<int>){return min_size_vec2.has_value() ? min_size_vec2.value() : NONVALID_ST_VEC2;}
+      GETTER(Opacity, float){return opacity_float.has_value() ? opacity_float.value() : NONVALID_FLOAT;}
+      GETTER(VSync, bool){return vsync_bool;}
       GETTER(ImGuiConfig, CREF(OPT(ImguiConfig))){return imgui_config;}
     };
 
@@ -199,12 +199,12 @@ namespace ZE {
           return *this;
         }
 
-        REF(WindowConfigBuilder) VSync() {
-          build_object.vsync_bool = true;
+        REF(WindowConfigBuilder) NoVsync() {
+          build_object.vsync_bool = false;
           return *this;
         }
 
-        REF(WindowConfigBuilder) ImGui(CREF(ImguiConfig) config) {
+        REF(WindowConfigBuilder) EnableImGui(CREF(ImguiConfig) config) {
           build_object.imgui_config = config;
           return *this;
         }
