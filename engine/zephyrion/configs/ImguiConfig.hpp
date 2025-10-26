@@ -15,7 +15,7 @@ namespace ZE {
       friend class ::ZE::ImguiHandler;
 
       VOID_FUNC process_event = nullptr;
-      bool dark_theme         = true;
+      bool      dark_theme    = true;
     public:
       GETTER(DarkTheme, bool){return dark_theme;}
     };

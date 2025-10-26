@@ -5,6 +5,6 @@
 
 namespace ZE::Configs {
   struct AppConfig {
-    UPTR(WindowConfig) window;
+    WPTR(WindowConfig) window;
   };
 }

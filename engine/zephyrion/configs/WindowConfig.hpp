@@ -18,36 +18,51 @@ namespace ZE {
       friend class ::ZE::Window;
       friend class ::ZE::ImguiHandler;
 
-      Enums::ZE_BackendRenderer renderer_enum       = Enums::ZE_BackendRenderer::OpenGL;
-      STR title_str                                 = "Hello from Zephyrion Engine!";
-      STR icon_filepath_str                         = "";
-      OPT(ST::Vector2<int>) position_vec2           = NULLOPT;
-      Enums::ZE_WindowPosition position_mode_enum   = Enums::ZE_WindowPosition::Centered;
-      ST::Vector2<int> size_vec2                    = {800, 600};
-      OPT(ST::Vector2<int>) max_size_vec2           = NULLOPT;
-      OPT(ST::Vector2<int>) min_size_vec2           = NULLOPT;
-      OPT(float) opacity_float                      = NULLOPT;
-      bool vsync_bool                               = true;
-      std::optional<ImguiConfig> imgui_config       = NULLOPT;
+      Enums::ZE_BackendRenderer renderer_enum        = Enums::ZE_BackendRenderer::OpenGL;
+      STR                       title_str            = "Hello from Zephyrion Engine!";
+      STR                       icon_filepath_str    = "";
+      OPT(ST_VEC2(int))         position_vec2        = NULLOPT;
+      Enums::ZE_WindowPosition  position_mode_enum   = Enums::ZE_WindowPosition::Centered;
+      ST_VEC2(int)              size_vec2            = {800, 600};
+      OPT(ST_VEC2(int))         max_size_vec2        = NULLOPT;
+      OPT(ST_VEC2(int))         min_size_vec2        = NULLOPT;
+      OPT(float)                opacity_float        = NULLOPT;
+      bool                      vsync_bool           = true;
+      OPT(ImguiConfig)          imgui_config         = NULLOPT;
 
-      bool resizable_bool                           = false;
-      bool borderless_bool                          = false;
-      bool fullscreen_bool                          = false;
-      bool always_on_top_bool                       = false;
-      bool hidden_bool                              = false;
-      bool input_blocked_bool                       = false;
+      bool                      resizable_bool       = false;
+      bool                      borderless_bool      = false;
+      bool                      fullscreen_bool      = false;
+      bool                      always_on_top_bool   = false;
+      bool                      hidden_bool          = false;
+      bool                      input_blocked_bool   = false;
 
-      SDL_Window* modal_parent_pointer              = nullptr;
-      bool external_bool                            = false;
+      SDL_Window*               modal_parent_pointer = nullptr;
+      bool                      external_bool        = false;
     public:
       GETTER(BackendRendererName, STR){return STR{magic_enum::enum_name(renderer_enum)};}
       GETTER(Title, CREF(STR)){return title_str;}
-      GETTER(Position, ST::Vector2<int>){return position_vec2.has_value() ? position_vec2.value() : NONVALID_ST_VEC2;}
+      GETTER(Position, ST_VEC2(int)){return position_vec2.has_value() ? position_vec2.value() : NONVALID_ST_VEC2;}
       GETTER(PositionMode, CREF(Enums::ZE_WindowPosition)){return position_mode_enum;}
-      GETTER(Size, CREF(ST::Vector2<int>)){return size_vec2;}
-      GETTER(MaximumSize, ST::Vector2<int>){return max_size_vec2.has_value() ? max_size_vec2.value() : NONVALID_ST_VEC2;}
-      GETTER(MinimalSize, ST::Vector2<int>){return min_size_vec2.has_value() ? min_size_vec2.value() : NONVALID_ST_VEC2;}
-      GETTER(Opacity, float){return opacity_float.has_value() ? opacity_float.value() : NONVALID_FLOAT;}
+      GETTER(Size, CREF(ST_VEC2(int))){return size_vec2;}
+      GETTER(MaximumSize, ST_VEC2(int)) {
+        if (max_size_vec2)
+          return max_size_vec2.value();
+        Logger::Error("Current window's \"Maximum Size\" is not set. Returning nonvalid Vector2<int> as error.");
+        return NONVALID_ST_VEC2;
+      }
+      GETTER(MinimalSize, ST_VEC2(int)) {
+        if (min_size_vec2)
+          return min_size_vec2.value();
+        Logger::Error("Current window's \"Minimal Size\" is not set. Returning nonvalid Vector2<int> as error.");
+        return NONVALID_ST_VEC2;
+      }
+      GETTER(Opacity, float) {
+        if (opacity_float)
+         return opacity_float.value();
+        Logger::Error("Current window does not have \"Transparency\" flag. Returning nonvalid float as error.");
+        return NONVALID_FLOAT;
+      }
       GETTER(VSync, bool){return vsync_bool;}
       GETTER(ImGuiConfig, CREF(OPT(ImguiConfig))){return imgui_config;}
     };

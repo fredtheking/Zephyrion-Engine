@@ -4,12 +4,12 @@
 #define CAST_MOUSE(X) static_cast<UINT8>(X)
 
 
-std::array<bool, 512> ZE::IO::s_CurrentKeys{};
-std::array<bool, 512> ZE::IO::s_PreviousKeys{};
-std::array<bool, 5> ZE::IO::s_CurrentMouse{};
-std::array<bool, 5> ZE::IO::s_PreviousMouse{};
-ZE::ST::Vector2<> ZE::IO::s_MousePos{};
-ZE::ST::Vector2<> ZE::IO::s_MouseWheel{};
+std::array<bool, ZE::IO::MAX_KEYS> ZE::IO::s_CurrentKeys{};
+std::array<bool, ZE::IO::MAX_KEYS> ZE::IO::s_PreviousKeys{};
+std::array<bool, ZE::IO::MAX_BUTTONS> ZE::IO::s_CurrentMouse{};
+std::array<bool, ZE::IO::MAX_BUTTONS> ZE::IO::s_PreviousMouse{};
+ST_VEC2() ZE::IO::s_MousePos{};
+ST_VEC2() ZE::IO::s_MouseWheel{};
 bool ZE::IO::s_Quit = false;
 STR ZE::IO::s_TextInput{};
 VEC(STR) ZE::IO::s_DropFiles{};

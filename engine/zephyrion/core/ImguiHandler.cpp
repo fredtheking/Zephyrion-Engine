@@ -27,7 +27,7 @@ void ZE::ImguiHandler::Draw() const {
 }
 
 ZE::ImguiHandler::ImguiHandler(CREF(Window) window)
-: p_Config(window.p_Config.imgui_config.value())
+: p_Config(window.p_Config->imgui_config.value())
 , p_MainWindow(window){
   Logger::Information("Creating imgui handler...");
 

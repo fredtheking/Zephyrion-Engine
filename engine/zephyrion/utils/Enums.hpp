@@ -1,4 +1,5 @@
 #pragma once
+#include "zephyrion/pch.hpp"
 #define ENUM(NAME) enum class NAME
 #define BITMASK_ENUMCLASS_OPERATORS(NAME) inline NAME operator|(NAME a, NAME b) {                    \
                                     return static_cast<NAME>(                                    \

@@ -13,6 +13,9 @@ namespace ZE {
     void Internal_SetWindowMinimaxSize() const;
     [[nodiscard]] SDL_WindowFlags Internal_InitialiseFlags() const;
     void Internal_AfterWindowInit();
+
+    void Process();
+    void Render();
   public:
     void UpdateIcon(CREF(std::string) filepath);
 
@@ -34,18 +37,16 @@ namespace ZE {
   private:
     //...
   public:
-    REF(Configs::WindowConfig) p_Config;
+    SPTR(Configs::WindowConfig) p_Config;
     OPT(UPTR(ImguiHandler)) m_Imgui = NULLOPT;
     SDL_GLContext m_GLContext = nullptr;
     SDL_Window* p_Window = nullptr;
     SDL_Surface* p_Icon = nullptr;
 
-    std::vector<SPTR(Window)> m_WindowChildren = {};
-
   private:
     friend class App;
   public:
-    explicit Window(REF(Configs::WindowConfig) window_config);
+    explicit Window(CREF(Configs::WindowConfig) window_config);
     ~Window();
   };
 }

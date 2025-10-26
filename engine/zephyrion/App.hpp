@@ -18,14 +18,15 @@ namespace ZE {
     void Terminate();
 
   private:
-    SDL_Event m_Event;
+    SDL_Event m_Event{};
+    VEC(WPTR(Window)) m_Windows = {};
   public:
     bool m_Running = true;
-    UPTR(Window) p_MainWindow = nullptr;
+    SPTR(Window) p_MainWindow = nullptr;
     UPTR(Configs::AppConfig) p_Config = nullptr;
 
-    double m_ProcessDeltatime;
-    double m_RenderDeltatime;
+    double m_ProcessDeltatime = 0;
+    double m_RenderDeltatime = 0;
 
 
   private:

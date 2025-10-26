@@ -3,6 +3,12 @@
 #define REF(TYPE) TYPE&
 #define CREF(TYPE) const REF(TYPE)
 
+#define UPTR(TYPE) std::unique_ptr<TYPE>
+#define MAKE_UPTR(TYPE) std::make_unique<TYPE>
+#define SPTR(TYPE) std::shared_ptr<TYPE>
+#define MAKE_SPTR(TYPE) std::make_shared<TYPE>
+#define WPTR(TYPE) std::weak_ptr<TYPE>
+
 #define U(TYPE) unsigned TYPE
 #define UINT8 U(char)
 #define UINT16 U(short)
@@ -13,12 +19,7 @@
 #define C_STR const char*
 #define STR std::string
 #define VEC(TYPE) std::vector<TYPE>
-
-#define UPTR(TYPE) std::unique_ptr<TYPE>
-#define MAKE_UPTR(TYPE) std::make_unique<TYPE>
-#define SPTR(TYPE) std::shared_ptr<TYPE>
-#define MAKE_SPTR(TYPE) std::make_shared<TYPE>
-#define WPTR(TYPE) std::weak_ptr<TYPE>
+#define ST_VEC2(TYPE) ZE::ST::Vector2<TYPE>
 
 #define NULLOPT std::nullopt
 #define OPT(TYPE) std::optional<TYPE>
@@ -70,7 +71,7 @@
 #define INFINITE_FLOATING(TYPE) std::numeric_limits<TYPE>::infinity()
 #define NONVALID_FLOAT -INFINITE_FLOATING(float)
 #define NONVALID_INT INT_MIN
-#define NONVALID_ST_VEC2 ZE::ST::Vector2{NONVALID_INT}
+#define NONVALID_ST_VEC2 ST_VEC2(int){NONVALID_INT}
 
 #define GET_APP_SINGLETON ZE::App::Get()
 #define DEFINE_APP_VARIABLE REF(auto) app = GET_APP_SINGLETON;

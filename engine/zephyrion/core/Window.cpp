@@ -4,9 +4,9 @@
 #include "zephyrion/utils/Util.hpp"
 
 void ZE::Window::Internal_UpdateWindowPosition() const {
-  ST::Vector2<int> pos;
+  ST_VEC2(int) pos;
 
-  switch (p_Config.position_mode_enum) {
+  switch (p_Config->position_mode_enum) {
     case Enums::ZE_WindowPosition::Centered:
       pos = {SDL_WINDOWPOS_CENTERED};
       break;
@@ -14,50 +14,50 @@ void ZE::Window::Internal_UpdateWindowPosition() const {
       pos = {};
       break;
     case Enums::ZE_WindowPosition::Custom:
-      pos = p_Config.position_vec2.value();
+      pos = p_Config->position_vec2.value();
       break;
   }
 
   SDL_SetWindowPosition(p_Window, pos.x, pos.y);
 }
 void ZE::Window::Internal_UpdateWindowSizeConfigs() const {
-  if (p_Config.min_size_vec2 && p_Config.size_vec2 < p_Config.min_size_vec2)
-    p_Config.size_vec2 = p_Config.min_size_vec2.value();
-  if (p_Config.max_size_vec2 && p_Config.size_vec2 > p_Config.max_size_vec2)
-    p_Config.size_vec2 = p_Config.max_size_vec2.value();
+  if (p_Config->min_size_vec2 && p_Config->size_vec2 < p_Config->min_size_vec2)
+    p_Config->size_vec2 = p_Config->min_size_vec2.value();
+  if (p_Config->max_size_vec2 && p_Config->size_vec2 > p_Config->max_size_vec2)
+    p_Config->size_vec2 = p_Config->max_size_vec2.value();
 }
 void ZE::Window::Internal_UpdateWindowSize() const {
-  SDL_SetWindowSize(p_Window, p_Config.size_vec2.x, p_Config.size_vec2.y);
+  SDL_SetWindowSize(p_Window, p_Config->size_vec2.x, p_Config->size_vec2.y);
 }
 void ZE::Window::Internal_SetWindowMinimaxSize() const {
-  if (p_Config.min_size_vec2)
-    SDL_SetWindowMinimumSize(p_Window, p_Config.min_size_vec2->x, p_Config.min_size_vec2->y);
-  if (p_Config.max_size_vec2)
-    SDL_SetWindowMaximumSize(p_Window, p_Config.max_size_vec2->x, p_Config.max_size_vec2->y);
+  if (p_Config->min_size_vec2)
+    SDL_SetWindowMinimumSize(p_Window, p_Config->min_size_vec2->x, p_Config->min_size_vec2->y);
+  if (p_Config->max_size_vec2)
+    SDL_SetWindowMaximumSize(p_Window, p_Config->max_size_vec2->x, p_Config->max_size_vec2->y);
 
   Internal_UpdateWindowSize();
 }
 SDL_WindowFlags ZE::Window::Internal_InitialiseFlags() const {
   SDL_WindowFlags flags = SDL_WINDOW_OPENGL;
 
-  if (p_Config.opacity_float < 1.0f)
+  if (p_Config->opacity_float)
     flags |= SDL_WINDOW_TRANSPARENT;
-  if (p_Config.resizable_bool)
+  if (p_Config->resizable_bool)
     flags |= SDL_WINDOW_RESIZABLE;
-  if (p_Config.borderless_bool)
+  if (p_Config->borderless_bool)
     flags |= SDL_WINDOW_BORDERLESS;
-  if (p_Config.fullscreen_bool)
+  if (p_Config->fullscreen_bool)
     flags |= SDL_WINDOW_FULLSCREEN;
-  if (p_Config.always_on_top_bool)
+  if (p_Config->always_on_top_bool)
     flags |= SDL_WINDOW_ALWAYS_ON_TOP;
-  if (p_Config.hidden_bool)
+  if (p_Config->hidden_bool)
     flags |= SDL_WINDOW_HIDDEN;
-  if (p_Config.input_blocked_bool)
+  if (p_Config->input_blocked_bool)
     flags |= SDL_WINDOW_NOT_FOCUSABLE;
-  if (p_Config.external_bool)
+  if (p_Config->external_bool)
     flags |= SDL_WINDOW_EXTERNAL;
 
-  switch (p_Config.renderer_enum) {
+  switch (p_Config->renderer_enum) {
     case Enums::ZE_BackendRenderer::OpenGL:
       flags |= SDL_WINDOW_OPENGL; break;
     case Enums::ZE_BackendRenderer::Vulkan:
@@ -73,12 +73,25 @@ void ZE::Window::Internal_AfterWindowInit() {
   Internal_SetWindowMinimaxSize();
   Internal_UpdateWindowPosition();
 
-  if (p_Config.modal_parent_pointer) {
-    Util::AssertSDL(SDL_SetWindowParent(p_Window, p_Config.modal_parent_pointer), "Failed to make window modal");
+  if (p_Config->modal_parent_pointer) {
+    Util::AssertSDL(SDL_SetWindowParent(p_Window, p_Config->modal_parent_pointer), "Failed to make window modal");
   }
 
-  if (!p_Config.icon_filepath_str.empty())
-    UpdateIcon(p_Config.icon_filepath_str);
+  if (!p_Config->icon_filepath_str.empty())
+    UpdateIcon(p_Config->icon_filepath_str);
+}
+
+void ZE::Window::Process() {
+
+}
+void ZE::Window::Render() {
+  if (m_Imgui) DEFINE_IO_VARIABLE
+
+  if (m_Imgui) m_Imgui.value()->Render();
+  glViewport(0, 0, p_Config->GetSize().x, p_Config->GetSize().y);
+  glClear(GL_COLOR_BUFFER_BIT);
+  if (m_Imgui) m_Imgui.value()->Draw();
+  SDL_GL_SwapWindow(p_Window);
 }
 
 void ZE::Window::UpdateIcon(CREF(std::string) filepath) {
@@ -93,13 +106,13 @@ void ZE::Window::UpdateIcon(CREF(std::string) filepath) {
 }
 
 void ZE::Window::UpdatePosition(const Enums::ZE_WindowPosition position_mode) const {
-  p_Config.position_mode_enum = position_mode;
-  p_Config.position_vec2 = NONVALID_ST_VEC2;
+  p_Config->position_mode_enum = position_mode;
+  p_Config->position_vec2 = NONVALID_ST_VEC2;
   Internal_UpdateWindowPosition();
 }
 void ZE::Window::UpdatePosition(CREF(ST::Vector2<int>) position) const {
-  p_Config.position_mode_enum = Enums::ZE_WindowPosition::Custom;
-  p_Config.position_vec2 = position;
+  p_Config->position_mode_enum = Enums::ZE_WindowPosition::Custom;
+  p_Config->position_vec2 = position;
   Internal_UpdateWindowPosition();
 }
 void ZE::Window::UpdatePosition(CREF(ST::Vector2<>) position) const {
@@ -117,7 +130,7 @@ void ZE::Window::UpdatePosition(const float x, const float y) const {
 }
 
 void ZE::Window::UpdateSize(const ST::Vector2<int> &size) const {
-  p_Config.size_vec2 = size;
+  p_Config->size_vec2 = size;
   Internal_UpdateWindowSizeConfigs();
   Internal_UpdateWindowSize();
 }
@@ -136,37 +149,37 @@ void ZE::Window::UpdateSize(const float width, const float height) const {
 }
 
 void ZE::Window::SetResizable(const bool value) const {
-  p_Config.resizable_bool = value;
-  SDL_SetWindowResizable(p_Window, p_Config.resizable_bool);
+  p_Config->resizable_bool = value;
+  SDL_SetWindowResizable(p_Window, p_Config->resizable_bool);
 }
 void ZE::Window::SetBorderless(const bool value) const {
-  p_Config.borderless_bool = value;
-  SDL_SetWindowBordered(p_Window, !p_Config.borderless_bool);
+  p_Config->borderless_bool = value;
+  SDL_SetWindowBordered(p_Window, !p_Config->borderless_bool);
 }
 void ZE::Window::SetFullscreen(const bool value) const {
-  p_Config.fullscreen_bool = value;
-  SDL_SetWindowFullscreen(p_Window, p_Config.fullscreen_bool);
+  p_Config->fullscreen_bool = value;
+  SDL_SetWindowFullscreen(p_Window, p_Config->fullscreen_bool);
 }
 void ZE::Window::SetAlwaysOnTop(const bool value) const {
-  p_Config.always_on_top_bool = value;
-  SDL_SetWindowAlwaysOnTop(p_Window, p_Config.always_on_top_bool);
+  p_Config->always_on_top_bool = value;
+  SDL_SetWindowAlwaysOnTop(p_Window, p_Config->always_on_top_bool);
 }
 void ZE::Window::SetHidden(const bool value) const {
-  p_Config.hidden_bool = value;
-  if (p_Config.hidden_bool)
+  p_Config->hidden_bool = value;
+  if (p_Config->hidden_bool)
     SDL_HideWindow(p_Window);
   else
     SDL_ShowWindow(p_Window);
 }
 
-ZE::Window::Window(REF(Configs::WindowConfig) window_config)
-: p_Config(window_config){
+ZE::Window::Window(CREF(Configs::WindowConfig) window_config) {
+  p_Config = MAKE_SPTR(Configs::WindowConfig)(window_config);
   Logger::Information("Creating window...");
 
   p_Window = SDL_CreateWindow(
-    p_Config.title_str.c_str(),
-    p_Config.size_vec2.x,
-    p_Config.size_vec2.y,
+    p_Config->title_str.c_str(),
+    p_Config->size_vec2.x,
+    p_Config->size_vec2.y,
     Internal_InitialiseFlags()
   );
   Util::AssertSDL(p_Window, "Failed initialising Window", "", true, [this] {Internal_AfterWindowInit();});
@@ -174,11 +187,11 @@ ZE::Window::Window(REF(Configs::WindowConfig) window_config)
   m_GLContext = SDL_GL_CreateContext(p_Window);
   Util::AssertSDL(m_GLContext, "Failed initialising GL context for window", "", true);
   Util::AssertSDL(SDL_GL_MakeCurrent(p_Window, m_GLContext), "Failed initialising GL context for window", "", true);
-  Util::AssertSDL(SDL_GL_SetSwapInterval(p_Config.vsync_bool), "Failed setting VSync", "");
+  Util::AssertSDL(SDL_GL_SetSwapInterval(p_Config->vsync_bool), "Failed setting VSync", "");
 
   Logger::DebugLog("Current Flags: " + Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
 
-  if (p_Config.imgui_config)
+  if (p_Config->imgui_config)
     m_Imgui = MAKE_UPTR(ImguiHandler)(*this);
 
   Logger::Information("Finished creating window");
