@@ -33,6 +33,7 @@ namespace ZE {
     void SetFullscreen(bool value) const;
     void SetAlwaysOnTop(bool value) const;
     void SetHidden(bool value) const;
+    void SetVsync(bool value) const;
 
   private:
     //...

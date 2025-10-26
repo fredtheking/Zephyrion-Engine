@@ -1,4 +1,6 @@
 #include "Window.hpp"
+
+#include "IO.hpp"
 #include "Logger.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/utils/Util.hpp"
@@ -82,7 +84,9 @@ void ZE::Window::Internal_AfterWindowInit() {
 }
 
 void ZE::Window::Process() {
-
+  if (IO::IsKeyPressed(Enums::ZE_Keys::Backspace))
+    SetVsync(!p_Config->vsync_bool);
+  // TODO: temporary thing. remove later
 }
 void ZE::Window::Render() {
   if (m_Imgui) DEFINE_IO_VARIABLE
@@ -170,6 +174,11 @@ void ZE::Window::SetHidden(const bool value) const {
     SDL_HideWindow(p_Window);
   else
     SDL_ShowWindow(p_Window);
+}
+void ZE::Window::SetVsync(const bool value) const {
+  p_Config->vsync_bool = value;
+  SDL_GL_SetSwapInterval(p_Config->vsync_bool);
+  //TODO: come up with better implementation for vsync. not cool duplicating "SDL_GL_SetSwapInterval" in both config-init and in set-func
 }
 
 ZE::Window::Window(CREF(Configs::WindowConfig) window_config) {
