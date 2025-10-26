@@ -81,10 +81,6 @@ void ZE::IO::ProcessEvent(REF(SDL_Event) e) {
       case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:
       case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:
       case SDL_EVENT_WINDOW_DESTROYED:
-      case SDL_EVENT_CLIPBOARD_UPDATE:
-      case SDL_EVENT_AUDIO_DEVICE_ADDED:
-      case SDL_EVENT_AUDIO_DEVICE_REMOVED:
-      case SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED:
         s_WindowEvents.push_back(e);
         break;
 

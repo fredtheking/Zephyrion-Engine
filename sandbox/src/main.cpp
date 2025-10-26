@@ -9,7 +9,6 @@ int main(){
       .Position(ZE::Enums::ZE_WindowPosition::Centered)
       .Resizable()
       .Size(1220, 720)
-      .NoVsync()
       .EnableImGui(ZE::Configs::Builders::ImguiConfigBuilder{}
         .Process([] {
           ImGui::ShowDemoWindow();
