@@ -63,21 +63,34 @@ namespace ZE {
         Logger::Error("Current window does not have \"Transparency\" flag. Returning nonvalid float as error.");
         return NONVALID_FLOAT;
       }
-      GETTER(VSync, bool){return vsync_bool;}
-      GETTER(ImGuiConfig, CREF(OPT(ImguiConfig))){return imgui_config;}
+      GETTER(VSync, bool) {return vsync_bool;}
+      GETTER(Resizable, bool) {return resizable_bool;}
+      GETTER(Borderless, bool) {return borderless_bool;}
+      GETTER(Fullscreen, bool) {return fullscreen_bool;}
+      GETTER(AlwaysOnTop, bool) {return always_on_top_bool;}
+      GETTER(Hidden, bool) {return hidden_bool;}
+      GETTER(InputBlocked, bool) {return input_blocked_bool;}
+      GETTER(ImGuiConfig, CREF(OPT(ImguiConfig))) {return imgui_config;}
+      GETTER(Modal, bool) {return modal_parent_pointer;}
+      GETTER(External, bool) {return external_bool;}
     };
 
     namespace Builders {
       class WindowConfigBuilder final : public Low::BuilderBase<WindowConfig> {
         void ValidityCheck() override {
+          if (build_object.imgui_config && build_object.imgui_config->GetFloatingWindows() && build_object.always_on_top_bool)
+            Logger::Warning("Warning in \"WindowConfig\" - "
+              "Window has both \"AlwaysOnTop\" and ImGuiConfig with \"FloatingWindows\" enabled. "
+              "New floating windows won’t be always on top; the main window takes priority.");
+
+
           if (build_object.renderer_enum != Enums::ZE_BackendRenderer::OpenGL)
             Logger::Critical("Incorrect \"WindowConfig\"! - "
-              "Currently, only \"OpenGL\" backend renderer is supported.");
+              "only OpenGL backend is supported for now.");
 
-          if (build_object.position_vec2 == NONVALID_ST_VEC2 &&
-              build_object.position_mode_enum == Enums::ZE_WindowPosition::Custom)
-            Logger::Critical("Incorrect \"WindowConfig\"! - "
-              "If you are using \"ZE::Enums::WindowPosition\" to define position, it is prohibited to use \"Custom\" option. Instead, use real values.");
+          if (build_object.position_vec2 && build_object.position_mode_enum == Enums::ZE_WindowPosition::Custom)
+            Logger::Critical("Incorrect \"WindowConfig\" - "
+              "\"Custom\" position mode requires valid coordinates. Use real values instead of leaving position empty.");
         }
       public:
         REF(WindowConfigBuilder) BackendRenderer(const Enums::ZE_BackendRenderer renderer) {

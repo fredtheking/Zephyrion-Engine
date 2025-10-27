@@ -17,6 +17,7 @@ int main(){
           ImGui::Text("FPS: %f", GET_IO_SINGLETON.Framerate);
           ImGui::End();
         })
+        .FloatingWindows()
         .Build()
       )
       .Icon(ENGINE_ASSETS "icon.png")

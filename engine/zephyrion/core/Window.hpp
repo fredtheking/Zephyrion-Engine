@@ -38,7 +38,13 @@ namespace ZE {
   private:
     //...
   public:
+    /**
+     * The only holder of window config. Access this variable only via weak_ptrs or directly.
+     */
     SPTR(Configs::WindowConfig) p_Config;
+    /**
+     * Optional imgui handler for current window.
+     */
     OPT(UPTR(ImguiHandler)) m_Imgui = NULLOPT;
     SDL_GLContext m_GLContext = nullptr;
     SDL_Window* p_Window = nullptr;

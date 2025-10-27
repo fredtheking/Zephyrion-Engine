@@ -100,15 +100,15 @@ void ZE::ImguiHandler::Render() const {
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::DockSpaceOverViewport();
+    if (p_Config.docking_bool) ImGui::DockSpaceOverViewport();
     p_Config.process_event();
 
     ImGui::Render();
-    if (GET_IO_SINGLETON.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    if (p_Config.floating_window_bool)
     {
-      ImGui::UpdatePlatformWindows();
-      ImGui::RenderPlatformWindowsDefault();
-      SDL_GL_MakeCurrent(p_MainWindow.p_Window, p_MainWindow.m_GLContext);
+	    ImGui::UpdatePlatformWindows();
+	    ImGui::RenderPlatformWindowsDefault();
+	    SDL_GL_MakeCurrent(p_MainWindow.p_Window, p_MainWindow.m_GLContext);
     }
   }
 }
@@ -130,11 +130,13 @@ ZE::ImguiHandler::ImguiHandler(CREF(Window) window)
   DEFINE_IO_VARIABLE
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	if (p_Config.floating_window_bool)
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	if (p_Config.docking_bool)
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   io.IniFilename = nullptr;
 
-  if (p_Config.dark_theme) ImGui::StyleColorsDark();
+  if (p_Config.dark_theme_bool) ImGui::StyleColorsDark();
   else                     ImGui::StyleColorsLight();
 
   REF(ImGuiStyle) style = ImGui::GetStyle();

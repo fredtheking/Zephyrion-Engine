@@ -13,7 +13,7 @@
 #define UINT8 U(char)
 #define UINT16 U(short)
 #define UINT32 U(int)
-#define UINT64 U(long)
+#define UINT64 U(long int)
 #define UINT128 U(long long)
 
 #define C_STR const char*

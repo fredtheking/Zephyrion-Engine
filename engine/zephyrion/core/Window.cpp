@@ -40,7 +40,7 @@ void ZE::Window::Internal_SetWindowMinimaxSize() const {
   Internal_UpdateWindowSize();
 }
 SDL_WindowFlags ZE::Window::Internal_InitialiseFlags() const {
-  SDL_WindowFlags flags = SDL_WINDOW_OPENGL;
+  SDL_WindowFlags flags = {};
 
   if (p_Config->opacity_float)
     flags |= SDL_WINDOW_TRANSPARENT;
@@ -62,6 +62,7 @@ SDL_WindowFlags ZE::Window::Internal_InitialiseFlags() const {
   switch (p_Config->renderer_enum) {
     case Enums::ZE_BackendRenderer::OpenGL:
       flags |= SDL_WINDOW_OPENGL; break;
+    // bottom ones are for the future. maybe
     case Enums::ZE_BackendRenderer::Vulkan:
       flags |= SDL_WINDOW_VULKAN; break;
     case Enums::ZE_BackendRenderer::Metal:
