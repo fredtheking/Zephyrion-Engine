@@ -87,6 +87,8 @@ void ZE::Window::Internal_AfterWindowInit() {
 void ZE::Window::Process() {
   if (IO::IsKeyPressed(Enums::ZE_Keys::Backspace))
     SetVsync(!p_Config->vsync_bool);
+  if (IO::IsKeyPressed(Enums::ZE_Keys::F11))
+    SetFullscreen(!p_Config->fullscreen_bool);
   // TODO: temporary thing. remove later
 }
 void ZE::Window::Render() {

@@ -18,7 +18,7 @@ void ZE::App::Terminate() {
   Logger::Separator(Colors::Lime, "Goodbye world");
 }
 
-void ZE::App::Setup(CREF(Configs::WindowConfig) window_config) {
+void ZE::App::Create(CREF(Configs::WindowConfig) window_config) {
   Logger::Separator(Colors::SkyBlue, "Hello world! Setting up engine...");
 
   Util::AssertSDL(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "Failed initialising SDL3", "Initialised SDL3", true);

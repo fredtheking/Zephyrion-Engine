@@ -13,7 +13,7 @@ namespace ZE {
     void Process();
     void Render();
   public:
-    void Setup(CREF(Configs::WindowConfig) window_config = {});
+    void Create(CREF(Configs::WindowConfig) window_config = {});
     void Run();
     void Terminate();
 

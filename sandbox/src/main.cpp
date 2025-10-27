@@ -4,11 +4,11 @@
 
 int main(){
   DEFINE_APP_VARIABLE
-  app.Setup(ZE::Configs::Builders::WindowConfigBuilder{}
+  app.Create(ZE::Configs::Builders::WindowConfigBuilder{}
       .Title("[Zephyrion Engine] example - Sandbox")
       .Position(ZE::Enums::ZE_WindowPosition::Centered)
       .Resizable()
-      .Size(1220, 720)
+      .Size(1920, 1080)
       .EnableImGui(ZE::Configs::Builders::ImguiConfigBuilder{}
         .Process([] {
           ImGui::ShowDemoWindow();
@@ -17,7 +17,6 @@ int main(){
           ImGui::Text("FPS: %f", GET_IO_SINGLETON.Framerate);
           ImGui::End();
         })
-        .FloatingWindows()
         .Build()
       )
       .Icon(ENGINE_ASSETS "icon.png")
