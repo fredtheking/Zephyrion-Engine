@@ -84,18 +84,13 @@ void ZE::Window::Internal_AfterWindowInit() {
     UpdateIcon(p_Config->icon_filepath_str);
 }
 void ZE::Window::Internal_HandleResize() {
-  OPT(SDL_Event) resize_event = NULLOPT;
-  if (std::ranges::any_of(IO::GetWindowEvents(), [&resize_event](CREF(SDL_Event) e) {
-    if (e.type == SDL_EVENT_WINDOW_RESIZED ||
-        e.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
-      resize_event = e;
-      return true;
+  for (CREF(SDL_Event) event: IO::GetWindowEvents())
+    if (event.type == SDL_EVENT_WINDOW_RESIZED || event.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
+      glViewport(0, 0, event.window.data1, event.window.data2);
+      break;
     }
-    return false;
-  }))
-    if (resize_event)
-      glViewport(0, 0, resize_event->window.data1, resize_event->window.data2);
   //TODO: kinda raw. redo?
+  //TODO:2: redid. but still kinda meh?
 }
 
 void ZE::Window::Process() {
@@ -103,10 +98,9 @@ void ZE::Window::Process() {
     SetVsync(!p_Config->vsync_bool);
   if (IO::IsKeyPressed(Enums::ZE_Keys::F11))
     SetFullscreen(!p_Config->fullscreen_bool);
+  // TODO: temporary thing. remove later
 
   Internal_HandleResize();
-
-  // TODO: temporary thing. remove later
 }
 void ZE::Window::Render() {
   if (m_Imgui) DEFINE_IO_VARIABLE
