@@ -30,6 +30,7 @@ void ZE::IO::ProcessEvent(REF(SDL_Event) e) {
     switch (e.type) {
       // ===================== SYSTEM =====================
       case SDL_EVENT_QUIT:
+      case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
         s_Quit = true;
         break;
 
