@@ -13,6 +13,7 @@ namespace ZE {
     void Internal_SetWindowMinimaxSize() const;
     [[nodiscard]] SDL_WindowFlags Internal_InitialiseFlags() const;
     void Internal_AfterWindowInit();
+    void Internal_HandleResize();
 
     void Process();
     void Render();

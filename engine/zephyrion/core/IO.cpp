@@ -139,11 +139,11 @@ bool ZE::IO::IsKeyDown(Enums::ZE_Keys key) {
   return s_CurrentKeys[CAST_KEY(key)];
 }
 bool ZE::IO::IsKeyPressed(Enums::ZE_Keys key) {
-  UINT16 int_key = CAST_KEY(key);
+  const auto int_key = CAST_KEY(key);
   return s_CurrentKeys[int_key] && !s_PreviousKeys[int_key];
 }
 bool ZE::IO::IsKeyReleased(Enums::ZE_Keys key) {
-  UINT16 int_key = CAST_KEY(key);
+  const auto int_key = CAST_KEY(key);
   return !s_CurrentKeys[int_key] && s_PreviousKeys[int_key];
 }
 
@@ -151,11 +151,11 @@ bool ZE::IO::IsMouseDown(Enums::ZE_Mouse button) {
   return s_CurrentMouse[CAST_MOUSE(button)];
 }
 bool ZE::IO::IsMousePressed(Enums::ZE_Mouse button) {
-  UINT8 int_button = CAST_MOUSE(button);
+  const auto int_button = CAST_MOUSE(button);
   return s_CurrentMouse[int_button] && !s_PreviousMouse[int_button];
 }
 bool ZE::IO::IsMouseReleased(Enums::ZE_Mouse button) {
-  UINT8 int_button = CAST_MOUSE(button);
+  const auto int_button = CAST_MOUSE(button);
   return !s_CurrentMouse[int_button] && s_PreviousMouse[int_button];
 }
 
@@ -179,13 +179,13 @@ float ZE::IO::MouseWheelY() {
   return s_MouseWheel.y;
 }
 
-const std::string & ZE::IO::GetTextInput() {
+CREF(STR) ZE::IO::GetTextInput() {
   return s_TextInput;
 }
-const std::vector<std::string> & ZE::IO::GetDroppedFiles() {
+CREF(VEC(STR)) ZE::IO::GetDroppedFiles() {
   return s_DropFiles;
 }
-const std::vector<SDL_Event> & ZE::IO::GetWindowEvents() {
+CREF(VEC(SDL_Event)) ZE::IO::GetWindowEvents() {
   return s_WindowEvents;
 }
 
