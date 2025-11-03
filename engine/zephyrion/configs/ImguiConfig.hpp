@@ -18,11 +18,11 @@ namespace ZE {
       VOID_FUNC process_event        = nullptr;
       bool      dark_theme_bool      = true;
       bool      docking_bool         = false;
-      bool      floating_window_bool = false;
+      bool      floating_windows_bool = false;
     public:
       GETTER(DarkTheme, bool){return dark_theme_bool;}
       GETTER(Docking, bool){return docking_bool;}
-      GETTER(FloatingWindows, bool){return floating_window_bool;}
+      GETTER(FloatingWindows, bool){return floating_windows_bool;}
     };
 
     namespace Builders {
@@ -46,7 +46,7 @@ namespace ZE {
           return *this;
         }
         REF(ImguiConfigBuilder) FloatingWindows() {
-          build_object.floating_window_bool = true;
+          build_object.floating_windows_bool = true;
           return *this;
         }
       };

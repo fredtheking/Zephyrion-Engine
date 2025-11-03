@@ -104,7 +104,7 @@ void ZE::ImguiHandler::Render() const {
     p_Config.process_event();
 
     ImGui::Render();
-    if (p_Config.floating_window_bool)
+    if (p_Config.floating_windows_bool)
     {
 	    ImGui::UpdatePlatformWindows();
 	    ImGui::RenderPlatformWindowsDefault();
@@ -130,14 +130,14 @@ ZE::ImguiHandler::ImguiHandler(CREF(Window) window)
   DEFINE_IO_VARIABLE
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-	if (p_Config.floating_window_bool)
+	if (p_Config.floating_windows_bool)
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	if (p_Config.docking_bool)
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   io.IniFilename = nullptr;
 
   if (p_Config.dark_theme_bool) ImGui::StyleColorsDark();
-  else                     ImGui::StyleColorsLight();
+  else											    ImGui::StyleColorsLight();
 
   REF(ImGuiStyle) style = ImGui::GetStyle();
   style.ScaleAllSizes(main_scale);

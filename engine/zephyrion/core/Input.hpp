@@ -11,7 +11,7 @@ namespace ZE {
     };
   }
 
-  class IO {
+  class Input {
   private:
     static void ProcessEvent(REF(SDL_Event) e);
   public:
@@ -64,6 +64,6 @@ namespace ZE {
   private:
     friend class App;
   public:
-    STATIC_ONLY_CONSTRUCTOR(IO)
+    STATIC_ONLY_CONSTRUCTOR(Input)
   };
 }

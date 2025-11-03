@@ -1,6 +1,6 @@
 #include "App.hpp"
 
-#include "core/IO.hpp"
+#include "core/Input.hpp"
 #include "core/Logger.hpp"
 #include "utils/Util.hpp"
 
@@ -48,10 +48,10 @@ void ZE::App::Run() {
 }
 
 void ZE::App::PollInput() {
-  IO::ProcessEvent(m_Event);
+  Input::ProcessEvent(m_Event);
 
-  m_Running = !IO::QuitRequested();
-  if (IO::IsKeyPressed(Enums::ZE_Keys::Escape))
+  m_Running = !Input::QuitRequested();
+  if (Input::IsKeyPressed(Enums::ZE_Keys::Escape))
     m_Running = false;
 }
 void ZE::App::Process() {

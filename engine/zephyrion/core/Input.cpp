@@ -1,23 +1,23 @@
-#include "IO.hpp"
+#include "Input.hpp"
 #include "Logger.hpp"
 #define CAST_KEY(X) static_cast<UINT16>(X)
 #define CAST_MOUSE(X) static_cast<UINT8>(X)
 
 
-std::array<bool, ZE::IO::MAX_KEYS> ZE::IO::s_CurrentKeys{};
-std::array<bool, ZE::IO::MAX_KEYS> ZE::IO::s_PreviousKeys{};
-std::array<bool, ZE::IO::MAX_BUTTONS> ZE::IO::s_CurrentMouse{};
-std::array<bool, ZE::IO::MAX_BUTTONS> ZE::IO::s_PreviousMouse{};
-ST_VEC2() ZE::IO::s_MousePos{};
-ST_VEC2() ZE::IO::s_MouseWheel{};
-bool ZE::IO::s_Quit = false;
-STR ZE::IO::s_TextInput{};
-VEC(STR) ZE::IO::s_DropFiles{};
-VEC(SDL_Event) ZE::IO::s_WindowEvents{};
-std::unordered_map<SDL_JoystickID, ZE::Low::GamepadState> ZE::IO::s_Gamepads{};
+std::array<bool, ZE::Input::MAX_KEYS> ZE::Input::s_CurrentKeys{};
+std::array<bool, ZE::Input::MAX_KEYS> ZE::Input::s_PreviousKeys{};
+std::array<bool, ZE::Input::MAX_BUTTONS> ZE::Input::s_CurrentMouse{};
+std::array<bool, ZE::Input::MAX_BUTTONS> ZE::Input::s_PreviousMouse{};
+ST_VEC2() ZE::Input::s_MousePos{};
+ST_VEC2() ZE::Input::s_MouseWheel{};
+bool ZE::Input::s_Quit = false;
+STR ZE::Input::s_TextInput{};
+VEC(STR) ZE::Input::s_DropFiles{};
+VEC(SDL_Event) ZE::Input::s_WindowEvents{};
+std::unordered_map<SDL_JoystickID, ZE::Low::GamepadState> ZE::Input::s_Gamepads{};
 
 
-void ZE::IO::ProcessEvent(REF(SDL_Event) e) {
+void ZE::Input::ProcessEvent(REF(SDL_Event) e) {
   s_PreviousKeys = s_CurrentKeys;
   s_PreviousMouse = s_CurrentMouse;
   s_MouseWheel.x = s_MouseWheel.y = 0;
@@ -115,79 +115,79 @@ void ZE::IO::ProcessEvent(REF(SDL_Event) e) {
   }
 }
 
-void ZE::IO::OpenGamepad(const SDL_JoystickID id) {
+void ZE::Input::OpenGamepad(const SDL_JoystickID id) {
   if (s_Gamepads.contains(id)) {
     Logger::Warning("Gamepad with this ID already exists!");
     return;
   }
   if (SDL_OpenGamepad(id)) s_Gamepads[id] = Low::GamepadState{};
 }
-void ZE::IO::CloseGamepad(const SDL_JoystickID id) {
+void ZE::Input::CloseGamepad(const SDL_JoystickID id) {
   if (const auto it = s_Gamepads.find(id); it != s_Gamepads.end()) {
     if (SDL_Gamepad* pad = SDL_OpenGamepad(id)) SDL_CloseGamepad(pad);
     s_Gamepads.erase(it);
   }
 }
-const ZE::Low::GamepadState* ZE::IO::GetGamepad(const SDL_JoystickID id) {
+const ZE::Low::GamepadState* ZE::Input::GetGamepad(const SDL_JoystickID id) {
   const auto it = s_Gamepads.find(id);
   return it != s_Gamepads.end() ? &it->second : nullptr;
 }
 
-bool ZE::IO::QuitRequested() {
+bool ZE::Input::QuitRequested() {
   return s_Quit;
 }
 
-bool ZE::IO::IsKeyDown(Enums::ZE_Keys key) {
+bool ZE::Input::IsKeyDown(Enums::ZE_Keys key) {
   return s_CurrentKeys[CAST_KEY(key)];
 }
-bool ZE::IO::IsKeyPressed(Enums::ZE_Keys key) {
+bool ZE::Input::IsKeyPressed(Enums::ZE_Keys key) {
   const auto int_key = CAST_KEY(key);
   return s_CurrentKeys[int_key] && !s_PreviousKeys[int_key];
 }
-bool ZE::IO::IsKeyReleased(Enums::ZE_Keys key) {
+bool ZE::Input::IsKeyReleased(Enums::ZE_Keys key) {
   const auto int_key = CAST_KEY(key);
   return !s_CurrentKeys[int_key] && s_PreviousKeys[int_key];
 }
 
-bool ZE::IO::IsMouseDown(Enums::ZE_Mouse button) {
+bool ZE::Input::IsMouseDown(Enums::ZE_Mouse button) {
   return s_CurrentMouse[CAST_MOUSE(button)];
 }
-bool ZE::IO::IsMousePressed(Enums::ZE_Mouse button) {
+bool ZE::Input::IsMousePressed(Enums::ZE_Mouse button) {
   const auto int_button = CAST_MOUSE(button);
   return s_CurrentMouse[int_button] && !s_PreviousMouse[int_button];
 }
-bool ZE::IO::IsMouseReleased(Enums::ZE_Mouse button) {
+bool ZE::Input::IsMouseReleased(Enums::ZE_Mouse button) {
   const auto int_button = CAST_MOUSE(button);
   return !s_CurrentMouse[int_button] && s_PreviousMouse[int_button];
 }
 
-ZE::ST::Vector2<> ZE::IO::MousePosition() {
+ZE::ST::Vector2<> ZE::Input::MousePosition() {
   return s_MousePos;
 }
-float ZE::IO::MousePositionX() {
+float ZE::Input::MousePositionX() {
   return s_MousePos.x;
 }
-float ZE::IO::MousePositionY() {
+float ZE::Input::MousePositionY() {
   return s_MousePos.y;
 }
 
-ZE::ST::Vector2<> ZE::IO::MouseWheel() {
+ZE::ST::Vector2<> ZE::Input::MouseWheel() {
   return s_MouseWheel;
 }
-float ZE::IO::MouseWheelX() {
+float ZE::Input::MouseWheelX() {
   return s_MouseWheel.x;
 }
-float ZE::IO::MouseWheelY() {
+float ZE::Input::MouseWheelY() {
   return s_MouseWheel.y;
 }
 
-CREF(STR) ZE::IO::GetTextInput() {
+CREF(STR) ZE::Input::GetTextInput() {
   return s_TextInput;
 }
-CREF(VEC(STR)) ZE::IO::GetDroppedFiles() {
+CREF(VEC(STR)) ZE::Input::GetDroppedFiles() {
   return s_DropFiles;
 }
-CREF(VEC(SDL_Event)) ZE::IO::GetWindowEvents() {
+CREF(VEC(SDL_Event)) ZE::Input::GetWindowEvents() {
   return s_WindowEvents;
 }
 

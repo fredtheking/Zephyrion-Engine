@@ -1,6 +1,6 @@
 #include "Window.hpp"
 
-#include "IO.hpp"
+#include "Input.hpp"
 #include "Logger.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/utils/Util.hpp"
@@ -84,7 +84,7 @@ void ZE::Window::Internal_AfterWindowInit() {
     UpdateIcon(p_Config->icon_filepath_str);
 }
 void ZE::Window::Internal_HandleResize() {
-  for (CREF(SDL_Event) event: IO::GetWindowEvents())
+  for (CREF(SDL_Event) event: Input::GetWindowEvents())
     if (event.type == SDL_EVENT_WINDOW_RESIZED || event.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
       glViewport(0, 0, event.window.data1, event.window.data2);
       break;
@@ -94,9 +94,9 @@ void ZE::Window::Internal_HandleResize() {
 }
 
 void ZE::Window::Process() {
-  if (IO::IsKeyPressed(Enums::ZE_Keys::Backspace))
+  if (Input::IsKeyPressed(Enums::ZE_Keys::Backspace))
     SetVsync(!p_Config->vsync_bool);
-  if (IO::IsKeyPressed(Enums::ZE_Keys::F11))
+  if (Input::IsKeyPressed(Enums::ZE_Keys::F11))
     SetFullscreen(!p_Config->fullscreen_bool);
   // TODO: temporary thing. remove later
 
