@@ -88,7 +88,7 @@ namespace ZE {
             Logger::Critical("Incorrect \"WindowConfig\"! - "
               "only OpenGL backend is supported for now.");
 
-          if (build_object.position_vec2 && build_object.position_mode_enum == Enums::ZE_WindowPosition::Custom)
+          if (!build_object.position_vec2 && build_object.position_mode_enum == Enums::ZE_WindowPosition::Custom)
             Logger::Critical("Incorrect \"WindowConfig\" - "
               "\"Custom\" position mode requires valid coordinates. Use real values instead of leaving position empty.");
         }

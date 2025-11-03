@@ -20,10 +20,10 @@ int main(){
     .EnableImGui(ZE::Configs::Builders::ImguiConfigBuilder{}
       .Process(ImGuiRenderProcess)
       .FloatingWindows()
-      .Docking()
       .Build()
     )
     .Icon(ENGINE_ASSETS "icon.png")
+    //TODO: Add 'exit key' option
     .Build()
   );
 
