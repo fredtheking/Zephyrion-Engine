@@ -85,13 +85,9 @@ namespace ZE {
       UpdateIcon(p_Config->icon_filepath_str);
   }
   void Window::Internal_HandleResize() {
-    for (CREF(SDL_Event) event: Input::GetWindowEvents())
-      if (event.type == SDL_EVENT_WINDOW_RESIZED || event.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
-        glViewport(0, 0, event.window.data1, event.window.data2);
-        break;
-      }
-    //TODO: kinda raw. redo?
-    //TODO:2: redid. but still kinda meh?
+    const OPT(SDL_Event) e = Input::GetWindowEvents().at(Enums::ZE_WindowEvents::Resized);
+    if (e)
+      glViewport(0, 0, e->window.data1, e->window.data2);
   }
 
   void Window::Process() {

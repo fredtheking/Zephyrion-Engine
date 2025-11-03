@@ -31,6 +31,27 @@ namespace ZE::Enums {
     Metal,
   };
 
+  ENUM(ZE_WindowEvents) {
+    Shown,
+    Hidden,
+    Exposed,
+    Moved,
+    Resized,
+    PixelSizeChanged,
+    Minimized,
+    Maximized,
+    Restored,
+    MouseEnter,
+    MouseLeave,
+    FocusGained,
+    FocusLost,
+    SafeAreaChanged,
+    EnterFullscreen,
+    LeaveFullscreen,
+    Destroyed,
+    COUNT,
+  };
+
   ENUM(ZE_WindowPosition) {
     Centered,
     TopLeft,

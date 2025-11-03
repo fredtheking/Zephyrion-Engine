@@ -1,7 +1,7 @@
 #pragma once
 
-#define REF(TYPE) TYPE&
-#define CREF(TYPE) const REF(TYPE)
+#define REF(...) __VA_ARGS__&
+#define CREF(...) const REF(__VA_ARGS__)
 
 #define UPTR(TYPE) std::unique_ptr<TYPE>
 #define MAKE_UPTR(TYPE) std::make_unique<TYPE>

@@ -14,7 +14,7 @@ namespace ZE {
   bool Input::s_Quit = false;
   STR Input::s_TextInput{};
   VEC(STR) Input::s_DropFiles{};
-  VEC(SDL_Event) Input::s_WindowEvents{};
+  std::array<OPT(SDL_Event), static_cast<unsigned char>(Enums::ZE_WindowEvents::COUNT)> Input::s_WindowEvents{};
   std::unordered_map<SDL_JoystickID, Low::GamepadState> Input::s_Gamepads{};
 
 
@@ -24,7 +24,8 @@ namespace ZE {
     s_MouseWheel.x = s_MouseWheel.y = 0;
     s_TextInput.clear();
     s_DropFiles.clear();
-    s_WindowEvents.clear();
+    for (int i = 0; i < static_cast<Z_UINT8>(Enums::ZE_WindowEvents::COUNT); ++i)
+      s_WindowEvents[i] = NULLOPT;
 
     while (SDL_PollEvent(&e)) {
       if (ImGui::GetCurrentContext()) ImGui_ImplSDL3_ProcessEvent(&e);
@@ -32,8 +33,7 @@ namespace ZE {
         // ===================== SYSTEM =====================
         case SDL_EVENT_QUIT:
         case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-          s_Quit = true;
-          break;
+          s_Quit = true; break;
 
           // ===================== KEYBOARD =====================
         case SDL_EVENT_KEY_DOWN:
@@ -45,8 +45,7 @@ namespace ZE {
             s_CurrentKeys[e.key.scancode] = false;
           break;
         case SDL_EVENT_TEXT_INPUT:
-          s_TextInput += e.text.text;
-          break;
+          s_TextInput += e.text.text; break;
 
           // ===================== MOUSE =====================
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
@@ -68,24 +67,39 @@ namespace ZE {
 
           // ===================== WINDOW =====================
         case SDL_EVENT_WINDOW_SHOWN:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Shown)] = e; break;
         case SDL_EVENT_WINDOW_HIDDEN:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Hidden)] = e; break;
         case SDL_EVENT_WINDOW_EXPOSED:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Exposed)] = e; break;
         case SDL_EVENT_WINDOW_MOVED:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Moved)] = e; break;
         case SDL_EVENT_WINDOW_RESIZED:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Resized)] = e; break;
         case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::PixelSizeChanged)] = e; break;
         case SDL_EVENT_WINDOW_MINIMIZED:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Minimized)] = e; break;
         case SDL_EVENT_WINDOW_MAXIMIZED:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Maximized)] = e; break;
         case SDL_EVENT_WINDOW_RESTORED:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Restored)] = e; break;
         case SDL_EVENT_WINDOW_MOUSE_ENTER:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::MouseEnter)] = e; break;
         case SDL_EVENT_WINDOW_MOUSE_LEAVE:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::MouseLeave)] = e; break;
         case SDL_EVENT_WINDOW_FOCUS_GAINED:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::FocusGained)] = e; break;
         case SDL_EVENT_WINDOW_FOCUS_LOST:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::FocusLost)] = e; break;
         case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::SafeAreaChanged)] = e; break;
         case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::EnterFullscreen)] = e; break;
         case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::LeaveFullscreen)] = e; break;
         case SDL_EVENT_WINDOW_DESTROYED:
-          s_WindowEvents.push_back(e);
-          break;
+          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Destroyed)] = e; break;
 
           // ===================== DROP =====================
         case SDL_EVENT_DROP_FILE:
@@ -95,23 +109,17 @@ namespace ZE {
 
           // ===================== GAMEPAD =====================
         case SDL_EVENT_GAMEPAD_ADDED:
-          OpenGamepad(e.gdevice.which);
-          break;
+          OpenGamepad(e.gdevice.which); break;
         case SDL_EVENT_GAMEPAD_REMOVED:
-          CloseGamepad(e.gdevice.which);
-          break;
+          CloseGamepad(e.gdevice.which); break;
         case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
-          s_Gamepads[e.gbutton.which].buttons[e.gbutton.button] = true;
-          break;
+          s_Gamepads[e.gbutton.which].buttons[e.gbutton.button] = true; break;
         case SDL_EVENT_GAMEPAD_BUTTON_UP:
-          s_Gamepads[e.gbutton.which].buttons[e.gbutton.button] = false;
-          break;
+          s_Gamepads[e.gbutton.which].buttons[e.gbutton.button] = false; break;
         case SDL_EVENT_GAMEPAD_AXIS_MOTION:
-          s_Gamepads[e.gaxis.which].axes[e.gaxis.axis] = e.gaxis.value / 32767.0f;
-          break;
+          s_Gamepads[e.gaxis.which].axes[e.gaxis.axis] = e.gaxis.value / 32767.0f; break;
         default:
-          Logger::Warning("Some event had been unhandled: " + std::to_string(e.type));
-          break;
+          Logger::Warning("Some event had been unhandled: " + std::to_string(e.type)); break;
       }
     }
   }
@@ -188,7 +196,11 @@ namespace ZE {
   CREF(VEC(STR)) Input::GetDroppedFiles() {
     return s_DropFiles;
   }
-  CREF(VEC(SDL_Event)) Input::GetWindowEvents() {
-    return s_WindowEvents;
+  std::unordered_map<Enums::ZE_WindowEvents, OPT(SDL_Event)> Input::GetWindowEvents() {
+    auto events_map = std::unordered_map<Enums::ZE_WindowEvents, OPT(SDL_Event)>{};
+    for (int i = 0; i < static_cast<Z_UINT8>(Enums::ZE_WindowEvents::COUNT); ++i)
+      events_map[static_cast<Enums::ZE_WindowEvents>(i)] = s_WindowEvents[i];
+
+    return std::move(events_map);
   }
 }

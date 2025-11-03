@@ -36,9 +36,9 @@ namespace ZE {
     [[nodiscard]] static float MouseWheelX();
     [[nodiscard]] static float MouseWheelY();
 
-    [[nodiscard]] static const REF(STR) GetTextInput();
-    [[nodiscard]] static const REF(VEC(STR)) GetDroppedFiles();
-    [[nodiscard]] static const REF(VEC(SDL_Event)) GetWindowEvents();
+    [[nodiscard]] static CREF(STR) GetTextInput();
+    [[nodiscard]] static CREF(VEC(STR)) GetDroppedFiles();
+    [[nodiscard]] static std::unordered_map<Enums::ZE_WindowEvents, OPT(SDL_Event)> GetWindowEvents();
 
   private:
     static constexpr int MAX_KEYS = SDL_SCANCODE_COUNT;
@@ -55,7 +55,7 @@ namespace ZE {
 
     static STR s_TextInput;
     static VEC(STR) s_DropFiles;
-    static VEC(SDL_Event) s_WindowEvents;
+    static std::array<OPT(SDL_Event), static_cast<unsigned char>(Enums::ZE_WindowEvents::COUNT)> s_WindowEvents;
 
     static std::unordered_map<SDL_JoystickID, Low::GamepadState> s_Gamepads;
   public:
