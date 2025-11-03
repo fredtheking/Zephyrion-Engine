@@ -29,10 +29,10 @@ namespace ZE {
     [[nodiscard]] static bool IsMousePressed(Enums::ZE_Mouse button);
     [[nodiscard]] static bool IsMouseReleased(Enums::ZE_Mouse button);
 
-    [[nodiscard]] static ST::Vector2<> MousePosition();
+    [[nodiscard]] static ST_VEC2() MousePosition();
     [[nodiscard]] static float MousePositionX();
     [[nodiscard]] static float MousePositionY();
-    [[nodiscard]] static ST::Vector2<> MouseWheel();
+    [[nodiscard]] static ST_VEC2() MouseWheel();
     [[nodiscard]] static float MouseWheelX();
     [[nodiscard]] static float MouseWheelY();
 
@@ -49,8 +49,8 @@ namespace ZE {
     static std::array<bool, MAX_BUTTONS> s_CurrentMouse;
     static std::array<bool, MAX_BUTTONS> s_PreviousMouse;
 
-    static ST::Vector2<> s_MousePos;
-    static ST::Vector2<> s_MouseWheel;
+    static ST_VEC2() s_MousePos;
+    static ST_VEC2() s_MouseWheel;
     static bool s_Quit;
 
     static STR s_TextInput;

@@ -16,30 +16,30 @@ namespace ZE::ST {
   public:
     void Update();
     void Update(CREF(T) x_or_left, CREF(T) y_or_top, CREF(T) width_or_right, CREF(T) height_or_bottom, bool bounds_parameters = false);
-    void Update(CREF(Vector2<T>) pos, CREF(Vector2<T>) size);
-    void Update(CREF(Vector2<T>) pos, CREF(T) width, CREF(T) height);
-    void Update(CREF(T) x, CREF(T) y, CREF(Vector2<T>) size);
-    void Update(CREF(Rectangle<T>) rec);
+    void Update(CREF(ST_VEC2(T)) pos, CREF(ST_VEC2(T)) size);
+    void Update(CREF(ST_VEC2(T)) pos, CREF(T) width, CREF(T) height);
+    void Update(CREF(T) x, CREF(T) y, CREF(ST_VEC2(T)) size);
+    void Update(CREF(ST_REC(T)) rec);
 
   private:
     //...
   public:
     T m_X, m_Y, m_Width, m_Height;
 
-    Rectangle<T> m_Rectangle;
-    Vector2<T> m_Position, m_Size;
+    ST_REC(T) m_Rectangle;
+    ST_VEC2(T) m_Position, m_Size;
 
     T m_LeftX, m_RightX, m_TopY, m_BottomY;
-    Vector2<T> m_LeftTop, m_LeftBottom, m_RightTop, m_RightBottom;
+    ST_VEC2(T) m_LeftTop, m_LeftBottom, m_RightTop, m_RightBottom;
 
   private:
     //...
   public:
     Bounds();
     Bounds(CREF(T) x_or_left, CREF(T) y_or_top, CREF(T) width_or_right, CREF(T) height_or_bottom, bool bounds_parameters = false);
-    Bounds(CREF(Vector2<T>) pos, CREF(Vector2<T>) size);
-    Bounds(CREF(Vector2<T>) pos, CREF(T) width, CREF(T) height);
-    Bounds(CREF(T) x, CREF(T) y, CREF(Vector2<T>) size);
-    Bounds(CREF(Rectangle<T>) rec);
+    Bounds(CREF(ST_VEC2(T)) pos, CREF(ST_VEC2(T)) size);
+    Bounds(CREF(ST_VEC2(T)) pos, CREF(T) width, CREF(T) height);
+    Bounds(CREF(T) x, CREF(T) y, CREF(ST_VEC2(T)) size);
+    explicit Bounds(CREF(ST_REC(T)) rec);
   };
 }

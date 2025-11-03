@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable: 4003)
 
 #include <SDL3/SDL.h>
 #include "vendor/include/glad/glad.h"

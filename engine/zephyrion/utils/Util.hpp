@@ -6,11 +6,11 @@
 namespace ZE::Util {
   inline bool Assert(
     const bool condition,
-    CREF(std::string) fail_msg,
-    CREF(std::string) success_msg = "",
+    CREF(STR) fail_msg,
+    CREF(STR) success_msg = "",
     const bool crash = false,
-    CREF(std::function<void()>) on_success = nullptr,
-    CREF(std::function<void()>) on_fail = nullptr)
+    CREF(FUNC(void())) on_success = nullptr,
+    CREF(FUNC(void())) on_fail = nullptr)
   {
     if (!condition) {
       if (!fail_msg.empty()) {
@@ -28,11 +28,11 @@ namespace ZE::Util {
 
   inline bool AssertSDL(
     const bool condition,
-    CREF(std::string) fail_msg,
-    CREF(std::string) success_msg = "",
+    CREF(STR) fail_msg,
+    CREF(STR) success_msg = "",
     const bool crash = false,
-    CREF(std::function<void()>) on_success = nullptr,
-    CREF(std::function<void()>) on_fail = nullptr)
+    CREF(FUNC(void())) on_success = nullptr,
+    CREF(FUNC(void())) on_fail = nullptr)
   {
     return Assert(condition, fail_msg + ": " + SDL_GetError(), success_msg, crash, on_success, on_fail);
   }
@@ -73,26 +73,26 @@ namespace ZE::Util {
     }
   }
   namespace String {
-    inline std::string ApplyToEachChar(std::string msg, CREF(FUNC(UINT8(UINT8))) func) {
+    inline STR ApplyToEachChar(STR msg, CREF(FUNC(Z_UINT8(Z_UINT8))) func) {
       std::ranges::transform(msg, msg.begin(),
-        [func](const UINT8 c) { return static_cast<char>(func(c)); });
+        [func](const Z_UINT8 c) { return static_cast<char>(func(c)); });
       return msg;
     }
-    inline std::string ToUpper(std::string msg) {
+    inline STR ToUpper(STR msg) {
       return ApplyToEachChar(std::move(msg), toupper);
     }
-    inline std::string ToUpper(const char* msg) {
-      return ToUpper(std::string(msg));
+    inline STR ToUpper(C_STR msg) {
+      return ToUpper(STR(msg));
     }
-    inline std::string ToLower(std::string msg) {
+    inline STR ToLower(STR msg) {
       return ApplyToEachChar(std::move(msg), tolower);
     }
-    inline std::string ToLower(const char* msg) {
-      return ToUpper(std::string(msg));
+    inline STR ToLower(C_STR msg) {
+      return ToUpper(STR(msg));
     }
   }
   namespace Loaders {
-    inline SDL_Surface* PNGtoSurface(CREF(std::string) filepath, const SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888) {
+    inline SDL_Surface* PNGtoSurface(CREF(STR) filepath, const SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888) {
       if (!Assert(std::filesystem::exists(filepath), "Failed to load: File not found at \"" + filepath + "\"."))
         return nullptr;
 
@@ -117,8 +117,8 @@ namespace ZE::Util {
     }
   }
   namespace Enums {
-    inline std::string ToString(const SDL_WindowFlags flags) {
-      std::string out;
+    inline STR ToString(const SDL_WindowFlags flags) {
+      STR out;
       for (auto& [val, name] : Translations::Enums::Translation__SDL_WindowFlags.forward) {
         if (flags & val) {
           if (!out.empty()) out += " | ";

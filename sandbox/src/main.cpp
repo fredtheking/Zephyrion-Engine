@@ -2,26 +2,29 @@
 
 #include "zephyrion/configs/ImguiConfig.hpp"
 
+void ImGuiRenderProcess() {
+  ImGui::ShowDemoWindow();
+
+  ImGui::Begin("Testo");
+  ImGui::Text("FPS: %f", GET_IMIO_SINGLETON.Framerate);
+  ImGui::End();
+}
+
 int main(){
   DEFINE_APP_VARIABLE
   app.Create(ZE::Configs::Builders::WindowConfigBuilder{}
-      .Title("[Zephyrion Engine] example - Sandbox")
-      .Position(ZE::Enums::ZE_WindowPosition::Centered)
-      .Resizable()
-      .Size(1920, 1080)
-      .EnableImGui(ZE::Configs::Builders::ImguiConfigBuilder{}
-        .Process([] {
-          ImGui::ShowDemoWindow();
-
-          ImGui::Begin("Testo");
-          ImGui::Text("FPS: %f", GET_IO_SINGLETON.Framerate);
-          ImGui::End();
-        })
-        .FloatingWindows()
-        .Build()
-      )
-      .Icon(ENGINE_ASSETS "icon.png")
+    .Title("[Zephyrion Engine] example - Sandbox")
+    .Position(ZE::Enums::ZE_WindowPosition::Centered)
+    .Resizable()
+    .Size(1920, 1080)
+    .EnableImGui(ZE::Configs::Builders::ImguiConfigBuilder{}
+      .Process(ImGuiRenderProcess)
+      .FloatingWindows()
+      .Docking()
       .Build()
+    )
+    .Icon(ENGINE_ASSETS "icon.png")
+    .Build()
   );
 
   // Custom initialisation

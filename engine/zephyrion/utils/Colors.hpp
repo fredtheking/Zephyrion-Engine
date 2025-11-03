@@ -1,7 +1,7 @@
 #pragma once
 #include "zephyrion/simple_types/Color.hpp"
 
-#define DEFINE_COLOR_FULL(NAME, R, G, B, A) inline const ST::Color NAME {(UINT8)R, G, B, A};
+#define DEFINE_COLOR_FULL(NAME, R, G, B, A) inline const ST::Color NAME {(Z_UINT8)R, G, B, A};
 #define DEFINE_COLOR(NAME, R, G, B) DEFINE_COLOR_FULL(NAME, R, G, B, 255)
 #define DEFINE_COLOR_SINGLE(NAME, X) DEFINE_COLOR(NAME, X, X, X)
 

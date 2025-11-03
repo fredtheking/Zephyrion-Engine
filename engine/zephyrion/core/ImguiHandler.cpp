@@ -93,64 +93,65 @@ void SetupImGuiStyle()
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.8f, 0.8f, 0.8f, 0.35f);
 }
 
+namespace ZE {
+	void ImguiHandler::Render() const {
+		if (p_Config.process_event) {
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplSDL3_NewFrame();
+			ImGui::NewFrame();
 
-void ZE::ImguiHandler::Render() const {
-  if (p_Config.process_event) {
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL3_NewFrame();
-    ImGui::NewFrame();
+			if (p_Config.docking_bool) ImGui::DockSpaceOverViewport();
+			p_Config.process_event();
 
-    if (p_Config.docking_bool) ImGui::DockSpaceOverViewport();
-    p_Config.process_event();
+			ImGui::Render();
+			if (p_Config.floating_windows_bool)
+			{
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
+				SDL_GL_MakeCurrent(p_MainWindow.p_Window, p_MainWindow.m_GLContext);
+			}
+		}
+	}
 
-    ImGui::Render();
-    if (p_Config.floating_windows_bool)
-    {
-	    ImGui::UpdatePlatformWindows();
-	    ImGui::RenderPlatformWindowsDefault();
-	    SDL_GL_MakeCurrent(p_MainWindow.p_Window, p_MainWindow.m_GLContext);
-    }
-  }
-}
+	void ImguiHandler::Draw() const {
+		if (p_Config.process_event)
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
 
-void ZE::ImguiHandler::Draw() const {
-  if (p_Config.process_event)
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
+	ImguiHandler::ImguiHandler(CREF(Window) window)
+	: p_Config(window.p_Config->imgui_config.value())
+	, p_MainWindow(window){
+		Logger::Information("Creating imgui handler...");
 
-ZE::ImguiHandler::ImguiHandler(CREF(Window) window)
-: p_Config(window.p_Config->imgui_config.value())
-, p_MainWindow(window){
-  Logger::Information("Creating imgui handler...");
+		const float main_scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
 
-  const float main_scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		DEFINE_IMIO_VARIABLE
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+		if (p_Config.floating_windows_bool)
+			io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		if (p_Config.docking_bool)
+			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.IniFilename = nullptr;
 
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
-  DEFINE_IO_VARIABLE
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-	if (p_Config.floating_windows_bool)
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	if (p_Config.docking_bool)
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-  io.IniFilename = nullptr;
+		if (p_Config.dark_theme_bool) ImGui::StyleColorsDark();
+		else											    ImGui::StyleColorsLight();
 
-  if (p_Config.dark_theme_bool) ImGui::StyleColorsDark();
-  else											    ImGui::StyleColorsLight();
+		REF(ImGuiStyle) style = ImGui::GetStyle();
+		style.ScaleAllSizes(main_scale);
+		style.FontScaleDpi = main_scale;
+		SetupImGuiStyle();
 
-  REF(ImGuiStyle) style = ImGui::GetStyle();
-  style.ScaleAllSizes(main_scale);
-  style.FontScaleDpi = main_scale;
-	SetupImGuiStyle();
+		ImGui_ImplSDL3_InitForOpenGL(window.p_Window, window.m_GLContext);
+		ImGui_ImplOpenGL3_Init();
 
-  ImGui_ImplSDL3_InitForOpenGL(window.p_Window, window.m_GLContext);
-  ImGui_ImplOpenGL3_Init();
-
-  Logger::Information("Finished creating imgui handler");
-}
-ZE::ImguiHandler::~ImguiHandler() {
-  ImGui_ImplOpenGL3_Shutdown();
-  ImGui_ImplSDL3_Shutdown();
-  ImGui::DestroyContext();
+		Logger::Information("Finished creating imgui handler");
+	}
+	ImguiHandler::~ImguiHandler() {
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplSDL3_Shutdown();
+		ImGui::DestroyContext();
+	}
 }

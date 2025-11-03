@@ -18,15 +18,15 @@ namespace ZE {
     void Process();
     void Render();
   public:
-    void UpdateIcon(CREF(std::string) filepath);
+    void UpdateIcon(CREF(STR) filepath);
 
     void UpdatePosition(Enums::ZE_WindowPosition position_mode) const;
-    void UpdatePosition(CREF(ST::Vector2<int>) position) const;
-    void UpdatePosition(CREF(ST::Vector2<>) position) const;
+    void UpdatePosition(CREF(ST_VEC2(int)) position) const;
+    void UpdatePosition(CREF(ST_VEC2()) position) const;
     void UpdatePosition(int x, int y) const;
     void UpdatePosition(float x, float y) const;
-    void UpdateSize(CREF(ST::Vector2<int>) size) const;
-    void UpdateSize(CREF(ST::Vector2<>) size) const;
+    void UpdateSize(CREF(ST_VEC2(int)) size) const;
+    void UpdateSize(CREF(ST_VEC2()) size) const;
     void UpdateSize(int width, int height) const;
     void UpdateSize(float width, float height) const;
     void SetResizable(bool value) const;

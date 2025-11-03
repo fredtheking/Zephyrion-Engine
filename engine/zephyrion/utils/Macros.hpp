@@ -10,15 +10,15 @@
 #define WPTR(TYPE) std::weak_ptr<TYPE>
 
 #define U(TYPE) unsigned TYPE
-#define UINT8 U(char)
-#define UINT16 U(short)
-#define UINT32 U(int)
-#define UINT64 U(long int)
-#define UINT128 U(long long)
+#define Z_UINT8 U(char)
+#define Z_UINT16 U(short)
+#define Z_UINT32 U(int)
 
 #define C_STR const char*
 #define STR std::string
 #define VEC(TYPE) std::vector<TYPE>
+#define ST_BOUNDS(TYPE) ZE::ST::Bounds<TYPE>
+#define ST_REC(TYPE) ZE::ST::Rectangle<TYPE>
 #define ST_VEC2(TYPE) ZE::ST::Vector2<TYPE>
 
 #define NULLOPT std::nullopt
@@ -44,11 +44,6 @@
                                         NAME(CREF(NAME)) = delete;               \
                                         REF(NAME) operator=(CREF(NAME)) = delete; \
 
-#define EXTEND_I(NAME) public Interfaces::I##NAME
-#define LOG_AND_RETURN(MSG, ...) { \
-                                   std::cout << MSG << '\n'; \
-                                   return __VA_ARGS__; \
-                                 }
 
 #define POS_N_NEG_ACTION_BASE(PREFIX_POS, PREFIX_NEG, NAME, TYPE, VAR) void PREFIX_POS##NAME(CREF(TYPE) VAR); \
                                                                        void PREFIX_NEG##NAME(CREF(TYPE) VAR);
@@ -75,6 +70,6 @@
 
 #define GET_APP_SINGLETON ZE::App::Get()
 #define DEFINE_APP_VARIABLE REF(auto) app = GET_APP_SINGLETON;
-#define GET_IO_SINGLETON ImGui::GetIO()
-#define DEFINE_IO_VARIABLE REF(ImGuiIO) io = GET_IO_SINGLETON;
+#define GET_IMIO_SINGLETON ImGui::GetIO()
+#define DEFINE_IMIO_VARIABLE REF(ImGuiIO) io = GET_IMIO_SINGLETON;
 #define ENGINE_ASSETS "assets/engine/"

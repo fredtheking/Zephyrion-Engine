@@ -131,15 +131,15 @@ namespace ZE {
           return *this;
         }
 
-        REF(WindowConfigBuilder) Title(CREF(std::string) title) {
+        REF(WindowConfigBuilder) Title(CREF(STR) title) {
           build_object.title_str = title;
           return *this;
         }
         REF(WindowConfigBuilder) Title(const char* title) {
-          return Title(std::string{title});
+          return Title(STR{title});
         }
 
-        REF(WindowConfigBuilder) Icon(CREF(std::string) filepath) {
+        REF(WindowConfigBuilder) Icon(CREF(STR) filepath) {
           build_object.icon_filepath_str = filepath;
           return *this;
         }
@@ -149,77 +149,77 @@ namespace ZE {
           build_object.position_mode_enum = position_mode;
           return *this;
         }
-        REF(WindowConfigBuilder) Position(CREF(ST::Vector2<int>) position) {
+        REF(WindowConfigBuilder) Position(CREF(ST_VEC2(int)) position) {
           build_object.position_mode_enum = Enums::ZE_WindowPosition::Custom;
           build_object.position_vec2 = position;
           return *this;
         }
-        REF(WindowConfigBuilder) Position(CREF(ST::Vector2<>) size) {
+        REF(WindowConfigBuilder) Position(CREF(ST_VEC2()) size) {
           Logger::Warning("Clipping floats to ints. Be careful!");
-          return Position(ST::Vector2{
+          return Position(ST_VEC2(int){
             static_cast<int>(size.x),
             static_cast<int>(size.y)
           });
         }
         REF(WindowConfigBuilder) Position(const int x, const int y) {
-          return Position(ST::Vector2{x, y});
+          return Position(ST_VEC2(int){x, y});
         }
         REF(WindowConfigBuilder) Position(const float x, const float y) {
-          return Position(ST::Vector2{x, y});
+          return Position(ST_VEC2(){x, y});
         }
 
-        REF(WindowConfigBuilder) Size(CREF(ST::Vector2<int>) size) {
+        REF(WindowConfigBuilder) Size(CREF(ST_VEC2(int)) size) {
           build_object.size_vec2 = size;
           return *this;
         }
-        REF(WindowConfigBuilder) Size(CREF(ST::Vector2<>) size) {
+        REF(WindowConfigBuilder) Size(CREF(ST_VEC2()) size) {
           Logger::Warning("Clipping floats to ints. Be careful!");
-          return Size(ST::Vector2{
+          return Size(ST_VEC2(int){
             static_cast<int>(size.x),
             static_cast<int>(size.y)
           });
         }
         REF(WindowConfigBuilder) Size(const int width, const int height) {
-          return Size(ST::Vector2{width, height});
+          return Size(ST_VEC2(int){width, height});
         }
         REF(WindowConfigBuilder) Size(const float width, const float height) {
-          return Size(ST::Vector2{width, height});
+          return Size(ST_VEC2(){width, height});
         }
 
-        REF(WindowConfigBuilder) MinimalSize(CREF(ST::Vector2<int>) size) {
+        REF(WindowConfigBuilder) MinimalSize(CREF(ST_VEC2(int)) size) {
           build_object.min_size_vec2 = size;
           return *this;
         }
-        REF(WindowConfigBuilder) MinimalSize(CREF(ST::Vector2<>) size) {
+        REF(WindowConfigBuilder) MinimalSize(CREF(ST_VEC2()) size) {
           Logger::Warning("Clipping floats to ints. Be careful!");
-          return MinimalSize(ST::Vector2{
+          return MinimalSize(ST_VEC2(int){
             static_cast<int>(size.x),
             static_cast<int>(size.y)
           });
         }
         REF(WindowConfigBuilder) MinimalSize(const int width, const int height) {
-          return MinimalSize(ST::Vector2{width, height});
+          return MinimalSize(ST_VEC2(int){width, height});
         }
         REF(WindowConfigBuilder) MinimalSize(const float width, const float height) {
-          return MinimalSize(ST::Vector2{width, height});
+          return MinimalSize(ST_VEC2(){width, height});
         }
 
-        REF(WindowConfigBuilder) MaximumSize(CREF(ST::Vector2<int>) size) {
+        REF(WindowConfigBuilder) MaximumSize(CREF(ST_VEC2(int)) size) {
           build_object.max_size_vec2 = size;
           return *this;
         }
-        REF(WindowConfigBuilder) MaximumSize(CREF(ST::Vector2<>) size) {
+        REF(WindowConfigBuilder) MaximumSize(CREF(ST_VEC2()) size) {
           Logger::Warning("Clipping floats to ints. Be careful!");
-          return MaximumSize(ST::Vector2{
+          return MaximumSize(ST_VEC2(int){
             static_cast<int>(size.x),
             static_cast<int>(size.y)
           });
         }
         REF(WindowConfigBuilder) MaximumSize(const int width, const int height) {
-          return MaximumSize(ST::Vector2{width, height});
+          return MaximumSize(ST_VEC2(int){width, height});
         }
         REF(WindowConfigBuilder) MaximumSize(const float width, const float height) {
-          return MaximumSize(ST::Vector2{width, height});
+          return MaximumSize(ST_VEC2(){width, height});
         }
 
         REF(WindowConfigBuilder) Opacity(const float opacity) {

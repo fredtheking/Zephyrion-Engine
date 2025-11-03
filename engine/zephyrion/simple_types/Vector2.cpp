@@ -4,34 +4,36 @@
 #define INIT_SINGLE(X) INIT(X, X);
 
 
-template<typename T>
-ZE::ST::Vector2<T>::Vector2() {
-  INIT_SINGLE(0)
-}
-template<typename T>
-ZE::ST::Vector2<T>::Vector2(T x, T y) {
-  INIT(x, y)
-}
-template<typename T>
-ZE::ST::Vector2<T>::Vector2(T xy) {
-  INIT_SINGLE(xy)
-}
+namespace ZE::ST {
+  template<typename T>
+  Vector2<T>::Vector2() {
+    INIT_SINGLE(0)
+  }
+  template<typename T>
+  Vector2<T>::Vector2(T x, T y) {
+    INIT(x, y)
+  }
+  template<typename T>
+  Vector2<T>::Vector2(T xy) {
+    INIT_SINGLE(xy)
+  }
 
-template<typename T>
-bool ZE::ST::Vector2<T>::operator==(CREF(Vector2) vector2) const {
-  return x == vector2.x &&
-         y == vector2.y;
-}
-template<typename T>
-bool ZE::ST::Vector2<T>::operator<(CREF(Vector2) vector2) const {
-  return x < vector2.x ||
-         y < vector2.y;
-}
-template<typename T>
-bool ZE::ST::Vector2<T>::operator>(CREF(Vector2) vector2) const {
-  return x > vector2.x ||
-         y > vector2.y;
-}
+  template<typename T>
+  bool Vector2<T>::operator==(CREF(Vector2) vector2) const {
+    return x == vector2.x &&
+           y == vector2.y;
+  }
+  template<typename T>
+  bool Vector2<T>::operator<(CREF(Vector2) vector2) const {
+    return x < vector2.x ||
+           y < vector2.y;
+  }
+  template<typename T>
+  bool Vector2<T>::operator>(CREF(Vector2) vector2) const {
+    return x > vector2.x ||
+           y > vector2.y;
+  }
 
-template class ZE::ST::Vector2<>;
-template class ZE::ST::Vector2<int>;
+  template class Vector2<>;
+  template class Vector2<int>;
+}
