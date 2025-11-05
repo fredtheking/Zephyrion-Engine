@@ -38,7 +38,7 @@ namespace ZE::Util {
   }
 
   inline void LogVersion() {
-    Logger::Separator(Colors::Orange, "PROTOTYPE BUILD - Not stable, WIP");
+    Logger::Information("[{}] - ({}): {}", Global::build_type, Global::build_version, Global::build_description);
   }
 
   namespace Process {

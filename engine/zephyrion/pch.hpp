@@ -40,3 +40,4 @@
 #include <optional>
 
 #include "zephyrion/utils/Macros.hpp"
+#include "zephyrion/utils/Global.hpp"

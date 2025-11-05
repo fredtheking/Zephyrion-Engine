@@ -9,6 +9,8 @@ namespace ZE {
 
   class Window {
   private:
+    //...
+  INTERNAL_GUARD_BEGIN
     void Internal_UpdateWindowPosition() const;
     void Internal_UpdateWindowSizeConfigs() const;
     void Internal_UpdateWindowSize() const;
@@ -16,6 +18,7 @@ namespace ZE {
     [[nodiscard]] SDL_WindowFlags Internal_InitialiseFlags() const;
     void Internal_AfterWindowInit();
     static void Internal_HandleResize();
+  INTERNAL_GUARD_END
 
     void Process();
     void Render();

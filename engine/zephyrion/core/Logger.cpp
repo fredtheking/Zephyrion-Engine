@@ -6,7 +6,7 @@ constexpr int MSG_START_POINT = 12;
 
 #ifdef _WIN32
 #include <Windows.h>
-int ZE::Logger::GetConsoleWidth() {
+int ZE::Logger::Internal_GetConsoleWidth() {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
   return csbi.srWindow.Right - csbi.srWindow.Left + 1;
@@ -23,7 +23,7 @@ int ZE::Logger::GetConsoleWidth() {
 
 
 namespace ZE {
-  void Logger::PrintTimestamp(CREF(STR) timestamp) {
+  void Logger::Internal_PrintTimestamp(CREF(STR) timestamp) {
     const ST::RGBA rgba = Colors::Silver.rgba;
     fmt::print(
       fmt::fg(fmt::rgb(rgba.red, rgba.green, rgba.blue)),
@@ -31,7 +31,7 @@ namespace ZE {
       '[' + timestamp + "] "
     );
   }
-  STR Logger::GetTimestamp() {
+  STR Logger::Internal_GetTimestamp() {
     const auto now = std::chrono::system_clock::now();
 
     std::time_t t = std::chrono::system_clock::to_time_t(now);
@@ -52,7 +52,7 @@ namespace ZE {
     return oss.str();
   }
 
-  void Logger::RawPrint(CREF(STR) prefix, CREF(STR) msg, CREF(ST::Color) fg_color, CREF(ST::Color) bg_color) {
+  void Logger::Internal_RawPrint(CREF(STR) prefix, CREF(STR) msg, CREF(ST::Color) fg_color, CREF(ST::Color) bg_color) {
     auto style = fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue));
     if (bg_color != Colors::Blank)
       style |= fmt::bg(fmt::rgb(bg_color.rgba.red, bg_color.rgba.green, bg_color.rgba.blue));
@@ -78,29 +78,29 @@ namespace ZE {
       };
     }
 
-    PrintTimestamp(GetTimestamp());
+    Internal_PrintTimestamp(Internal_GetTimestamp());
     format_callback();
     std::cout.flush();
   }
 
   void Logger::DebugLog(CREF(STR) msg) {
-    RawPrint("debug", msg, Colors::SkyBlue, Colors::Blank);
+    Internal_RawPrint("debug", msg, Colors::SkyBlue, Colors::Blank);
   }
   void Logger::Information(CREF(STR) msg) {
-    RawPrint("info", msg, Colors::White, Colors::Blank);
+    Internal_RawPrint("info", msg, Colors::White, Colors::Blank);
   }
   void Logger::Warning(CREF(STR) msg) {
-    RawPrint("warn", msg, Colors::Yellow, Colors::Blank);
+    Internal_RawPrint("warn", msg, Colors::Yellow, Colors::Blank);
   }
   void Logger::Success(CREF(STR) msg) {
-    RawPrint("success", msg, Colors::Lime, Colors::Blank);
+    Internal_RawPrint("success", msg, Colors::Lime, Colors::Blank);
   }
   void Logger::Error(CREF(STR) msg) {
-    RawPrint("error", msg, Colors::Red, Colors::Blank);
+    Internal_RawPrint("error", msg, Colors::Red, Colors::Blank);
   }
   // Also crashes the app.
   void Logger::Critical(CREF(STR) msg) {
-    RawPrint("crit", msg, Colors::Black, Colors::Red);
+    Internal_RawPrint("crit", msg, Colors::Black, Colors::Red);
     std::exit(-1);
   }
 
@@ -109,11 +109,11 @@ namespace ZE {
     Separator(Colors::Purple, msg, sign);
   }
   void Logger::Separator(CREF(ST::Color) fg_color, CREF(STR) msg, const char sign) {
-    const size_t term_width = GetConsoleWidth();
+    const size_t term_width = Internal_GetConsoleWidth();
     const STR space = msg.empty() ? "" : "  ";
     const size_t msg_len = msg.length();
 
-    const STR timestamp = GetTimestamp();
+    const STR timestamp = Internal_GetTimestamp();
 
     const int filler_len_raw = static_cast<int>(term_width) - (timestamp.size()+4) - static_cast<int>(msg_len) - static_cast<int>(space.length() * 2);
     const size_t filler_len = filler_len_raw > 0 ? filler_len_raw / 2 : 0;
@@ -124,7 +124,7 @@ namespace ZE {
       full_line += sign;
     }
 
-    PrintTimestamp(timestamp);
+    Internal_PrintTimestamp(timestamp);
     fmt::print(
         fmt::fg(fmt::rgb(fg_color.rgba.red, fg_color.rgba.green, fg_color.rgba.blue)),
         "{}\n\r",

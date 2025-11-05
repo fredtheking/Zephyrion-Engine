@@ -1,6 +1,6 @@
+// #define Z_SHOW_INTERNALS
 #include <zephyrion/App.hpp>
 #include <zephyrion/configs/ImguiConfig.hpp>
-
 #include "zephyrion/utils/Util.hpp"
 
 void ImGuiRenderProcess() {

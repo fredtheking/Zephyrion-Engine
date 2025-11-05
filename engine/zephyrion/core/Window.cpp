@@ -203,13 +203,14 @@ namespace ZE {
     );
     Util::AssertSDL(p_Window, "Failed initialising Window", "", true);
     Internal_AfterWindowInit();
+    #ifdef DEVELOPER_MODE
+    Logger::DebugLog("Current Window flags: {}", Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
+    #endif
 
     m_GLContext = SDL_GL_CreateContext(p_Window);
     Util::AssertSDL(m_GLContext, "Failed initialising GL context for window", "", true);
     Util::AssertSDL(SDL_GL_MakeCurrent(p_Window, m_GLContext), "Failed initialising GL context for window", "", true);
     Util::AssertSDL(SDL_GL_SetSwapInterval(p_Config->vsync_bool), "Failed setting VSync", "");
-
-    Logger::DebugLog("Current Flags: {}", Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
 
     if (p_Config->imgui_config)
       m_Imgui = MAKE_UPTR(ImguiHandler)(*this);

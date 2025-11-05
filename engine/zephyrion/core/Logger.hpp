@@ -6,17 +6,19 @@
 
 namespace ZE {
   class Logger {
-  private:
-    static int GetConsoleWidth();
-    static void PrintTimestamp(CREF(STR) timestamp);
-  public:
-    static STR GetTimestamp();
-    static void RawPrint(CREF(STR) prefix, CREF(STR) msg, CREF(ST::Color) fg_color, CREF(ST::Color) bg_color);
-    static void Separator(CREF(STR) msg, char sign = '=');
-    static void Separator(CREF(ST::Color) fg_color = Colors::Purple, CREF(STR) msg = "", char sign = '=');
+  INTERNAL_GUARD_BEGIN
     template<typename... Args>
     static void DebugLog(fmt::format_string<Args...> fmt, Args&&... args){ DebugLog(Z_FMT_FORMAT); }
     static void DebugLog(CREF(STR) msg);
+
+    static int Internal_GetConsoleWidth();
+    static void Internal_RawPrint(CREF(STR) prefix, CREF(STR) msg, CREF(ST::Color) fg_color, CREF(ST::Color) bg_color);
+    static STR Internal_GetTimestamp();
+    static void Internal_PrintTimestamp(CREF(STR) timestamp);
+  INTERNAL_GUARD_END
+  public:
+    static void Separator(CREF(STR) msg, char sign = '=');
+    static void Separator(CREF(ST::Color) fg_color = Colors::Purple, CREF(STR) msg = "", char sign = '=');
     template<typename... Args>
     static void Information(fmt::format_string<Args...> fmt, Args&&... args){ Information(Z_FMT_FORMAT); }
     static void Information(CREF(STR) msg);
@@ -40,7 +42,7 @@ namespace ZE {
     //...
 
   private:
-    //...
+    friend class Window;
   public:
     STATIC_ONLY_CONSTRUCTOR(Logger)
   };

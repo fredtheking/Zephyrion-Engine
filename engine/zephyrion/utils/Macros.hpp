@@ -74,3 +74,11 @@
 #define GET_IMIO_SINGLETON ImGui::GetIO()
 #define DEFINE_IMIO_VARIABLE REF(ImGuiIO) io = GET_IMIO_SINGLETON;
 #define ENGINE_ASSETS "res/engine/"
+
+#ifdef Z_SHOW_INTERNALS
+  #define INTERNAL_GUARD_BEGIN public:
+  #define INTERNAL_GUARD_END private:
+#else
+  #define INTERNAL_GUARD_BEGIN private:
+  #define INTERNAL_GUARD_END
+#endif
