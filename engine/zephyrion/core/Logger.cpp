@@ -83,8 +83,8 @@ namespace ZE {
     std::cout.flush();
   }
 
-  void Logger::DebugLog(CREF(STR) msg, CREF(ST::Color) fg_color) {
-    RawPrint("debug", msg, fg_color, Colors::Blank);
+  void Logger::DebugLog(CREF(STR) msg) {
+    RawPrint("debug", msg, Colors::SkyBlue, Colors::Blank);
   }
   void Logger::Information(CREF(STR) msg) {
     RawPrint("info", msg, Colors::White, Colors::Blank);

@@ -5,6 +5,7 @@
 #include "vendor/include/glad/glad.h"
 #include <SDL3/SDL_opengl.h>
 #include <imgui.h>
+#include <ImGuizmo.h>
 #include <magic_enum_all.hpp>
 #include "vendor/stb_image.h"
 #include <fmt/args.h>

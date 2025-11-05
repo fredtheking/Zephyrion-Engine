@@ -5,6 +5,8 @@
 #include "zephyrion/simple_types/Bounds.hpp"
 
 namespace ZE {
+  class App;
+
   class Window {
   private:
     void Internal_UpdateWindowPosition() const;
@@ -13,7 +15,7 @@ namespace ZE {
     void Internal_SetWindowMinimaxSize() const;
     [[nodiscard]] SDL_WindowFlags Internal_InitialiseFlags() const;
     void Internal_AfterWindowInit();
-    void Internal_HandleResize();
+    static void Internal_HandleResize();
 
     void Process();
     void Render();

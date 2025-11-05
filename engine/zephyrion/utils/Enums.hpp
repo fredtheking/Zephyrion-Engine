@@ -32,24 +32,27 @@ namespace ZE::Enums {
   };
 
   ENUM(ZE_WindowEvents) {
-    Shown,
-    Hidden,
-    Exposed,
-    Moved,
-    Resized,
-    PixelSizeChanged,
-    Minimized,
-    Maximized,
-    Restored,
-    MouseEnter,
-    MouseLeave,
-    FocusGained,
-    FocusLost,
-    SafeAreaChanged,
-    EnterFullscreen,
-    LeaveFullscreen,
-    Destroyed,
-    COUNT,
+  #define PAIR(X, Y) X = SDL_EVENT_ ##Y,
+
+    PAIR(Shown, WINDOW_SHOWN)
+    PAIR(Hidden, WINDOW_HIDDEN)
+    PAIR(Exposed, WINDOW_EXPOSED)
+    PAIR(Moved, WINDOW_MOVED)
+    PAIR(Resized, WINDOW_RESIZED)
+    PAIR(PixelSizeChanged, WINDOW_PIXEL_SIZE_CHANGED)
+    PAIR(Minimized, WINDOW_MINIMIZED)
+    PAIR(Maximized, WINDOW_MAXIMIZED)
+    PAIR(Restored, WINDOW_RESTORED)
+    PAIR(MouseEnter, WINDOW_MOUSE_ENTER)
+    PAIR(MouseLeave, WINDOW_MOUSE_LEAVE)
+    PAIR(FocusGained, WINDOW_FOCUS_GAINED)
+    PAIR(FocusLost, WINDOW_FOCUS_LOST)
+    PAIR(SafeAreaChanged, WINDOW_SAFE_AREA_CHANGED)
+    PAIR(EnterFullscreen, WINDOW_ENTER_FULLSCREEN)
+    PAIR(LeaveFullscreen, WINDOW_LEAVE_FULLSCREEN)
+    PAIR(Destroyed, WINDOW_DESTROYED)
+
+  #undef PAIR
   };
 
   ENUM(ZE_WindowPosition) {

@@ -18,9 +18,12 @@ namespace ZE {
     void Terminate();
 
   private:
-    SDL_Event m_Event{};
     VEC(WPTR(Window)) m_Windows = {};
+
+    double m_StartTime = 0;
   public:
+    double m_CurrentTime = 0; //TODO: make "Stopwatch" and "Timer" classes in future
+
     bool m_Running = true;
     SPTR(Window) p_MainWindow = nullptr;
     UPTR(Configs::AppConfig) p_Config = nullptr;

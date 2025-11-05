@@ -1,7 +1,7 @@
 #pragma once
 #include "zephyrion/pch.hpp"
 #include "zephyrion/core/Logger.hpp"
-#include "translations/EnumTranslations.hpp"
+#include "zephyrion/translations/EnumTranslations.hpp"
 
 namespace ZE::Util {
   inline bool Assert(
@@ -35,6 +35,10 @@ namespace ZE::Util {
     CREF(FUNC(void())) on_fail = nullptr)
   {
     return Assert(condition, fail_msg + ": " + SDL_GetError(), success_msg, crash, on_success, on_fail);
+  }
+
+  inline void LogVersion() {
+    Logger::Separator(Colors::Orange, "PROTOTYPE BUILD - Not stable, WIP");
   }
 
   namespace Process {
@@ -88,7 +92,7 @@ namespace ZE::Util {
       return ApplyToEachChar(std::move(msg), tolower);
     }
     inline STR ToLower(C_STR msg) {
-      return ToUpper(STR(msg));
+      return ToLower(STR(msg));
     }
   }
   namespace Loaders {
@@ -108,7 +112,7 @@ namespace ZE::Util {
         [&surf, &data, &width, &height, &filepath] {
         std::memcpy(surf->pixels, data, static_cast<size_t>(width) * height * 4);
         stbi_image_free(data);
-        Logger::Success("Loaded image successfully: at path \"" + filepath + "\" as R8G8B8A8");
+        Logger::Success("Loaded image successfully: at path \"{}\" as R8G8B8A8", filepath);
       }, [&data] {
         stbi_image_free(data);
       }))

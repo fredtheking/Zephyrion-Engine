@@ -1,5 +1,6 @@
 #pragma once
 #include "zephyrion/pch.hpp"
+#include "zephyrion/core/Logger.hpp"
 
 namespace ZE::ST {
   template<typename T1, typename T2>
@@ -7,7 +8,7 @@ namespace ZE::ST {
   private:
     //...
   public:
-    void Insert(const T1& a, const T2& b) {
+    void Insert(CREF(T1) a, CREF(T2) b) {
       forward[a] = b;
       backward[b] = a;
     }
@@ -18,15 +19,15 @@ namespace ZE::ST {
     std::unordered_map<T1, T2> forward;
     std::unordered_map<T2, T1> backward;
 
-    const T2& operator[](const T1& key) const {
+    CREF(T2) operator[](CREF(T1) key) const {
       auto it = forward.find(key);
-      if (it == forward.end()) throw std::out_of_range("no such key in forward");
+      if (it == forward.end()) Logger::Critical("No such key in \"forward\" map.");
       return it->second;
     }
 
-    const T1& operator[](const T2& key) const {
+    CREF(T1) operator[](CREF(T2) key) const {
       auto it = backward.find(key);
-      if (it == backward.end()) throw std::out_of_range("no such key in backward");
+      if (it == backward.end()) Logger::Critical("No such key in \"backward\" map.");
       return it->second;
     }
 

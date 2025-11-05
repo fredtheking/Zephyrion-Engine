@@ -2,6 +2,7 @@
 
 #include "Input.hpp"
 #include "Logger.hpp"
+#include "zephyrion/App.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/utils/Util.hpp"
 
@@ -85,7 +86,7 @@ namespace ZE {
       UpdateIcon(p_Config->icon_filepath_str);
   }
   void Window::Internal_HandleResize() {
-    if (const OPT(SDL_Event) e = Input::GetWindowEvents().at(Enums::ZE_WindowEvents::Resized))
+    if (const OPT(SDL_Event) e = Input::IsWindow(Enums::ZE_WindowEvents::Resized))
       glViewport(0, 0, e->window.data1, e->window.data2);
   }
 
@@ -200,14 +201,15 @@ namespace ZE {
       p_Config->size_vec2.y,
       Internal_InitialiseFlags()
     );
-    Util::AssertSDL(p_Window, "Failed initialising Window", "", true, [this] {Internal_AfterWindowInit();});
+    Util::AssertSDL(p_Window, "Failed initialising Window", "", true);
+    Internal_AfterWindowInit();
 
     m_GLContext = SDL_GL_CreateContext(p_Window);
     Util::AssertSDL(m_GLContext, "Failed initialising GL context for window", "", true);
     Util::AssertSDL(SDL_GL_MakeCurrent(p_Window, m_GLContext), "Failed initialising GL context for window", "", true);
     Util::AssertSDL(SDL_GL_SetSwapInterval(p_Config->vsync_bool), "Failed setting VSync", "");
 
-    Logger::DebugLog("Current Flags: " + Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
+    Logger::DebugLog("Current Flags: {}", Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
 
     if (p_Config->imgui_config)
       m_Imgui = MAKE_UPTR(ImguiHandler)(*this);

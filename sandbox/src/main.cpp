@@ -1,6 +1,7 @@
 #include <zephyrion/App.hpp>
+#include <zephyrion/configs/ImguiConfig.hpp>
 
-#include "zephyrion/configs/ImguiConfig.hpp"
+#include "zephyrion/utils/Util.hpp"
 
 void ImGuiRenderProcess() {
   ImGui::ShowDemoWindow();
@@ -11,6 +12,8 @@ void ImGuiRenderProcess() {
 }
 
 int main(){
+  ZE::Util::LogVersion();
+
   DEFINE_APP_VARIABLE
   app.Create(ZE::Configs::Builders::WindowConfigBuilder{}
     .Title("[Zephyrion Engine] example - Sandbox")

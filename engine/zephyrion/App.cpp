@@ -9,6 +9,7 @@ namespace ZE {
     Logger::Separator(Colors::Yellow, "Registration ended. Doing final touches...");
 
     //TODO: come up with smth here
+    m_StartTime = SDL_GetPerformanceCounter();
 
     Logger::Separator(Colors::Lime, "Everything set up. Starting runtime process");
   }
@@ -49,7 +50,7 @@ namespace ZE {
   }
 
   void App::PollInput() {
-    Input::ProcessEvent(m_Event);
+    Input::ProcessEvents();
 
     m_Running = !Input::QuitRequested();
     if (Input::IsKeyPressed(Enums::ZE_Keys::Escape))
@@ -57,6 +58,7 @@ namespace ZE {
   }
   void App::Process() {
     m_ProcessDeltatime = Util::Process::GetDeltaTime();
+    m_CurrentTime = (SDL_GetPerformanceCounter() - m_StartTime) / static_cast<double>(SDL_GetPerformanceFrequency());
 
     for (CREF(WPTR(Window)) window: m_Windows) {
       if (const auto ptr = window.lock())

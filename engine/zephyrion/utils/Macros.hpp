@@ -13,6 +13,7 @@
 #define Z_UINT8 U(char)
 #define Z_UINT16 U(short)
 #define Z_UINT32 U(int)
+#define Z_UINT64 U(long long)
 
 #define C_STR const char*
 #define STR std::string
@@ -72,4 +73,4 @@
 #define DEFINE_APP_VARIABLE REF(auto) app = GET_APP_SINGLETON;
 #define GET_IMIO_SINGLETON ImGui::GetIO()
 #define DEFINE_IMIO_VARIABLE REF(ImGuiIO) io = GET_IMIO_SINGLETON;
-#define ENGINE_ASSETS "assets/engine/"
+#define ENGINE_ASSETS "res/engine/"

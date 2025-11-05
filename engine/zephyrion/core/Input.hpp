@@ -13,7 +13,7 @@ namespace ZE {
 
   class Input {
   private:
-    static void ProcessEvent(REF(SDL_Event) e);
+    static void ProcessEvents();
   public:
     static void OpenGamepad(SDL_JoystickID id);
     static void CloseGamepad(SDL_JoystickID id);
@@ -38,7 +38,7 @@ namespace ZE {
 
     [[nodiscard]] static CREF(STR) GetTextInput();
     [[nodiscard]] static CREF(VEC(STR)) GetDroppedFiles();
-    [[nodiscard]] static std::unordered_map<Enums::ZE_WindowEvents, OPT(SDL_Event)> GetWindowEvents();
+    [[nodiscard]] static OPT(SDL_Event) IsWindow(Enums::ZE_WindowEvents event);
 
   private:
     static constexpr int MAX_KEYS = SDL_SCANCODE_COUNT;
@@ -55,7 +55,7 @@ namespace ZE {
 
     static STR s_TextInput;
     static VEC(STR) s_DropFiles;
-    static std::array<OPT(SDL_Event), static_cast<unsigned char>(Enums::ZE_WindowEvents::COUNT)> s_WindowEvents;
+    static std::array<OPT(SDL_Event), SDL_EVENT_LAST> s_AllEvents;
 
     static std::unordered_map<SDL_JoystickID, Low::GamepadState> s_Gamepads;
   public:

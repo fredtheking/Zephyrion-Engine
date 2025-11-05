@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.20)
-set(ENGINE_NAME zephyrion-engine)
 project(${ENGINE_NAME} LANGUAGES C CXX)
 
 include(FetchContent)
@@ -27,18 +26,36 @@ FetchContent_Declare(
         GIT_SHALLOW    TRUE
 )
 FetchContent_MakeAvailable(imgui)
-set(IMGUI_DIR ${CMAKE_BINARY_DIR}/_deps/imgui-src)
-file(GLOB IMGUI_SOURCES
-        ${IMGUI_DIR}/*.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_sdl3.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+set(imgui_DIR ${CMAKE_BINARY_DIR}/_deps/imgui-src)
+file(GLOB imgui_SOURCES
+        ${imgui_DIR}/*.cpp
+        ${imgui_DIR}/backends/imgui_impl_sdl3.cpp
+        ${imgui_DIR}/backends/imgui_impl_opengl3.cpp
 )
-add_library(imgui STATIC ${IMGUI_SOURCES})
+add_library(imgui STATIC ${imgui_SOURCES})
 target_include_directories(imgui PUBLIC
-        ${IMGUI_DIR}
-        ${IMGUI_DIR}/backends
+        ${imgui_DIR}
+        ${imgui_DIR}/backends
 )
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
+
+
+FetchContent_Declare(
+        imguizmo
+        GIT_REPOSITORY https://github.com/CedricGuillemet/ImGuizmo.git
+        GIT_TAG        1e6b189c4abcf92f5bc6830b717aafb1e7cfea46
+        GIT_PROGRESS   TRUE
+        GIT_SHALLOW    TRUE
+)
+FetchContent_MakeAvailable(imguizmo)
+set(imguizmo_DIR ${CMAKE_BINARY_DIR}/_deps/imguizmo-src)
+file(GLOB imguizmo_SOURCES
+        ${imguizmo_DIR}/*.h
+        ${imguizmo_DIR}/*.cpp
+)
+add_library(imguizmo STATIC ${imguizmo_SOURCES})
+target_include_directories(imguizmo PUBLIC ${imgui_DIR})
+target_link_libraries(imguizmo PUBLIC imgui)
 
 
 FetchContent_Declare(
@@ -76,21 +93,29 @@ set(magic-enums_DIR ${CMAKE_BINARY_DIR}/_deps/magic-enums-src)
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/zephyrion/**)
 add_library(${ENGINE_NAME} STATIC
         ${ENGINE_SOURCES}
+        ${imguizmo_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad.c
 )
 target_include_directories(${ENGINE_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${imguizmo_DIR}
         ${magic-enums_DIR}/include/magic_enum
 )
 
 target_link_libraries(${ENGINE_NAME} PUBLIC
         SDL3::SDL3
         imgui
+        imguizmo
         stduuid
         fmt::fmt
 )
 add_custom_command(TARGET ${ENGINE_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_SOURCE_DIR}/engine/res"
-        "${CLEAN_BIN_DIR}/assets/engine"
+        "${SANDBOX_CLEAN_BIN_DIR}/res/engine"
+)
+add_custom_command(TARGET ${ENGINE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/engine/res"
+        "${EDITOR_CLEAN_BIN_DIR}/res/engine"
 )

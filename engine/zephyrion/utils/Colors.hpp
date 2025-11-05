@@ -52,3 +52,4 @@ namespace ZE::Colors {
 
 #undef DEFINE_COLOR_SINGLE
 #undef DEFINE_COLOR
+#undef DEFINE_COLOR_FULL

@@ -14,20 +14,21 @@ namespace ZE {
   bool Input::s_Quit = false;
   STR Input::s_TextInput{};
   VEC(STR) Input::s_DropFiles{};
-  std::array<OPT(SDL_Event), static_cast<unsigned char>(Enums::ZE_WindowEvents::COUNT)> Input::s_WindowEvents{};
+  std::array<OPT(SDL_Event), SDL_EVENT_LAST> Input::s_AllEvents{};
   std::unordered_map<SDL_JoystickID, Low::GamepadState> Input::s_Gamepads{};
 
 
-  void Input::ProcessEvent(REF(SDL_Event) e) {
+  void Input::ProcessEvents() {
     s_PreviousKeys = s_CurrentKeys;
     s_PreviousMouse = s_CurrentMouse;
     s_MouseWheel.x = s_MouseWheel.y = 0;
     s_TextInput.clear();
     s_DropFiles.clear();
-    for (int i = 0; i < static_cast<Z_UINT8>(Enums::ZE_WindowEvents::COUNT); ++i)
-      s_WindowEvents[i] = NULLOPT;
+    for (int i = 0; i < SDL_EVENT_LAST; ++i) s_AllEvents[i] = NULLOPT;
 
+    SDL_Event e;
     while (SDL_PollEvent(&e)) {
+      s_AllEvents[e.type] = e;
       if (ImGui::GetCurrentContext()) ImGui_ImplSDL3_ProcessEvent(&e);
       switch (e.type) {
         // ===================== SYSTEM =====================
@@ -67,39 +68,23 @@ namespace ZE {
 
           // ===================== WINDOW =====================
         case SDL_EVENT_WINDOW_SHOWN:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Shown)] = e; break;
         case SDL_EVENT_WINDOW_HIDDEN:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Hidden)] = e; break;
         case SDL_EVENT_WINDOW_EXPOSED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Exposed)] = e; break;
         case SDL_EVENT_WINDOW_MOVED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Moved)] = e; break;
         case SDL_EVENT_WINDOW_RESIZED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Resized)] = e; break;
         case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::PixelSizeChanged)] = e; break;
         case SDL_EVENT_WINDOW_MINIMIZED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Minimized)] = e; break;
         case SDL_EVENT_WINDOW_MAXIMIZED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Maximized)] = e; break;
         case SDL_EVENT_WINDOW_RESTORED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Restored)] = e; break;
         case SDL_EVENT_WINDOW_MOUSE_ENTER:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::MouseEnter)] = e; break;
         case SDL_EVENT_WINDOW_MOUSE_LEAVE:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::MouseLeave)] = e; break;
         case SDL_EVENT_WINDOW_FOCUS_GAINED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::FocusGained)] = e; break;
         case SDL_EVENT_WINDOW_FOCUS_LOST:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::FocusLost)] = e; break;
         case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::SafeAreaChanged)] = e; break;
         case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::EnterFullscreen)] = e; break;
         case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::LeaveFullscreen)] = e; break;
         case SDL_EVENT_WINDOW_DESTROYED:
-          s_WindowEvents[static_cast<Z_UINT8>(Enums::ZE_WindowEvents::Destroyed)] = e; break;
+          break;
 
           // ===================== DROP =====================
         case SDL_EVENT_DROP_FILE:
@@ -119,7 +104,7 @@ namespace ZE {
         case SDL_EVENT_GAMEPAD_AXIS_MOTION:
           s_Gamepads[e.gaxis.which].axes[e.gaxis.axis] = e.gaxis.value / 32767.0f; break;
         default:
-          Logger::Warning("Some event had been unhandled: " + std::to_string(e.type)); break;
+          Logger::Warning("Implicit event process: {}", e.type); break;
       }
     }
   }
@@ -196,11 +181,7 @@ namespace ZE {
   CREF(VEC(STR)) Input::GetDroppedFiles() {
     return s_DropFiles;
   }
-  std::unordered_map<Enums::ZE_WindowEvents, OPT(SDL_Event)> Input::GetWindowEvents() {
-    auto events_map = std::unordered_map<Enums::ZE_WindowEvents, OPT(SDL_Event)>{};
-    for (int i = 0; i < static_cast<Z_UINT8>(Enums::ZE_WindowEvents::COUNT); ++i)
-      events_map[static_cast<Enums::ZE_WindowEvents>(i)] = s_WindowEvents[i];
-
-    return std::move(events_map);
+  OPT(SDL_Event) Input::IsWindow(Enums::ZE_WindowEvents event) {
+    return s_AllEvents[static_cast<unsigned int>(event)];
   }
 }
