@@ -14,7 +14,7 @@ int ZE::Logger::Internal_GetConsoleWidth() {
 #else
 #include <sys/ioctl.h>
 #include <unistd.h>
-int ZE::Logger::GetConsoleWidth() {
+int ZE::Logger::Internal_GetConsoleWidth() {
   struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
   return w.ws_col;
