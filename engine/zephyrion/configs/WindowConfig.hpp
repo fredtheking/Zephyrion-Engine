@@ -1,5 +1,5 @@
 #pragma once
-#include "ImguiConfig.hpp"
+#include "ImGuiConfig.hpp"
 #include "zephyrion/core/Logger.hpp"
 #include "zephyrion/low/BuilderBase.hpp"
 #include "zephyrion/simple_types/Vector2.hpp"
@@ -16,7 +16,7 @@ namespace ZE {
     private:
       friend class ::ZE::Configs::Builders::WindowConfigBuilder;
       friend class ::ZE::Window;
-      friend class ::ZE::ImguiHandler;
+      friend class ::ZE::ImGuiHandler;
 
       Enums::ZE_BackendRenderer renderer_enum        = Enums::ZE_BackendRenderer::OpenGL;
       STR                       title_str            = "Hello from Zephyrion Engine!";
@@ -28,7 +28,7 @@ namespace ZE {
       OPT(ST_VEC2(int))         min_size_vec2        = NULLOPT;
       OPT(float)                opacity_float        = NULLOPT;
       bool                      vsync_bool           = true;
-      OPT(ImguiConfig)          imgui_config         = NULLOPT;
+      OPT(ImGuiConfig)          imgui_config         = NULLOPT;
 
       bool                      resizable_bool       = false;
       bool                      borderless_bool      = false;
@@ -40,7 +40,8 @@ namespace ZE {
       SDL_Window*               modal_parent_pointer = nullptr;
       bool                      external_bool        = false;
     public:
-      GETTER(BackendRendererName, STR){return STR{magic_enum::enum_name(renderer_enum)};}
+      GETTER(BackendRenderer, Enums::ZE_BackendRenderer) {return renderer_enum;}
+      GETTER(BackendRendererName, STR) {return STR{magic_enum::enum_name(renderer_enum)};}
       GETTER(Title, CREF(STR)){return title_str;}
       GETTER(Position, ST_VEC2(int)){return position_vec2.has_value() ? position_vec2.value() : NONVALID_ST_VEC2;}
       GETTER(PositionMode, CREF(Enums::ZE_WindowPosition)){return position_mode_enum;}
@@ -70,7 +71,7 @@ namespace ZE {
       GETTER(AlwaysOnTop, bool) {return always_on_top_bool;}
       GETTER(Hidden, bool) {return hidden_bool;}
       GETTER(InputBlocked, bool) {return input_blocked_bool;}
-      GETTER(ImGuiConfig, CREF(OPT(ImguiConfig))) {return imgui_config;}
+      GETTER(ImGuiConfig, CREF(OPT(ImGuiConfig))) {return imgui_config;}
       GETTER(Modal, bool) {return modal_parent_pointer;}
       GETTER(External, bool) {return external_bool;}
     };
@@ -232,8 +233,17 @@ namespace ZE {
           return *this;
         }
 
-        REF(WindowConfigBuilder) EnableImGui(CREF(ImguiConfig) config) {
+        REF(WindowConfigBuilder) EnableImGui(CREF(ImGuiConfig) config) {
           build_object.imgui_config = config;
+          return *this;
+        }
+        // Implicitly creates default 'ImguiConfig' with process func provided
+        REF(WindowConfigBuilder) EnableImGui(VOID_FUNC_CONST process) {
+          build_object.imgui_config = ImGuiConfigBuilder{}.Process(process).Build();
+          return *this;
+        }
+        REF(WindowConfigBuilder) EnableImGui() {
+          build_object.imgui_config = ImGuiConfigBuilder{}.Build();
           return *this;
         }
       };

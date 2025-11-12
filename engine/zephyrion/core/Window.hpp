@@ -1,5 +1,6 @@
 #pragma once
-#include "ImguiHandler.hpp"
+#include "ImGuiHandler.hpp"
+#include "RendererDevice.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/configs/WindowConfig.hpp"
 #include "zephyrion/simple_types/Bounds.hpp"
@@ -51,8 +52,7 @@ namespace ZE {
     /**
      * Optional imgui handler for current window.
      */
-    OPT(UPTR(ImguiHandler)) m_Imgui = NULLOPT;
-    SDL_GLContext m_GLContext = nullptr;
+    UPTR(RendererDevice) m_RendererDevice;
     SDL_Window* p_Window = nullptr;
     SDL_Surface* p_Icon = nullptr;
 

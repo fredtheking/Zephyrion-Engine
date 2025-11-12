@@ -207,13 +207,14 @@ namespace ZE {
     Logger::DebugLog("Current Window flags: {}", Util::Enums::ToString(SDL_GetWindowFlags(p_Window)));
     #endif
 
-    m_GLContext = SDL_GL_CreateContext(p_Window);
+    m_RendererDevice = MAKE_UPTR(RendererDevice)(*this);
+    BACKEND_CALL(p_Config->GetBackendRenderer(), )
     Util::AssertSDL(m_GLContext, "Failed initialising GL context for window", "", true);
     Util::AssertSDL(SDL_GL_MakeCurrent(p_Window, m_GLContext), "Failed initialising GL context for window", "", true);
     Util::AssertSDL(SDL_GL_SetSwapInterval(p_Config->vsync_bool), "Failed setting VSync", "");
 
     if (p_Config->imgui_config)
-      m_Imgui = MAKE_UPTR(ImguiHandler)(*this);
+      m_Imgui = MAKE_UPTR(ImGuiHandler)(*this);
 
     Logger::Information("Finished creating window");
   }

@@ -1,6 +1,9 @@
-#include "ImguiHandler.hpp"
+#include "ImGuiHandler.hpp"
 #include "Window.hpp"
 #include "Logger.hpp"
+#include "zephyrion/core/renderers/OpenGLHandler.hpp"
+#include "zephyrion/core/renderers/VulkanHandler.hpp"
+#include "zephyrion/core/renderers/MetalHandler.hpp"
 
 
 void SetupImGuiStyle()
@@ -94,33 +97,114 @@ void SetupImGuiStyle()
 }
 
 namespace ZE {
-	void ImguiHandler::Render() const {
-		if (p_Config.process_event) {
-			ImGui_ImplOpenGL3_NewFrame();
+	template class ImGuiHandler<Renderers::OpenGLHandler>;
+	template class ImGuiHandler<Renderers::VulkanHandler>;
+	template class ImGuiHandler<Renderers::MetalHandler>;
+
+	template<>
+	void ImGuiHandler<Renderers::OpenGLHandler>::Internal_SpecificInit() {
+		ImGui_ImplSDL3_InitForOpenGL(
+			p_LinkedWindow.p_Window,
+			p_LinkedWindow.m_RendererDevice->Get<Renderers::OpenGLHandler>().m_GLContext
+		);
+		ImGui_ImplOpenGL3_Init();
+	}
+	template<>
+	void ImGuiHandler<Renderers::VulkanHandler>::Internal_SpecificInit() {
+		//TODO
+	}
+	template<>
+	void ImGuiHandler<Renderers::MetalHandler>::Internal_SpecificInit() {
+		//TODO
+	}
+
+	template<>
+	void ImGuiHandler<Renderers::OpenGLHandler>::Internal_SpecificShutdown() {
+		ImGui_ImplOpenGL3_Shutdown();
+	}
+	template<>
+	void ImGuiHandler<Renderers::VulkanHandler>::Internal_SpecificShutdown() {
+		//TODO
+	}
+	template<>
+	void ImGuiHandler<Renderers::MetalHandler>::Internal_SpecificShutdown() {
+		//TODO
+	}
+
+	template<>
+	void ImGuiHandler<Renderers::OpenGLHandler>::Internal_SpecificNewFrame() {
+		ImGui_ImplOpenGL3_NewFrame();
+	}
+	template<>
+	void ImGuiHandler<Renderers::VulkanHandler>::Internal_SpecificNewFrame() {
+		//TODO
+	}
+	template<>
+	void ImGuiHandler<Renderers::MetalHandler>::Internal_SpecificNewFrame() {
+		//TODO
+	}
+
+	template<>
+	void ImGuiHandler<Renderers::OpenGLHandler>::Internal_SpecificRenderDrawData() {
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
+	template<>
+	void ImGuiHandler<Renderers::VulkanHandler>::Internal_SpecificRenderDrawData() {
+		//TODO
+	}
+	template<>
+	void ImGuiHandler<Renderers::MetalHandler>::Internal_SpecificRenderDrawData() {
+		//TODO
+	}
+
+	template<>
+	void ImGuiHandler<Renderers::OpenGLHandler>::Internal_SpecificFloatingEndAction() {
+		SDL_GL_MakeCurrent(
+				p_LinkedWindow.p_Window,
+				p_LinkedWindow.m_RendererDevice->Get<Renderers::OpenGLHandler>().m_GLContext
+			);
+	}
+	template<>
+	void ImGuiHandler<Renderers::VulkanHandler>::Internal_SpecificFloatingEndAction() {
+		//TODO
+	}
+	template<>
+	void ImGuiHandler<Renderers::MetalHandler>::Internal_SpecificFloatingEndAction() {
+		//TODO
+	}
+
+
+
+	template<typename T>
+	void ImGuiHandler<T>::Render() const {
+		if (p_Config.GetProcessFunc()) {
+			Internal_SpecificNewFrame();
 			ImGui_ImplSDL3_NewFrame();
 			ImGui::NewFrame();
 
-			if (p_Config.docking_bool) ImGui::DockSpaceOverViewport();
-			p_Config.process_event();
+			if (p_Config.GetDocking()) ImGui::DockSpaceOverViewport();
+			p_Config.GetProcessFunc()();
 
 			ImGui::Render();
-			if (p_Config.floating_windows_bool)
+			if (p_Config.GetFloatingWindows())
 			{
 				ImGui::UpdatePlatformWindows();
 				ImGui::RenderPlatformWindowsDefault();
-				SDL_GL_MakeCurrent(p_MainWindow.p_Window, p_MainWindow.m_GLContext);
+				Internal_SpecificFloatingEndAction();
 			}
 		}
 	}
 
-	void ImguiHandler::Draw() const {
-		if (p_Config.process_event)
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	template<typename T>
+	void ImGuiHandler<T>::Draw() const {
+		if (p_Config.GetProcessFunc())
+			Internal_SpecificRenderDrawData();
 	}
 
-	ImguiHandler::ImguiHandler(CREF(Window) window)
-	: p_Config(window.p_Config->imgui_config.value())
-	, p_MainWindow(window){
+	template<typename T>
+	ImGuiHandler<T>::ImGuiHandler(CREF(Window) window)
+	: p_Config(window.p_Config->GetImGuiConfig().value())
+	, p_LinkedWindow(window){
 		Logger::Information("Creating imgui handler...");
 
 		const float main_scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
@@ -130,27 +214,25 @@ namespace ZE {
 		DEFINE_IMIO_VARIABLE
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-		if (p_Config.floating_windows_bool)
-			io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		if (p_Config.docking_bool)
-			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		if (p_Config.GetFloatingWindows()) io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		if (p_Config.GetDocking()) io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.IniFilename = nullptr;
 
-		if (p_Config.dark_theme_bool) ImGui::StyleColorsDark();
-		else											    ImGui::StyleColorsLight();
+		if (p_Config.GetDarkTheme()) ImGui::StyleColorsDark();
+		else										     ImGui::StyleColorsLight();
 
 		REF(ImGuiStyle) style = ImGui::GetStyle();
 		style.ScaleAllSizes(main_scale);
 		style.FontScaleDpi = main_scale;
 		SetupImGuiStyle();
 
-		ImGui_ImplSDL3_InitForOpenGL(window.p_Window, window.m_GLContext);
-		ImGui_ImplOpenGL3_Init();
+		Internal_SpecificInit();
 
 		Logger::Information("Finished creating imgui handler");
 	}
-	ImguiHandler::~ImguiHandler() {
-		ImGui_ImplOpenGL3_Shutdown();
+	template<typename T>
+	ImGuiHandler<T>::~ImGuiHandler() {
+		Internal_SpecificShutdown();
 		ImGui_ImplSDL3_Shutdown();
 		ImGui::DestroyContext();
 	}
