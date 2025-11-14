@@ -1,6 +1,6 @@
 #pragma once
 #include "WindowConfig.hpp"
-#include "ImGuiConfig.hpp"
+#include "ImguiConfig.hpp"
 
 
 namespace ZE::Configs {

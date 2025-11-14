@@ -2,7 +2,7 @@
 #include "zephyrion/pch.hpp"
 #include "configs/AppConfig.hpp"
 #include "core/Window.hpp"
-#include "core/ImGuiHandler.hpp"
+#include "core/ImguiHandler.hpp"
 
 namespace ZE {
   class App final {

@@ -26,30 +26,24 @@
 #define OPT(TYPE) std::optional<TYPE>
 #define MAKE_OPT(TYPE) std::make_optional<TYPE>
 
-#define VAR(...) std::variant<__VA_ARGS__>
-#define CALL_VAR(VAR, METHOD_NAME, ...) std::visit([](auto& r){ r.METHOD_NAME(__VA_ARGS__); }, VAR);
-
-
 #define FUNC(RETURN) std::function<RETURN>
 #define VOID_FUNC FUNC(void())
 #define VOID_FUNC_CONST CREF(VOID_FUNC)
 
 
-#define SINGLETON_CONSTRUCTOR(NAME)    \
-private:                                \
-  NAME() = default;                      \
-public:                                   \
-  NAME(CREF(NAME)) = delete;               \
-  REF(NAME) operator=(CREF(NAME)) = delete; \
-  static REF(NAME) Get() {                   \
-    static NAME singleton;                    \
-    return singleton;                          \
-  }
-#define STATIC_ONLY_CONSTRUCTOR(NAME)   \
-public:                                  \
-  NAME() = delete;                        \
-  NAME(CREF(NAME)) = delete;               \
-  REF(NAME) operator=(CREF(NAME)) = delete; \
+#define SINGLETON_CONSTRUCTOR(NAME) private:                                \
+                                      NAME() = default;                      \
+                                    public:                                   \
+                                      NAME(CREF(NAME)) = delete;               \
+                                      REF(NAME) operator=(CREF(NAME)) = delete; \
+                                      static REF(NAME) Get() {                   \
+                                        static NAME singleton;                    \
+                                        return singleton;                          \
+                                      }
+#define STATIC_ONLY_CONSTRUCTOR(NAME) public:                                  \
+                                        NAME() = delete;                        \
+                                        NAME(CREF(NAME)) = delete;               \
+                                        REF(NAME) operator=(CREF(NAME)) = delete; \
 
 
 #define POS_N_NEG_ACTION_BASE(PREFIX_POS, PREFIX_NEG, NAME, TYPE, VAR) void PREFIX_POS##NAME(CREF(TYPE) VAR); \
@@ -61,9 +55,9 @@ public:                                  \
 #define PREFIX_GETTER_ARGS(PREFIX, NAME, TYPE, ...) TYPE PREFIX##Get##NAME(__VA_ARGS__) const
 #define PREFIX_GETTER(PREFIX, NAME, TYPE) PREFIX_GETTER_ARGS(PREFIX, NAME, TYPE)
 #define TRYGETTER(NAME, TYPE) template<typename T> \
-                              bool TryGet##NAME(REF(TYPE) out)
+                              bool TryGet##NAME(REF(TYPE) out);
 #define T_GETTER(NAME, TYPE) template<typename T> \
-                             TYPE Get##NAME()
+                             TYPE Get##NAME();
 #define GETTER(NAME, TYPE) PREFIX_GETTER( , NAME, TYPE)
 #define SETTER(NAME, TYPE, VAR) void Set##NAME(CREF(TYPE) VAR);
 #define GETTER_N_SETTER(NAME, TYPE, VAR) GETTER(NAME, TYPE) SETTER(NAME, TYPE, VAR)
@@ -80,19 +74,6 @@ public:                                  \
 #define GET_IMIO_SINGLETON ImGui::GetIO()
 #define DEFINE_IMIO_VARIABLE REF(ImGuiIO) io = GET_IMIO_SINGLETON;
 #define ENGINE_ASSETS "res/engine/"
-
-#define BACKEND_CALL(BACKEND_ENUMVAR, FUNC_GL, FUNC_VK, FUNC_MTL) \
-switch (BACKEND_ENUMVAR) {                                         \
-  case ZE::Enums::ZE_BackendRenderer::OpenGL:                       \
-    FUNC_GL; break;                                                  \
-  case ZE::Enums::ZE_BackendRenderer::Vulkan:                         \
-    FUNC_VK; break;                                                    \
-  case ZE::Enums::ZE_BackendRenderer::Metal:                            \
-    FUNC_MTL; break;                                                     \
-}
-#define RENDERER_HANDLER_TEMPLATE \
-template <typename T>      \
-requires std::derived_from<T, ZE::Low::RendererBase>
 
 #ifdef Z_SHOW_INTERNALS
   #define INTERNAL_GUARD_BEGIN public:

@@ -38,7 +38,6 @@
 #include <iomanip>
 #include <sstream>
 #include <optional>
-#include <variant>
 
 #include "zephyrion/utils/Macros.hpp"
 #include "zephyrion/utils/Global.hpp"

@@ -1,6 +1,6 @@
 // #define Z_SHOW_INTERNALS
 #include <zephyrion/App.hpp>
-#include <zephyrion/configs/ImGuiConfig.hpp>
+#include <zephyrion/configs/ImguiConfig.hpp>
 #include "zephyrion/utils/Util.hpp"
 
 void ImGuiRenderProcess() {
@@ -20,7 +20,7 @@ int main(){
     .Position(ZE::Enums::ZE_WindowPosition::Centered)
     .Resizable()
     .Size(1920, 1080)
-    .EnableImGui(ZE::Configs::Builders::ImGuiConfigBuilder{}
+    .EnableImGui(ZE::Configs::Builders::ImguiConfigBuilder{}
       .Process(ImGuiRenderProcess)
       .FloatingWindows()
       .Build()
