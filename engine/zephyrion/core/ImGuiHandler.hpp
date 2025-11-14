@@ -1,11 +1,11 @@
 #pragma once
 #include "zephyrion/pch.hpp"
-#include "zephyrion/configs/ImguiConfig.hpp"
+#include "zephyrion/configs/ImGuiConfig.hpp"
 
 namespace ZE {
   class Window;
 
-  class ImguiHandler {
+  class ImGuiHandler {
   private:
     //...
   public:
@@ -13,7 +13,7 @@ namespace ZE {
     void Draw() const;
 
   private:
-    REF(Configs::ImguiConfig) p_Config;
+    REF(Configs::ImGuiConfig) p_Config;
     CREF(Window) p_MainWindow;
   public:
     //...
@@ -21,7 +21,7 @@ namespace ZE {
   private:
     friend class App;
   public:
-    explicit ImguiHandler(CREF(Window) window);
-    ~ImguiHandler();
+    explicit ImGuiHandler(CREF(Window) window);
+    ~ImGuiHandler();
   };
 }

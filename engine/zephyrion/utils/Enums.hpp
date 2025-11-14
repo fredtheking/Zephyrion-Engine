@@ -25,6 +25,14 @@
                                   }
 
 namespace ZE::Enums {
+  ENUM(ZE_VideoDriver) {
+    Windows,
+    X11,
+    Wayland,
+    Cocoa,
+    UiKit,
+  };
+
   ENUM(ZE_BackendRenderer) {
     OpenGL,
     Vulkan,

@@ -123,7 +123,7 @@ namespace ZE::Util {
   namespace Enums {
     inline STR ToString(const SDL_WindowFlags flags) {
       STR out;
-      for (auto& [val, name] : Translations::Enums::Translation__SDL_WindowFlags.forward) {
+      for (auto& [val, name] : Translations::EtoS::T__SDL_WindowFlags.forward) {
         if (flags & val) {
           if (!out.empty()) out += " | ";
           out += name;

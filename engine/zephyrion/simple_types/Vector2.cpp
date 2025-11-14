@@ -9,6 +9,12 @@ namespace ZE::ST {
   Vector2<T>::Vector2() {
     INIT_SINGLE(0)
   }
+
+  template<typename T>
+  Vector2<T>::Vector2(CREF(Vector2) vector2) {
+    INIT(vector2.x, vector2.y);
+  }
+
   template<typename T>
   Vector2<T>::Vector2(T x, T y) {
     INIT(x, y)

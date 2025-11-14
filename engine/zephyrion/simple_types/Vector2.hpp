@@ -18,8 +18,9 @@ namespace ZE::ST {
     //...
   public:
     Vector2();
+    Vector2(CREF(Vector2) vector2);
     Vector2(T x, T y);
-    Vector2(T xy);
+    explicit Vector2(T xy);
 
     bool operator==(CREF(Vector2) vector2) const;
     bool operator<(CREF(Vector2) vector2) const;

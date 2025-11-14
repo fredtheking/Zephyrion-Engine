@@ -1,4 +1,4 @@
-#include "ImguiHandler.hpp"
+#include "ImGuiHandler.hpp"
 #include "Window.hpp"
 #include "Logger.hpp"
 
@@ -94,7 +94,7 @@ void SetupImGuiStyle()
 }
 
 namespace ZE {
-	void ImguiHandler::Render() const {
+	void ImGuiHandler::Render() const {
 		if (p_Config.process_event) {
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplSDL3_NewFrame();
@@ -113,12 +113,12 @@ namespace ZE {
 		}
 	}
 
-	void ImguiHandler::Draw() const {
+	void ImGuiHandler::Draw() const {
 		if (p_Config.process_event)
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 
-	ImguiHandler::ImguiHandler(CREF(Window) window)
+	ImGuiHandler::ImGuiHandler(CREF(Window) window)
 	: p_Config(window.p_Config->imgui_config.value())
 	, p_MainWindow(window){
 		Logger::Information("Creating imgui handler...");
@@ -149,7 +149,7 @@ namespace ZE {
 
 		Logger::Information("Finished creating imgui handler");
 	}
-	ImguiHandler::~ImguiHandler() {
+	ImGuiHandler::~ImGuiHandler() {
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplSDL3_Shutdown();
 		ImGui::DestroyContext();

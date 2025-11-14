@@ -37,6 +37,7 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <fstream>
 #include <optional>
 
 #include "zephyrion/utils/Macros.hpp"

@@ -1,5 +1,5 @@
 #pragma once
-#include "ImguiHandler.hpp"
+#include "ImGuiHandler.hpp"
 #include "zephyrion/pch.hpp"
 #include "zephyrion/configs/WindowConfig.hpp"
 #include "zephyrion/simple_types/Bounds.hpp"
@@ -15,6 +15,7 @@ namespace ZE {
     void Internal_UpdateWindowSizeConfigs() const;
     void Internal_UpdateWindowSize() const;
     void Internal_SetWindowMinimaxSize() const;
+    [[nodiscard]] ST_VEC2(int) Internal_WaylandFixedSize() const;
     [[nodiscard]] SDL_WindowFlags Internal_InitialiseFlags() const;
     void Internal_AfterWindowInit();
     static void Internal_HandleResize();
@@ -51,7 +52,7 @@ namespace ZE {
     /**
      * Optional imgui handler for current window.
      */
-    OPT(UPTR(ImguiHandler)) m_Imgui = NULLOPT;
+    OPT(UPTR(ImGuiHandler)) m_Imgui = NULLOPT;
     SDL_GLContext m_GLContext = nullptr;
     SDL_Window* p_Window = nullptr;
     SDL_Surface* p_Icon = nullptr;

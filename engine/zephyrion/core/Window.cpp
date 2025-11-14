@@ -1,5 +1,7 @@
 #include "Window.hpp"
 
+#include <cmath>
+
 #include "Input.hpp"
 #include "Logger.hpp"
 #include "zephyrion/App.hpp"
@@ -12,7 +14,7 @@ namespace ZE {
 
     switch (p_Config->position_mode_enum) {
       case Enums::ZE_WindowPosition::Centered:
-        pos = {SDL_WINDOWPOS_CENTERED};
+        pos = ST_VEC2(int){SDL_WINDOWPOS_CENTERED};
         break;
       case Enums::ZE_WindowPosition::TopLeft:
         pos = {};
@@ -31,18 +33,44 @@ namespace ZE {
       p_Config->size_vec2 = p_Config->max_size_vec2.value();
   }
   void Window::Internal_UpdateWindowSize() const {
-    SDL_SetWindowSize(p_Window, p_Config->size_vec2.x, p_Config->size_vec2.y);
+    const ST_VEC2(int) size =
+      Translations::StoE::T__VideoDriver[SDL_GetCurrentVideoDriver()] == Enums::ZE_VideoDriver::Wayland
+      ? Internal_WaylandFixedSize()
+      : p_Config->size_vec2;
+
+    SDL_SetWindowSize(p_Window, size.x, size.y);
   }
   void Window::Internal_SetWindowMinimaxSize() const {
     if (p_Config->min_size_vec2)
       SDL_SetWindowMinimumSize(p_Window, p_Config->min_size_vec2->x, p_Config->min_size_vec2->y);
     if (p_Config->max_size_vec2)
       SDL_SetWindowMaximumSize(p_Window, p_Config->max_size_vec2->x, p_Config->max_size_vec2->y);
-
-    Internal_UpdateWindowSize();
   }
+
+  ST_VEC2(int) Window::Internal_WaylandFixedSize() const {
+    float scale;
+    bool got_scale = false;
+    SDL_Event e;
+    while (!got_scale) {
+      while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED ||
+            e.type == SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED) {
+          scale = SDL_GetWindowDisplayScale(p_Window);
+          got_scale = true;
+          break;
+        }
+      }
+    }
+    return {
+      static_cast<int>(std::ceil(p_Config->size_vec2.x / scale)),
+      static_cast<int>(std::ceil(p_Config->size_vec2.y / scale)),
+    };
+
+    //TODO: fix. not working. i have no idea what im doing at this point.
+  }
+
   SDL_WindowFlags Window::Internal_InitialiseFlags() const {
-    SDL_WindowFlags flags = {};
+    SDL_WindowFlags flags = SDL_WINDOW_OPENGL;
 
     if (p_Config->opacity_float)
       flags |= SDL_WINDOW_TRANSPARENT;
@@ -61,26 +89,17 @@ namespace ZE {
     if (p_Config->external_bool)
       flags |= SDL_WINDOW_EXTERNAL;
 
-    switch (p_Config->renderer_enum) {
-      case Enums::ZE_BackendRenderer::OpenGL:
-        flags |= SDL_WINDOW_OPENGL; break;
-        // bottom ones are for the future. maybe
-      case Enums::ZE_BackendRenderer::Vulkan:
-        flags |= SDL_WINDOW_VULKAN; break;
-      case Enums::ZE_BackendRenderer::Metal:
-        flags |= SDL_WINDOW_METAL; break;
-    }
-
     return flags;
   }
 
   void Window::Internal_AfterWindowInit() {
+    SDL_ShowWindow(p_Window);
     Internal_SetWindowMinimaxSize();
+    UpdateSize(p_Config->size_vec2);
     Internal_UpdateWindowPosition();
 
-    if (p_Config->modal_parent_pointer) {
+    if (p_Config->modal_parent_pointer)
       Util::AssertSDL(SDL_SetWindowParent(p_Window, p_Config->modal_parent_pointer), "Failed to make window modal");
-    }
 
     if (!p_Config->icon_filepath_str.empty())
       UpdateIcon(p_Config->icon_filepath_str);
@@ -188,7 +207,6 @@ namespace ZE {
   void Window::SetVsync(const bool value) const {
     p_Config->vsync_bool = value;
     SDL_GL_SetSwapInterval(p_Config->vsync_bool);
-    //TODO: come up with better implementation for vsync. not cool duplicating "SDL_GL_SetSwapInterval" in both config-init and in set-func
   }
 
   Window::Window(CREF(Configs::WindowConfig) window_config) {
@@ -213,7 +231,7 @@ namespace ZE {
     Util::AssertSDL(SDL_GL_SetSwapInterval(p_Config->vsync_bool), "Failed setting VSync", "");
 
     if (p_Config->imgui_config)
-      m_Imgui = MAKE_UPTR(ImguiHandler)(*this);
+      m_Imgui = MAKE_UPTR(ImGuiHandler)(*this);
 
     Logger::Information("Finished creating window");
   }

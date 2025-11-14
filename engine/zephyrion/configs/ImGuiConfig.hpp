@@ -4,16 +4,16 @@
 #include "zephyrion/low/BuilderBase.hpp"
 
 namespace ZE {
-  class ImguiHandler;
+  class ImGuiHandler;
   namespace Configs {
     namespace Builders {
-      class ImguiConfigBuilder;
+      class ImGuiConfigBuilder;
     }
 
-    class ImguiConfig {
+    class ImGuiConfig {
     private:
-      friend class ::ZE::Configs::Builders::ImguiConfigBuilder;
-      friend class ::ZE::ImguiHandler;
+      friend class ::ZE::Configs::Builders::ImGuiConfigBuilder;
+      friend class ::ZE::ImGuiHandler;
 
       VOID_FUNC process_event        = nullptr;
       bool      dark_theme_bool      = true;
@@ -26,26 +26,26 @@ namespace ZE {
     };
 
     namespace Builders {
-      class ImguiConfigBuilder final : public Low::BuilderBase<ImguiConfig> {
+      class ImGuiConfigBuilder final : public Low::BuilderBase<ImGuiConfig> {
         void ValidityCheck() override {
           if (build_object.docking_bool)
-            Logger::Warning("Warning in \"ImguiConfig\" - "
+            Logger::Warning("Warning in \"ImGuiConfig\" - "
               "\"Docking\" is enabled; background color may be altered.");
         }
       public:
-        REF(ImguiConfigBuilder) Process(VOID_FUNC_CONST event) {
+        REF(ImGuiConfigBuilder) Process(VOID_FUNC_CONST event) {
           build_object.process_event = event;
           return *this;
         }
-        REF(ImguiConfigBuilder) LightTheme() {
+        REF(ImGuiConfigBuilder) LightTheme() {
           build_object.dark_theme_bool = false;
           return *this;
         }
-        REF(ImguiConfigBuilder) Docking() {
+        REF(ImGuiConfigBuilder) Docking() {
           build_object.docking_bool = true;
           return *this;
         }
-        REF(ImguiConfigBuilder) FloatingWindows() {
+        REF(ImGuiConfigBuilder) FloatingWindows() {
           build_object.floating_windows_bool = true;
           return *this;
         }
