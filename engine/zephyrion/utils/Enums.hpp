@@ -25,6 +25,12 @@
                                   }
 
 namespace ZE::Enums {
+  ENUM(ZE_BackendRenderer) {
+    OpenGL,
+    Vulkan,
+    Metal,
+  };
+
   ENUM(ZE_WindowEvents) {
   #define PAIR(X, Y) X = SDL_EVENT_ ##Y,
 
