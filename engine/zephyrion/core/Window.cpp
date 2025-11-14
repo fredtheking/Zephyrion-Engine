@@ -42,7 +42,7 @@ namespace ZE {
     Internal_UpdateWindowSize();
   }
   SDL_WindowFlags Window::Internal_InitialiseFlags() const {
-    SDL_WindowFlags flags = {};
+    SDL_WindowFlags flags = SDL_WINDOW_OPENGL;
 
     if (p_Config->opacity_float)
       flags |= SDL_WINDOW_TRANSPARENT;
@@ -60,16 +60,6 @@ namespace ZE {
       flags |= SDL_WINDOW_NOT_FOCUSABLE;
     if (p_Config->external_bool)
       flags |= SDL_WINDOW_EXTERNAL;
-
-    switch (p_Config->renderer_enum) {
-      case Enums::ZE_BackendRenderer::OpenGL:
-        flags |= SDL_WINDOW_OPENGL; break;
-        // bottom ones are for the future. maybe
-      case Enums::ZE_BackendRenderer::Vulkan:
-        flags |= SDL_WINDOW_VULKAN; break;
-      case Enums::ZE_BackendRenderer::Metal:
-        flags |= SDL_WINDOW_METAL; break;
-    }
 
     return flags;
   }
